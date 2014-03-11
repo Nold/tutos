@@ -44,7 +44,7 @@ public class FiltreAvecExclusionsFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) 
 		throws IOException, ServletException {
-		String url = request.getRequestURL().toString();
+		final String url = request.getRequestURL().toString();
 		if (isExcluded(url)) {
 			// On sort de l'exécution du filtre
 			chain.doFilter(request, response);
@@ -58,8 +58,8 @@ public class FiltreAvecExclusionsFilter implements Filter {
 		// Exemples de patterns d'exclusion : "/css/*,/script/*,/truc/*"
 		String[] excludedPatterns = excludePatternsString.split(",");
 		for (String excludedPattern : excludedPatterns){
-			Pattern pattern = Pattern.compile(excludedPattern);
-			Matcher matcher = pattern.matcher(url);
+			final Pattern pattern = Pattern.compile(excludedPattern);
+			final Matcher matcher = pattern.matcher(url);
 			if (matcher.find()){
 				// Un des patterns exclut l'url
 				return true;
