@@ -1,8 +1,11 @@
 <tuto>
 <h1>Mettre en place une solution CSRF avec CsrfGuard</h1>
 
+CsrfGuard est une librairie Java éditée par l'OSWAP et qui permet de prévenir le risque de Cross Site Request Forgery (CSRF).
+Ce tutoriel va vous montrer comment mettre en place CsrfGuard dans votre application web.
+
 <h2>Introduction au risque de CSRF</h2>
-Les attaques de type CSRF (Cross Site Request Forgery) représentent un problème de sécurité reconnu.
+Les attaques de type CSRF représentent un problème de sécurité reconnu.
 Sans rentrer dans les détails on peut dire qu'il s'agit d'une attaque de type cross site scripting
  (couramment abrégé XSS) où l'attaquant exploite l'existence d'un cookie pour stocker 
 l'id de session de la session http.
@@ -45,10 +48,10 @@ Elle contient aussi un système de configuration qui permet de définir
 La librairie est éditée par <link href="http://www.owasp.org">le projet OWASP</link> qui est une organisation reconnue 
 de lutte contre l'insécurité du web.
 La documentation (en anglais) de CsrfGuard est située <link href="https://www.owasp.org/index.php/Category:OWASP_CSRFGuard_Project">ici</link>.
-Les sources de CsrfGuard sont disponible <link href="https://github.com/aramrami/OWASP-CSRFGuard">sur GitHub</link>.
+Les sources de CsrfGuard sont disponibles <link href="https://github.com/aramrami/OWASP-CSRFGuard">sur GitHub</link>.
 Cliquez sur "Download Zip" pour récuperer simplement un fichier zip contenant la dernière version du master 
 ou clonez directement le projet à l'aide de l'url Git fournie.
-Vous noterez en étudiant les sources de CsrfGuard qu'elles contiennent une application de test qui peut vous guider sur l'utilisation de la librairie.
+En étudiant les sources de CsrfGuard, vous noterez qu'elles contiennent une application de test qui peut vous guider sur l'utilisation de la librairie.
 
 <h2>Installation de CsrfGuard avec Maven</h2>
 Si votre projet Maven est configuré pour accéder aux repositories online alors rien de plus simple.
