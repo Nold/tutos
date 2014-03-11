@@ -1,0 +1,67 @@
+<tuto>
+<h1>How to override a JSP tag ?</h1>
+
+If you need to add functionality to or modify a standard JSP tag you must implement a specific class for it and properly declare it in the TLD file.
+
+<h2>Implementing the tag class</h2>
+Since the original tag already does most of the necessary tag work, it is usualy simpler to inherit from it.
+It is your responsability to override the methods suitable to your needs.
+You can also completely change the tag to a completely new implementation : it is up to you !
+
+<code type="java">
+public class SecuredFormTag extends FormTag {
+	/**
+     * Render the end of this form.
+     * @throws JspException if a JSP exception has occurred
+     */
+    public int doEndTag() throws JspException {
+    	
+        // Adding security to the form element
+		... your code here ...
+		
+        return super.doEndPage();
+    }
+}
+</code>
+
+<h2>Declaring the tag class in the TLD</h2>
+The TLD (for Tag Library Descriptor) is a file usualy found in the folder "/src/main/webapp/WEB-INF/tdl" of your web application.
+You need to modify the <code type="xml"><tag-class></code> element of the tag you want to override, by referencing your tag implementation.
+Take care not to modify the tag's name otherwise you end up replacing the tag instead of overriding it !
+
+Example of a modified struts-html.tld :
+<code type="xml">
+	<!DOCTYPE taglib
+        PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+        "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+	<taglib>
+		<tag>
+			<!-- This tag implementation is overriden to provide added security -->
+			<name>form</name>
+			<tag-class>com.tutotechno.tag.SecuredFormTag</tag-class>        
+			<body-content>JSP</body-content>
+			...	
+		</tag>
+	...	
+	<taglib>
+</code>
+
+<h2>Using your custom tag</h2>
+First, you need to tell JSP where to look for your custom tag definition by adding the taglib declaration at the beginning of your JSP file:
+<code type="xml">
+	<%@ taglib uri="/WEB-INF/tld/struts-html.tld" prefix="html" %>
+</code>
+
+You then use your tag the classic way:
+<code type="xml">
+	<html:form ...attributes... >
+	... form content ...
+	</html:form>
+</code>
+
+<h2>Restarting the server</h2>
+Usualy a redeployment of a web application does not reload the compiled versions of the JSPs in the server's cache.
+Seeing your changes might necessitate a server restart.
+Know that some servers have configurations available to allow the reload of the JSPs on a redeployment, this is beyond this tutorial however...
+
+</tuto>

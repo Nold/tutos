@@ -1,0 +1,67 @@
+<tuto>
+<h1>Comment surcharger un tag JSP ?</h1>
+
+Pour surcharger les fonctionnalités d'un tag JSP standard il faut réaliser deux étapes : implémenter le nouveau tag en java et le déclarer dans le fichier TLD.
+
+<h2>Implémenter la classe de tag en java</h2>
+Si le tag originel contient déjà la plupart des fonctionnalités souhaitées, il peut être plus simple d'en hériter plutôt que de tout recoder.
+Cela reste de votre responsabilité de modifier le tag correctement et de ne surcharger que les méthodes qui vous conviennent.
+
+Exemple de surcharge de la méthode "doEndTag" dans le cadre d'une problématique de sécurité :
+<code type="java">
+public class SecuredFormTag extends FormTag {
+	/**
+     * Cette méthode doit écrire la balise fermante de l'élément "form".
+     * @throws JspException si une exception JSP est lancée
+     */
+    public int doEndTag() throws JspException {
+    	
+        // Ajout de la sécurité à l'élément "form"
+		... ici le code de sécurité ...
+		
+        return super.doEndPage();
+    }
+}
+</code>
+
+<h2>Declaration de la nouvelle classe de tag dans le TLD</h2>
+Le TLD (pour Tag Library Descriptor) est un fichier généralement situé dans le répertoire "/src/main/webapp/WEB-INF/tdl" de votre application web.
+Vous devez modifier l'élément <code type="xml"><tag-class></code> du tag, en y référençant votre implémentation.
+Attention de ne pas modifier le nom du tag sinon quoi la surcharge ne sera réalisée !
+
+Exemple d'un fichier struts-html.tld modifié avec une surcharge de l'élément "form" :
+<code type="xml">
+	<!DOCTYPE taglib
+        PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+        "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+	<taglib>
+		<tag>
+			<!-- Nouvelle implémentation du tag "form" pour améliorer la sécurité -->
+			<name>form</name>
+			<tag-class>com.tutotechno.tag.SecuredFormTag</tag-class>        
+			<body-content>JSP</body-content>
+			...	
+		</tag>
+	...	
+	<taglib>
+</code>
+
+<h2>Mise en place du tag dans la page web</h2>
+Tout d'abord on place la déclaration du taglib au début de votre fichier JSP :
+<code type="xml">
+	<%@ taglib uri="/WEB-INF/tld/struts-html.tld" prefix="html" %>
+</code>
+
+Ensuite on utilise le tag normalement :
+<code type="xml">
+	<html:form ...attributs du form... >
+	... contenu du form ...
+	</html:form>
+</code>
+
+<h2>Redémarrage du serveur</h2>
+En général le redéploiment d'une application web ne déclenche pas la compilation des JSPs depuis le cache du serveur.
+Pour voir vos modifications, il est donc probable qu'il vous faille redémarrer le serveur.
+Certains serveurs apportent toutefois des possibilités de configuration du rechargement des JSPs, il vous faudra parcourir la documentation de votre serveur sur ce point.
+
+</tuto>

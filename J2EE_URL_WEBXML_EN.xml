@@ -1,0 +1,42 @@
+<tuto>
+
+<h1>How to define a resource url into web.xml for Websphere ?</h1>
+For your code to perform a JNDI lookup on some JNDI name (for example : java:comp/env/exampleUrl), you must properly define the URL resource. 
+The web.xml is the standard JavaEE file where you must declare the URLs needed for your local JNDI namespace (java:comp/env).
+The web.xml file is to be located inside the WEB-INF folder of your WAR project. 
+If you use Servlet specification 2.5 or more, then deployment descriptors are optional meaning that the web.xml file is not mandatory any more.
+
+The file ibm-web-bnd.xml is specific to WebSphere and must be located in the same directory as web.xml. 
+It holds the binding of URLs definitions (and other declared artifacts). 
+You can find IBM's documentation about this file <link src="">here</link>.
+Inside the ibm-web-bnd.xml file, the references "id" attribute must match the "id" attribute of the "resource-ref" element of the web.xml file.
+That's the way WebSphere links ibm-web-bnd.xml definitions to web.xml ones. 
+
+To summary : 
+
+1) Defining the local JNDI name
+In web.xml, you define the local JNDI name. 
+That would be the name by which your Java code is referring to the URL. 
+For example, exampleUrl. 
+
+We must add the following to web.xml :
+<code type="xml">
+    <resource-env-ref>
+        <resource-env-ref-name>exampleUrl</resource-env-ref-name>
+        <resource-env-ref-type>java.net.URL</resource-env-ref-type>
+    </resource-env-ref>	
+</code>
+
+2) Adding a URL definition in Websphere
+We must define the JNDI name in WebSphere's JNDI tree.
+Any value can be used here, convention being that you use the prefix "url/". For example: url/exampleUrl.
+
+3) Binding name
+We must bind the URL looked-up by your application (here : exampleUrl) to the binding name (here : url/exampleUrl).
+The binding name is the JNDI name by which the URL is known by WebSphere. 
+This is done in the file ibm-web-bnd.xml like this :
+<code type="xml">
+    <resource-env-ref name="exampleUrl" binding-name="url/exampleUrl"/>
+</code>
+
+<tuto>

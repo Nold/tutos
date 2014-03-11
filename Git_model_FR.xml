@@ -1,0 +1,51 @@
+<tuto>
+<h1>Le modèle de Git</h1>
+
+<h2>Les objets de Git</h2>
+Un dépôt Git contient quatre types d'objets différents.
+Un objet Git est soit un blob (un fichier), un arbre (un répertoire), un commit, ou un tag.
+Chaque objet est unique et identié par un nombre hexadécimal à 40 chiffres, qui est le hachage SHA-1 de son contenu.
+Les identifiants peuvent toutefois être rendus lisibles par l'homme par troncature de l'identifiant, ou
+par référencement avec des noms classiques.
+Les objets Git utilisent les identifiants pour faire référence à d'autres objets.
+
+Les blobs et les arbres représentent les fichiers et les répertoires.
+Les tags sont des références nommées à un autre objet, avec quelques métadonnées supplémentaires.
+En d'autres termes un tag est un pointeur.
+Un objet commit contient : 
+- l'identifiant d'un arbre 
+- zéro, un ou plusieurs parents, qui sont les identifiants de commits précis
+- un auteur (nom, email, date)
+- un "commiteur" (nom, email, date)
+- un message de log
+
+<h2>Le repository</h2>
+Un repository Git est un dépôt, une collection de branches et de tags.
+Une branche est un pointeur mobile vers un objet, généralement un commit.
+La HEAD est un pointeur vers une branche ou un tag.
+Le repository sera donc composé d'une liste de pointeurs dans ce style :
+- HEAD -> refs/heads/master
+- refs/heads/master -> commit fec6ed ...
+- refs/heads/ftrace -> commit ce5c1e ...
+- refs/tags/v2.6.8 -> commit e8ce2f ...
+- refs/tags/v2.6.27 -> commit 4b5127 ...
+
+Le repository stocke automatiquement le graphe de commit (le DAG pour directed acyclic graph) : les objets pointés par les branches et les tags.
+
+<h2>Les branches<h2>
+Git a été conçu pour mettre l'accent sur la facilité de gestion des branches et des merges.
+Chaque repo peut ainsi contenir n'importe quel nombre de branches, c'est une fonctionnalité que ne partagent pas tous les VCS !
+Les branches sont seulement des références, des pointeurs sur le graphe de commits (le DAG) : elles ne consomment pas de mémoire.
+De plus, les pointeurs n'étant pas versionnés, vous n'avez donc aucune crainte à avoir de faire des branches jetables pour expérimenter avec Git.
+Git est branch-friendly !
+
+<h2>L'historique Git : le log<h2>
+Git retrace l'historique de l'ensemble de votre projet, pas l'historique de fichiers individuels.
+Par contre, contrairement à d'autres VCS, Git ne suit pas les renommages sous forme de métadonnées dans le référentiel.
+Au lieu de cela, les renommages sont détectés automatiquement en fonction du contenu quand cette information est nécessaire.
+Parfois cette fonctionnalité demande de prendre des précautions supplémentaires toutefois.
+L'ID d'un commit est une clé cryptographique qui certifie l'intégrité de l'ensemble de l'historique du repo jusqu'à ce commit.
+C'est une fonctionnalité souvent absente de la plupart des autres VCS en particulier ceux qui ne sont pas prévus pour être distribués.
+De plus Git dispose d'outils puissants pour réécrire l'historique, le plus souvent dans le but de le simplifier.
+Cela nécessite toutefois de communiquer avec ceux qui ont fait un pull du repo impacté par cette modification d'historique.
+</tuto>

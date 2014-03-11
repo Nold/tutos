@@ -1,0 +1,40 @@
+<tuto>
+<h1>Comment faire un checkout sur un tag avec Git ?<h1>
+
+1) Récupérer le repository
+Faites un git clone si vous n'avez pas encore récupéré le repository.
+
+2) Visualiser les tags disponibles
+Vous pouvez lister les tags avec :
+<shell>git tag -l</shell> 
+
+Si vous ne voyez pas le tag que vous recherchez, vous n'êtes peut-être pas à jour.
+Il vous faut alors récupérer les dernières modifications du respository distant avec un git pull.
+Evidemment si vous venez de faire un git clone, ce n'est pas nécessaire car vous êtes déjà à jour.
+
+3) Le checkout
+Faites le checkout du tag avec son nom : 
+<shell>git checkout tags/nom_du_tag</shell>
+Vous êtes à présent positionné sur le tag.
+Toutefois vous êtes en "detached head mode", c'est à dire non positionné sur une branche.
+Même s'il est techniquement possible de commiter dans ce mode, cela reste déconseillé car cela donnerait un commit non référencé par aucune branche...
+
+4) Qu'est-ce qu'un tag dans Git exactement ?
+Dans git, un tag est un pointeur qui se réfère à un point dans l'historique du projet.
+Un pointeur peut être un tag, un commit, une date ou d'autres choses encore.
+
+Une branche est similaire à un tag, mais c'est un pointeur mobile.
+Lorsque vous êtes "sur" une branche et faites un commit, le pointeur qu'est réellement la branche est alors déplacé vers le nouveau commit qui devient la position actuelle de la branche.
+Votre HEAD est un pointeur vers une branche qui est considérée comme "en cours".
+Normalement, lorsque vous clonez un repo, la HEAD pointe par défaut sur le master qui est une branche qui à son tour pointe vers un commit. 
+Lorsque vous alors faites <shell>git checkout ma_branche</shell>, vous faites pointer la HEAD vers "ma_branche" qui pointe vers un commit différent de celui pointé par la branche "master".
+
+Quand vous faites <shell>git checkout tags/mon_tag1.0.0</shell>, vous pointez alors sur un commit qui n'est pas pointé par une branche.
+La HEAD est maintenant "détachée" et ne pointe pas vers une branche : c'est le "detached head mode".
+Le message affiché par Git vous informe qu'à ce niveau, vos commits risquent d'être perdus.
+
+Pour modifier votre tag le mieux reste encore de créer une nouvelle branche à partir du tag et de commiter dessus.
+Pour cela il suffit de faire : 
+<shell>git checkout -b 1.0.0-patch mon_tag1.0.0</shell>
+
+</tuto>

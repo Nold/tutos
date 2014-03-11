@@ -1,0 +1,109 @@
+<tuto>
+
+<h1>Le flux de navigation d'une requète Struts</h1>
+
+Voici les étapes suivies par Struts lors de la réception d'une requète HTTP.
+
+1) Lorsqu'une requète est faite sur le serveur avec une URI particulière, par exemple "/monAccueil.do", le serveur va d'abord contrôler le fichier "web.xml".
+
+2) Il vérifie la correspondance de l'URI "/monAccueil.do" dans le mapping du fichier "web.xml".
+Cela va lui permettre de trouver l'ActionServlet et de la charger.
+
+Exemple de déclaration "web.xml" :
+<code type="xml">
+	<!-- Déclaration de la servlet et mapping -->
+	<servlet>
+		<servlet-name>action</servlet-name>
+		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>/WEB-INF/struts-config.xml</param-value>
+		</init-param>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>2</param-value>
+		</init-param>
+		<init-param>
+			<param-name>detail</param-name>
+			<param-value>2</param-value>
+		</init-param>
+		<init-param>
+			<param-name>validate</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	     <init-param>
+    	    <param-name>convertNull</param-name>
+	        <param-value>true</param-value>
+    	 </init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	...
+	<servlet-mapping>
+        <servlet-name>action</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+</code>
+
+3) Le chargement ActionServlet va appeller la méthode <code>init()</code> (comme pour toutes les servlets).
+Remarque: la classe ActionServlet étend uniquement la classe HttpServlet.
+
+4) La méthode <code>init()</code>, va lire les paramètres "init-param" et charger le fichier "struts-config.xml".
+
+Exemple de paramètres "init-param" : 
+<code type="xml">
+	...
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>/WEB-INF/struts-config.xml</param-value>
+		</init-param>
+	...
+</code>
+
+5) Puis l'ActionServlet appelle la méthode <code>proceed()</code> de la classe RequestProcessor.
+
+6) La méthode <code>proceed()</code>, va vérifier le mapping approprié pour la requète, créer l'objet ActionMapping et mapper l'URI à l'action déclarée dans le fichier "struts-config.xml".
+Exemple d'"action-mapping" dans le fichier "struts-config.xml" :
+<code type="xml">
+	...
+	<form-beans type="org.apache.struts.action.ActionFormBean">
+		<form-bean name="forwardForm" type="com.tutotechno.struts.form.ForwardForm" />
+	</form-beans>
+	...
+	<action-mappings>
+		<action path="/accueil"
+		        validate="false"
+		        type="com.tutotechno.struts.action.ForwardAction"
+				input="/erreur.jsp"
+		        name="forwardForm">
+			<forward name="succes" path="/accueil.jsp"/>
+		</action>
+	</action-mappings>
+	...
+</code>
+
+7) Puis elle crée un objet "ActionForm" associé à l'action mappée. 
+Dans l'exemple ci-dessus on crée un bean de type "ForwardForm" qui étend la classe Struts "org.apache.struts.action.ActionForm".
+
+8) Appel des méthodes setters et <code>reset()</code> de l'ActionForm.
+
+9) Si la balise "action" dans "struts-config.xml" contient <code>validate="true"</code>, alors la méthode <code>validate()</code> de l'ActionForm est appelée.
+
+10) S'il y a des erreurs de validation, alors la requète est renvoyée vers le composant défini par l'attribut <code>input="/erreur.jsp"</code>.
+
+11) S'il n'y a pas d'erreurs de validation, alors une classe struts "Action" est créée pour ce mapping puis la méthode <code>execute()</code> de cette Action Struts est appelée.
+
+12) La méthode <code>execute()</code> effectue la logique métier telle que vous l'avez définie et revient avec une clé d'ActionForward.
+
+13) Cette clé, "succes" par exemple, est recherchée dans le mapping qui est spécifié par le tag "forward".
+<code type="xml">
+	...	
+	<forward name="succes" path="/accueil.jsp"/>
+	...
+</code>
+
+14) Le composant d'affichage approprié, ici "/accueil.jsp", est alors appelé et sa réponse est renvoyée au navigateur.
+
+Evidemment si vous souhaitez savoir ce qui va être affiché par votre application, ce flux de navigation "simple" ne suffit pas !
+Il faut encore tenir compte des <link href="">tiles de Struts</link> !
+
+</tuto>
