@@ -1,0 +1,214 @@
+<tuto>
+<h1>Mettre en place une solution CSRF avec CsrfGuard</h1>
+
+<h2>Introduction au risque de CSRF</h2>
+Les attaques de type CSRF (Cross Site Request Forgery) représentent un problème de sécurité reconnu.
+Sans rentrer dans les détails on peut dire qu'il s'agit d'une attaque de type cross site scripting
+ (couramment abrégé XSS) où l'attaquant exploite l'existence d'un cookie pour stocker 
+l'id de session de la session http.
+Durant la période où ce cookie est valide un site malicieux peut donc créer des requètes
+ qui seront autentifiées par le cookie valide.
+
+<h2>Une défense déconseillée : l'url rewriting</h2>
+Il est donc possible d'éviter le problème de CSRF en cessant d'utiliser un cookie pour stocker le sessionId, 
+toutefois ceci pose d'autres problèmes.
+La technique couramment utilisée, lorsqu'on veut se passer des cookies, est de faire de la réécriture d'url (url rewriting). 
+Cela signifie qu'on configure le serveur pour rajouter un paramètres aux urls produites dans les pages HTML.
+Cela donne une url de type "/loginAccess.jsp;JSESSIONID=95546546464654".
+Le session ID n'étant pas stocké dans les cookies, un attaquant ne peut pas l'utiliser pour se connecter à une session active.
+Les experts en sécurité, toutefois, considèrent cette technique comme dangereuse et ne préconisent pas son utilisation.
+En effet, une conséquence de la réécriture d'url est de rendre trop visible l'id de session à d'éventuels attaquants. 
+Quelqu'un qui ferait une copie d'écran de son navigateur pourrait ainsi involontairement fournir l'id d'une session active
+ à des personnes mal intentionnées, car l'id de session fait alors partie de l'url complète utilisée
+ par l'application et apparaît donc clairement dans la barre d'adresse des navigateurs courants.
+
+<h2>Une solution plébisitée : le pattern "synchronizer token"</h2>
+La technique couramment mise en avant pour protéger les applications des attaques XSS se nomme "synchronizer token pattern". 
+Elle consiste à placer dans la page un second identifiant, associé à la requête et non pas à la session.
+Le logiciel de sécurité Fortify conseille ainsi de rajouter un attribut caché dans chaque formulaire :
+<code type="html">
+	<input type="hidden" name="req_id" value="87ae34d92ba7a1">
+</code>
+Cette problématique ne touche en effet que les pages qui peuvent modifier l'état du serveur.
+La valeur du token doit être un identifiant unique et de préférence généré 
+à l'aide d'un générateur de nombre aléatoire sécurisé (voir <code type="java">java.security.SecureRandom</code>).
+L'application doit alors stocker (en session par exemple) la valeur du token et la comparer 
+à celle des requètes protégées.
+En cas d'absence ou de différence du token, l'application rejettera la requète et se protègera ainsi des attaques CSRF.
+
+<h2>Une librairie adaptée : CsrfGuard</h2>
+Comme son nom l'indique CsrfGuard est une librairie spécifiquement destinée à permettre 
+à une application Java web de se protéger contre les attaques CSRF.
+Son point fort est de se charger d'insérer dynamiquement le token dans les emplacements nécessaires des pages web.
+Elle contient aussi un système de configuration qui permet de définir
+ avec simplicité et finesse les paramètres de la protection souhaitée.
+La librairie est éditée par <link href="http://www.owasp.org">le projet OWASP</link> qui est une organisation reconnue 
+de lutte contre l'insécurité du web.
+La documentation (en anglais) de CsrfGuard est située <link href="https://www.owasp.org/index.php/Category:OWASP_CSRFGuard_Project">ici</link>.
+Les sources de CsrfGuard sont disponible <link href="https://github.com/aramrami/OWASP-CSRFGuard">sur GitHub</link>.
+Cliquez sur "Download Zip" pour récuperer simplement un fichier zip contenant la dernière version du master 
+ou clonez directement le projet à l'aide de l'url Git fournie.
+Vous noterez en étudiant les sources de CsrfGuard qu'elles contiennent une application de test qui peut vous guider sur l'utilisation de la librairie.
+
+<h2>Installation de CsrfGuard avec Maven</h2>
+Si votre projet Maven est configuré pour accéder aux repositories online alors rien de plus simple.
+Il suffit d'ajouter dans le pom de votre projet la dépendance suivante : 
+<code type="xml">
+	<dependency>
+		<groupId>org.owasp</groupId>
+		<artifactId>csrfguard</artifactId>
+		<version>3.1.0</version>
+	</dependency>
+</code>
+Dans le cas contraire il faudra télécharger vous-même la librairie et l'installer dans votre repo.
+NB : pensez à mettre à jour la version de CsrfGuard : en matière de sécurité, il est vital de rester à jour !     
+
+L'utilisation de CsrfGuard nécessite la déclaration des filtres et mapping suivants dans le fichier web.xml :
+<code type="xml">
+	<!-- Déclaration des paramètres -->
+	<context-param>
+		<param-name>Owasp.CsrfGuard.Config</param-name>
+		<param-value>WEB-INF/csrfguard.properties</param-value>
+	</context-param>
+	<context-param>
+		<param-name>Owasp.CsrfGuard.Config.Print</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<!-- Déclaration des listeners -->
+	<listener>
+		<listener-class>org.owasp.csrfguard.CsrfGuardServletContextListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.owasp.csrfguard.CsrfGuardHttpSessionListener</listener-class>
+	</listener>
+
+	<!-- Déclaration du filtre et mapping global avec "/*" -->
+	<filter>
+		<filter-name>CSRFGuard</filter-name>
+		<filter-class>org.owasp.csrfguard.CsrfGuardFilter</filter-class>
+	</filter>	
+	<filter-mapping>
+		<filter-name>CSRFGuard</filter-name> 
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- Déclaration de la servlet et mapping -->
+	<servlet>
+		<servlet-name>JavaScriptServlet</servlet-name>
+		<servlet-class>org.owasp.csrfguard.servlet.JavaScriptServlet</servlet-class>
+		<init-param>
+			<param-name>source-file</param-name>
+			<param-value>WEB-INF/csrfguard.js</param-value>
+		</init-param>
+		<init-param>
+			<param-name>inject-into-forms</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>inject-into-attributes</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>domain-strict</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>referer-pattern</param-name>
+			<param-value>.*localhost.*</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+	     <servlet-name>JavaScriptServlet</servlet-name>
+	     <url-pattern>/JavaScriptServlet</url-pattern>
+	</servlet-mapping>
+</code>
+
+Comme on peut le voir dans cette configuration, la suite de l'installation consiste à rajouter les fichiers
+ csrfguard.js et csrfguard.properties au répertoire WEB-INF de l'application.
+Ces fichiers sont disponibles dans les sources de CsrfGuard.
+
+La dernière étape de l'installation consiste à ajouter la ligne suivante aux pages HTML à protéger : 
+<code type="html">
+	<script src="/webapp/JavaScriptServlet"></script>
+</code>
+Ce script permet de rajouter dynamiquement un champ de type "hidden input" dans les formulaires 
+afin de transmettre le token au serveur lors de la soumission du formulaire.
+
+<h2>Configuration de CsrfGuard</h2>
+La configuration de CsrfGuard est principalement pilotée par le fichier csrfguard.properties.
+Voici le fichier de configuration csrfguard.properties (allégé de tous le texte commenté) :
+
+<code type="properties">
+org.owasp.csrfguard.Logger=org.owasp.csrfguard.log.JavaLogger
+# org.owasp.csrfguard.NewTokenLandingPage=/index.html
+org.owasp.csrfguard.ProtectedMethods=POST,PUT,DELETE
+org.owasp.csrfguard.TokenPerPage=false
+org.owasp.csrfguard.TokenPerPagePrecreate=false
+# org.owasp.csrfguard.Rotate=true
+org.owasp.csrfguard.Ajax=true
+#org.owasp.csrfguard.Protect=true
+#org.owasp.csrfguard.protected.MaPage=/mapage.jsp
+org.owasp.csrfguard.unprotected.Default=/
+org.owasp.csrfguard.unprotected.Accueil=/accueil.jsp
+
+org.owasp.csrfguard.action.Log=org.owasp.csrfguard.action.Log
+org.owasp.csrfguard.action.Log.Message=potential cross-site request forgery (CSRF) attack thwarted (user:%user%, ip:%remote_ip%, uri:%request_uri%, error:%exception_message%)
+#org.owasp.csrfguard.action.Invalidate=org.owasp.csrfguard.action.Invalidate
+org.owasp.csrfguard.action.Redirect=org.owasp.csrfguard.action.Redirect
+org.owasp.csrfguard.action.Redirect.Page=/error.html
+org.owasp.csrfguard.action.Rotate=org.owasp.csrfguard.action.Rotate
+
+org.owasp.csrfguard.TokenName=OWASP_CSRFTOKEN
+org.owasp.csrfguard.SessionKey=OWASP_CSRFTOKEN
+org.owasp.csrfguard.TokenLength=32
+org.owasp.csrfguard.PRNG=IBMSecureRandom
+org.owasp.csrfguard.PRNG.Provider=IBMJCE
+</code>
+
+Dans cette configuration précise on obtient un token valide non pas par requète mais pour l'ensemble de la session.
+Cela peut suffire dans certains cas, toutefois pour plus de sécurité vous pouvez passer le paramètre 
+"org.owasp.csrfguard.TokenPerPage" à la valeur "true" et obtenir un token différent à chaque requète.
+Ici on a utilisé l'algorithme de pseudo-random number generator (PRNG) fourni par IBM 
+pour leur serveur Websphere.
+Notez qu'il est utile de configurer l'action de redirection en cas de détection d'attaque avec les paramètres : 
+org.owasp.csrfguard.action.Redirect=org.owasp.csrfguard.action.Redirect
+org.owasp.csrfguard.action.Redirect.Page=/error.html
+Cela vous permettra d'afficher un message d'erreur pertinent sur une page dédiée.
+
+<h2>Premier lancement</h2>
+Une fois la librairie correctement installée et configurée et l'application redéployée, 
+la connection à votre page d'accueil peut provoquer une erreur.
+La raison en est simple : lors de la toute première connection la session du serveur n'est pas encore finalisée et 
+donc malheureusement pas encore utilisable par CsrfGuard.
+Il faut donc éviter de protéger la page d'accueil de votre application pour cela on va simplement l'exclure
+de la protection dans le fichier csfrguard.properties avec un paramètre de type : 
+org.owasp.csrfguard.unprotected.Accueil=/accueil.jsp
+
+<h2>Valider qu'une page est bien protégée avec CsrfGuard</h2>
+Pour vérifier que CsrfGuard a bien généré dynamiquement un token dans votre application web, rien de plus simple.
+Il suffit d'ouvrir la page protégée avec votre navigateur favori et de visualiser les sources de la page.
+Vous devriez y trouver le token nommé "OWASP_CSRFTOKEN" (ou selon ce que vous aurez configuré pour org.owasp.csrfguard.TokenName).
+La présence du token dans la page, cependant ne prouve pas que CsrfGuard bloque les requètes malicieuses.
+Pour ce faire nous allons forger nous-mêmes une requète incorrecte à l'aide de Firefox et de son éditeur de HTML natif.
+Firefox possède ainsi un mode "Inspector" qui va nous permettre de modifier la valeur du token et valider la protection.
+Il suffit de faire un click droit au niveau du formulaire à contrôler et de sélectionner "Inspect Element (Q)".
+La console de modification s'ouvrira, affichant directement le code HTML du formulaire et permettant d'agir sur les éléments ou leurs valeurs.
+Il faut retrouver le token dans le code HTML affiché, un simple click sur la valeur permet de la modifier.
+Par exemple : 
+<code type="html">
+	<input type="hidden" name="OWASP_CSRFTOKEN" value="SOXN-J334-PIGS-59HI-WE5K-6WBH-TGH2-HAUK"></input>
+</code>
+Nous changeons cette valeur pour : 
+<code type="html">
+	<input type="hidden" name="OWASP_CSRFTOKEN" value="CEST-UNE-ATTAQUE-CSRF-EN-REGLE"></input>
+</code>
+
+Ainsi la modification du token (attention le token peut aussi être présent dans l'url de l'attribut "action" de l'élément "form") provoquera une erreur visible dans les logs :
+
+<shell>
+00000015 CsrfGuard     W   potential cross-site request forgery (CSRF) attack thwarted (user:<anonymous>, ip:127.0.0.1, uri:/tutotechno/mapageprotegee, error:request token does not match session token)
+</shell>
+
+C'est la preuve que l'application est bien protégée !
+</tuto>

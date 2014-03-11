@@ -1,0 +1,74 @@
+<tuto>
+ <h1>How to create a VitualBox Host ?</h1>
+
+This tutorial will show you how to create a headless virtualbox host.
+
+ <h2>Prepare the VHost</h2>
+
+We install a standard server first. (see machine "server")
+The standard server installs opensshd, so from now on, the installation will go headless using putty.
+
+Change 'devadm' password: 
+<shell>passwd devadm</shell>
+
+To install virtualbox-ose :
+    <shell>sudo apt-get install --no-install-recommends virtualbox-ose virtualbox-ose-dkms</shell>
+Restart machine
+Create a user 'vboxuser' to run the VMs.
+    <shell>sudo useradd -m vboxuser</shell>
+    <shell>su - vboxuser</shell>
+
+ <h2>Import a first vm</h2>
+Copy a vm's xml file into the /home/vboxuser/.VirtualBox/Machines/<machinename> directory.
+Change the VM uuid at the beginning of the XML file.
+Remove the AttachedDevice balise at the end of the XML file.
+Register the XML file:
+<shell>vboxmanage registervm Machines/<machinename>/<machinename>.xml</shell>
+
+ <h2>Add disks</h2>
+Create disks for the vm in the HardDisks directory
+    <shell>vboxmanage createhd --filename <sddname>.vdi --size 10000</shell>
+    <shell>vboxmanage createhd --filename <hdname>.vdi --size 20000</shell>
+
+Attach disks
+ <shell>vboxmanage storageattach <machinename> --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium <hdname>.vdi</shell>
+ <shell>vboxmanage storageattach <machinename> --storagectl "SATA Controller" --port 2 --device 0 --type hdd --medium <sddname>.vdi</shell>
+
+Define Master and Slave Hard Drives :
+Issue : with SATA Standard the idea of master/slave hdd disapeared. In our case we have 2 hdd but virtualbox can't decide wich hdd is bootable. To solve this issue we need to use IDE emulation to specify which sata hdd is master.
+    <shell>vi ~vboxuser/.VirtualBox/Machines/<machinename>/<machinename>.xml</shell>
+
+Modify the entity StorageController to define SATA port 2 as Master :
+<code type="xml"><StorageController name="SATA Controller" type="AHCI" PortCount="3" useHostIOCache="false" Bootable="true" IDE0MasterEmulationPort="2" IDE0SlaveEmulationPort="0" IDE1MasterEmulationPort="1" IDE1SlaveEmulationPort="1"></code>
+
+ <h2>Mount DVD</h2>
+<shell>vboxmanage storageattach <machinename> --storagectl "IDE Controller" --port 1 --device 0 --type dvddrive --medium ~/mini-10.10-Modify4.iso</shell>
+
+ <h2>Run the vm</h2>
+<shell>vboxheadless -s <machinename> --vnc --vncport 5555</shell>
+
+Now, you can connect to the VNC server with a VNC client on port 5555:
+<shell>vinagre localhost:5555</shell>
+
+
+ <h2>Umount DVD</h2>
+<shell>vboxmanage storageattach <machinename> --storagectl "IDE Controller" --port 1 --device 0 --type dvddrive --medium none</shell>
+
+
+ <h2>To stop the vm</h2>
+<shell>vboxmanage controlvm <machinename> poweroff</shell>
+
+ <h2>Autostart</h2>
+In order to configure the autostart of the VM, don't forget to add your new vm in /etc/vboxtool/machines.conf:
+
+File syntax:
+VMname,VNCport
+
+ <h2>Bonus : Shared Folder</h2>
+Create a shared folder.
+    <shell>vboxmanage sharedfolder add <machinename> --name svn --hostpath /home/vboxuser/data-svn/</shell>
+
+To use the shared folders, inside the VMs you must install: 
+    <shell>sudo apt-get install --no-install-recommends virtualbox-ose-guest-utils virtualbox-ose-guest-dkms</shell>
+
+</tuto>

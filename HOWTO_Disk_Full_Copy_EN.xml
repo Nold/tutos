@@ -1,0 +1,17 @@
+<tuto>
+ <h1>How to do a disk full copy</h1>
+
+To make a fully copy of a disk (including MBR) :
+
+1) Put the target and the source disk on the same machine 
+
+2) Boot with a live Os
+
+3) Be Sure to know what is the source disk and what is the target disk
+   This command can help you :
+   <shell>sudo fdisk -l</shell>
+
+4) then you can copy 
+   <shell>sudo dd if=/dev/sdXXX of=/dev/sdXXX</shell>
+   by replacing "XXX" by the letter of your disk
+</tuto>

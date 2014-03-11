@@ -1,0 +1,61 @@
+<tuto>
+<h1>Vérifier ce que l'on va livrer avec Git</h1>
+
+Une livraison est toujours un moment délicat dans le cycle de vie d'un projet d'autant plus que les taches à réaliser peuvent être différentes en fonction des modifications que l'on livre par rapport à la version précédente.
+Ici nous sommes dans le cas de la livraison d'une série de modification sur un projet déjà livré auparavent : on incrémente simplement le numéro de version du livrable.
+Dans notre exemple ci-dessous nous passons de la version 1.0.1 à la version 1.0.2 et nous voulons savoir précisément quelles sont les différences entre ces deux versions.
+Pour cela nous allons utiliser Git afin qu'il nous donne la liste des commits inclus dans la nouvelle version.
+
+<h2>Lister les commits participants inclus dans une livraison</h2>
+Le livrable de la nouvelle version porte le numéro 1.0.2. 
+Cela signifie le plus souvent que votre repository Git comporte déjà un tag de la version précédente : "tag_1.0.1". 
+Ce point est indispensable pour la suite, si ce n'est pas le cas nous vous recommandons de mettre en place un tel mécanisme.
+La création d'une release avec Maven, par exemple, supporte nativement la création de tags de versions dans Git.
+
+La commande à lancer pour obtenir la liste des commits réalisés depuis le dernier tag est la suivante :
+<shell>
+git log 'git describe --abbrev=0 --tags'..master
+</shell>
+
+Si vous ne livrez pas à partir du master mais à partir d'une branche de patch par exemple alors il suffit d'adapter la ligne de commande :
+<shell>
+git log 'git describe --abbrev=0 --tags'..branche_de_patch
+</shell>
+
+Comment fonctionne cette commande ? Voici quelques explications : 
+
+<h2><code>git log</code></h2>
+Cette commande permet d'afficher la liste des commits présent sur la branche courante.
+Ici on l'utilise avec l'option "&lt;since&gt;..&lt;until&gt;" qui limite l'affichage aux commits présents entre les deux commits nommés. 
+Une liste plus complète des usages de l'option "&lt;since&gt;..&lt;until&gt;" est disponible dans la <link>documentation de Git</link>.
+Dans notre exemple le paramètre "since" est le tag de livraison précédent et le paramètre "until" est la HEAD de la branche voulue.
+
+<h2><code>git describe</code></h2>
+Cette commande va nous permettre d'automatiser la recherche du dernier tag livré, en fait elle permet d'afficher le tag le plus récent qui est accessible à partir d'un commit.
+L'argument "--abbrev=0" sert à éviter le format long et à ne montrer que le tag le plus proche.
+L'argument "--tags", lui, nous permet d'utiliser tous les tags (et pas seulement les tags annotés).
+
+<h2>Afficher le détail d'un commit livré</h2>
+A présent que vous avez la liste précise des commits qui seront inclus dans votre livraison, vous allez surement vouloir connaitre leur contenu.
+Pour cela il suffit d'afficher le détail du commit voulu avec <code>git diff<code> : 
+<shell>
+git diff identifiant_du_commit
+</shell>
+Git vous affiche les modifications du commit, fichier après fichier.
+
+<h2>Comment rechercher des modifications dans certains fichier bien précis</h2>
+Cette problématique, bien qu'assez habituelle lors des livraisons, n'est toutefois pas limitée à la création de releases.
+Dans l'exemple ci-dessous nous allons vérifier si des modifications se sont glissées dans les fichiers "pom.xml" d'un projet maven.
+Ces fichiers étant essentiels à la bonne configuration d'un projet, toutes leurs modifications doivent être duement validées avant livraison.
+
+La commande à lancer sous Linux est la suivante : 
+<shell>
+git diff 'git describe --abbrev=0 --tags' --name-only -- chemin | grep -v "pom.xml"
+</shell>
+La partie "git describe" est décrite ci-dessus : elle nous renvoie simplement le dernier tag livré.
+L'argument "--name-only" commande au "git diff" de ne retourner que les noms des fichiers ayant été modifiés.
+La partie "-- chemin" limite la recherche à un répertoire particulier.
+La partie "grep -v" nous permet de rechercher précisément ce que nous voulons parmi la liste des fichiers modifiés : ici les fichiers "pom.xml".
+Sous Windows, à moins d'avoir installé une version de grep, il faudra utiliser un équivalent tel que "findstr".
+
+</tuto>

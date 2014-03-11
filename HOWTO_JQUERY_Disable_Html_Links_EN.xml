@@ -1,0 +1,45 @@
+<tuto>
+ <h1>How to disable all links in a web page with JQuery ?</h1>
+
+This tutorial with show you how to disable all the links in a web page, with a very simple JQuery code.
+What's the point of disabling all links anyway ?
+Well there can be many reasons to do so, here we are going to consider that the links should not be clickable until the page is fully loaded.
+In recent browsers, the HTML elements are displayed while processed by the browser and some links can appear way before the rest of the page.
+Let's say our application wants to prevent link clicks during page loading.
+We are going to use JQuery for that purpose.
+
+1) Install JQuery
+If your application does not already use JQuery, you must download the JQuery file and declare it in your pages.
+JQuery can be downloaded <link src="">here</link>.
+Place it in your application, maybe in a "javascripts" directory, and then simply declare it in your page : 
+<code type="html">
+	<script src="javascripts/jquery1.9.1.js"></script>
+</code>
+
+2) Declare the JQuery script 
+Insert the following script in your html page :
+<code type="html">
+	<script type="javascript">
+		var isPageLoaded=false;
+	
+		$("a, input").click(function(){
+		    if(!isPageLoaded){
+			return false;
+		    }
+		});
+
+		addEvent(window,'load', function() {
+			// enabling the clicks when the page is fully loaded
+			isPageLoaded=true;
+		});
+	</script>
+</code>
+
+You noted that two types of links have been disabled : the simple "a" links and the "input" ones.
+If the page is no yet loaded, the function associated to thoses elements returns false, meaning a click on those won't actualy do anything.
+Then an event is declared to enable back the links when the page is fully loaded.
+Simple enough ?
+
+There is a drawback to this method however : if your page load stalls because of say, a server problem, then the links will never be activated...
+
+</tuto>

@@ -1,0 +1,47 @@
+<tuto>
+<h1>Comment déplacer des commits récents vers une autre branche avec git?</h1>
+
+Typiquement, le besoin est de passer les derniers commits que l'on a fait sur le master vers une nouvelle branche et de retrouver sur le master l'état d'avant les commits.
+Il est aussi possible de vouloir déplacer les commits vers une branche déjà existante.
+En fait ce sont les deux cas différents que nous traitons ici : 
+
+<h2>Déplacer des commits vers une nouvelle branche</h2>
+
+Cela peut être fait facilement en créant une branche puis en reculant. 
+Attention à ne pas perdre des modifications non-commitées.
+
+<shell>
+branche git nouvelle_branche
+git reset --hard HEAD~3  # Cette commande permet de revenir en arrière de 3 commits. Les modifications non-commitées seront perdues.
+git checkout nouvelle_branche
+<shell>
+
+Assurez-vous bien du nombre de commits à déplacer !
+Les commits seront "sortis" de la branche master, vous les retrouverez dans "nouvelle_branche" !
+La méthode ci-dessus fonctionne parce que vous créez une nouvelle branche lors de la première commande. 
+Pour déplacer les commits vers une branche existante, utilisez la méthode ci-dessous.
+
+<h2>Déplacer des commits vers une branche existante</h2>
+Si vous souhaitez utiliser une branche existante vous devez fusionner vos modifications dans la branche existante avant d'exécuter <code>git reset - hard HEAD~3</code>.
+Si vous n'avez pas fusionné vos modifications d'abord, elles seront perdues. 
+Donc, si vous travaillez avec une branche existante, il faut procéder ainsi :
+
+<shell>
+git checkout branche_existante
+git merge master
+git checkout master
+git reset --hard HEAD~3  # Cette commande permet de revenir en arrière de 3 commits. Les modifications non-commitées seront perdues.
+git checkout branche_existante
+<shell>
+
+<h2>Pourquoi ça marche ?</h2>
+Puisqu'une branche n'est qu'un pointeur, le master était initialement un pointeur sur le dernier commit. 
+Lorsque vous avez créé la branche "nouvelle_branche", il vous simplement créé un nouveau pointeur sur le dernier commit. 
+Ensuite, en utilisant "git reset" vous avez déplacé le pointeur de master en arrière de trois commits. 
+Mais puisque vous n'avez pas bougé le pointeur de "nouvelle_branche", il pointe toujours sur le commit d'origine, c'est à dire le dernier.
+
+Nota Bene : 
+Bien que cette méthode soit la meilleure option dans ce cas précis, ce n'est toutefois pas une méthode standard. 
+Pour une technique plus générale utilisez la commande <link>git cherry-pick<link>.
+
+</tuto>

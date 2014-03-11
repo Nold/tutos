@@ -1,0 +1,20 @@
+<tuto>
+ <h1>How to encrypts files or directories with EncFS ?</h1>
+
+This tutorial with show you how to encrypts files with EncFS, using an arbitrary directory as storage for the encrypted files.
+
+1) Install Encfs
+<shell>sudo apt-get install encfs</shell>
+    
+2) Create and encrypt dir
+<shell>encfs /home/$USER/.safe/ /home/$USER/open_safe/</shell>
+
+3) Use : "mount"
+<shell>encfs /home/$USER/.safe/ /home/$USER/open_safe/</shell>
+
+4) "unmount"
+<shell>fusermount -u /home/$USER/open_safe</shell>
+    
+5) Change passphrase
+<shell>encfsctl passwd /etc/ldapscripts/.secured</shell>
+</tuto>

@@ -1,0 +1,143 @@
+<tuto>
+<h1>Les commandes Linux de navigation</h1>
+
+Ce tutorial présente les commandes essentielles à la navigation dans un système Linux : pwd, cd, et ls.
+
+<h2>Notion de base : l'organisation du système de fichiers</h2>
+
+Comme pour la plupart des systèmes d'exploitation, le système de fichiers Linux est organisé en structure de répertoire hiérarchique. 
+Cela signifie une organisation en arborescence de répertoires (aussi appelés dossiers), qui peuvent contenir des fichiers et d'autres répertoires. 
+Le premier répertoire dans le système de fichier Linux est appelé le répertoire racine et est représenté par un "/". 
+Le répertoire racine contient des fichiers et sous-répertoires, qui contiennent plusieurs fichiers et sous-répertoires et ainsi de suite.
+
+Une particularité importante des systèmes d'exploitation hérités de Unix (tel que Linux) est qu'ils n'utilisent pas le concept de lettres de lecteur.
+Il n'y a qu'une seule arborescence et donc un seul répertoire racine. 
+Les différents périphériques de stockage peuvent correspondre à différentes branches de l'arbre, mais il n'y a toujours qu'un seul arbre.
+
+<h2><code>pwd</code></h2>
+
+La commande <code>pwd</code> (print working directory) permet de trouver le nom du répertoire de travail.
+À tout moment de votre navigation dans le système de fichier, vous vous trouvez dans un seul répertoire. 
+Ce répertoire est par convention le répertoire de travail.
+Depuis ce répertoire vous pouvez voir les fichiers présents, le chemin du répertoire parent et les chemins des sous-répertoires.
+
+<shell>
+programmer_alpha@tutotechno.com:~$ pwd
+/home/programmer_alpha
+</shell>
+
+Lorsque vous vous connectez pour la première fois sur un système Linux, le répertoire de travail est placé sur votre répertoire personnel : /home/votre_login. 
+C'est là que vous êtes sensés mettre vos fichiers. 
+Pour lister les fichiers dans le répertoire de travail, utilisez la commande <code>ls</code>.
+
+<shell>
+programmer_alpha@tutotechno.com:~$ ls
+.k5login     .sh_history     mon_fichier.txt 
+</shell>
+
+<h2><code>cd</code></h2>
+
+La commande <code>cd</code> (change directory) permet de changer de répertoire de travail.
+Il suffit d'entrer <code>cd</code> suivi du chemin du répertoire de travail souhaité. 
+Il est important de comprendre qu'il existe deux types de chemin d'accès : les chemins absolus et les chemins relatifs. 
+
+Un chemin absolu commence par le répertoire racine et suit l'arbre branche par branche jusqu'au chemin du répertoire ou du fichier final. 
+Par exemple, la plupart des programmes de votre système sont installés dans le répertoire indiqué par le chemin "/usr/bin". 
+Cela signifie que dans le répertoire racine (représenté par le premier "/"), il y a un répertoire "usr" qui contient un sous-répertoire "bin".
+
+Faisons un essai :
+<shell>
+programmer_alpha@tutotechno.com:~$ cd /usr/bin
+programmer_alpha@tutotechno.com:/usr/bin$ pwd
+programmer_alpha@tutotechno.com:/usr/bin$ ls
+[                             funzip                       mformat                    rmic
+2to3                          fzputtygen                   mgrtopbm                   rmvmqinf
+2to3-2.7                      fzsftp                       migmbbrk                   routef
+2to3-3.2                      g++                          mimeopen                   routel
+</shell>
+et bien d'autres encore...
+
+Ici, nous remarquons que le répertoire de travail est à présent "/usr/bin" et qu'il est plein de fichiers. 
+De plus l'invite de commande a changé et affiche le répertoire de travail.
+
+Les chemins relatifs eux, ne commencent pas à partir de la racine, mais directement à partir du répertoire de travail : ils ne commencent donc pas par "/".
+Les chemins relatifs peuvent utiliser les notations  "." (point) et ".." (point point) pour représenter des positions relatives dans l'arborescence du système de fichier.
+La notation "." désigne le répertoire de travail lui-même et la notation ".." désigne le répertoire parent du répertoire de travail. 
+Un exemple :
+
+<shell>
+programmer_alpha@tutotechno.com:~$ cd /usr/bin
+programmer_alpha@tutotechno.com:/usr/bin$ pwd
+/usr/bin
+programmer_alpha@tutotechno.com:/usr/bin$ cd ..
+programmer_alpha@tutotechno.com:/usr$ pwd
+/usr
+</shell>
+
+De même, nous pouvons retourner dans "/usr/bin" de manière relative :
+<shell>
+programmer_alpha@tutotechno.com:/usr$ cd ./bin
+programmer_alpha@tutotechno.com:/usr/bin$ pwd
+/usr/bin
+</shell>
+
+Notez que le "./" est optionnel car implicite. Taper <code>cd bin</code> ferait la même chose. 
+Par défaut, si vous ne spécifiez pas un chemin d'accès à quelque chose, le répertoire de travail sera assumé. 
+
+<h2>Quelques raccourcis utiles :</h2>
+	<li><code>cd </code> : suivi de rien, <code>cd</code> changera le répertoire de travail pour votre répertoire personnel.</li>
+	<li><code>cd ~ nom_utilisateur</code> : va dans le répertoire personnel de l'utilisateur spécifié.</li>
+	<li><code>cd -</code> : retourne au répertoire de travail précédent.</li>
+
+<h2>Quelques points à retenir :</h2>
+	<li>Les fichiers dont le nom commence par un point "." sont des fichiers cachés. 
+Cela signifie seulement qu'ils ne seront pas listés par la commande <code>ls</code>, sauf si vous utilisez l'option "-a" : <code>ls -a</code>. 
+Vous pourrez trouver certains de ces fichiers cachés au sein même de votre répertoire personnel : ils servent à la configuration de votre compte.</li>
+	<li>Les noms de fichier sous Linux, comme Unix, sont sensibles à la casse. Les noms de fichiers "Fichier1" et "fichier1" correspondent donc à des fichiers différents.</li>
+	<li>Linux n'a pas de concept d'une "extension" de fichier. Vous pouvez nommer les fichiers comme vous le souhaitez. 
+	Cependant, alors que Linux lui-même ne se soucie pas des extensions de fichiers, de nombreux programmes tiers le font.</li>
+	<li>Bien que Linux supporte les noms de fichiers longs qui peuvent contenir des espaces et des caractères de ponctuation, il est conseillé d'éviter les espaces et de limiter les caractères de ponctuation au point, au tiret, et au souligné.</li>
+	
+<h2><code>ls</code></h2>
+
+La commande <code>ls</code> (list) permet de lister le contenu d'un répertoire.
+C'est probablement la commande la plus couramment utilisée de Linux . 
+Elle peut être utilisée d'une multitude de façons différentes. 
+En voici quelques exemples :
+
+	<li><code>ls</code> : lister les fichiers dans le répertoire de travail<li>
+	<li><code>ls /bin</code> : lister les fichiers dans le répertoire "/bin"<li>
+	<li><code>ls -l</code> : lister les fichiers dans le répertoire de travail en format long<li>
+	<li><code>ls /etc /bin</code> : lister les fichiers dans les répertoires "/etc" et "/bin"<li>
+	<li><code>ls -a ..</code> : lister tous les fichiers (y compris les fichiers cachés) dans le répertoire parent<li>
+	<li><code>ls -rt</code> : lister les fichiers du répertoire parent en les ordonnant du plus ancien au plus récent<li>
+
+Ici nous voyons que <code>ls</code> peut avoir une ou plusieurs options, comme -a et -l, et peut fonctionner sur un ou plusieurs répertoires.
+
+<h2>Précisions sur l'option "-l"</h2>
+
+Si vous utilisez l'option "-l" avec la commande <code>ls</code> , vous obtiendrez une mine d'informations sur les fichiers listés.
+Voici un exemple :
+
+<shell>
+programmer_alpha@tutotechno.com:/usr$ls -l mes_contacts.txt
+-rw-r--r--    1 programmer_alpha     users_lambda       171541 Nov 28 17:21 mes_contacts.txt
+</shell>
+
+La commande nous retourne dans l'ordre :
+Autorisations du fichier
+    Une représentation des autorisations d'accès du fichier. Le premier caractère est le type de fichier : "-" indique un fichier normal, "d" indique un répertoire. Les caractères suivants représentent les droits de lecture, d'écriture et d'exécution sur le fichier tels que explicités dans le tutorial <TODO/>.
+Nombre de liens
+	Nombre d'emplacements qui font référence à ce fichier.
+Propriétaire
+    Le nom de l'utilisateur qui possède le fichier.
+Groupe
+    Le nom du groupe qui dispose des autorisations sur le fichier (en plus du propriétaire).
+Taille
+    La taille du fichier en octets.
+Heure de modification
+    La dernière fois que le fichier a été modifié. 
+Nom du fichier
+    Le nom du fichier ou du répertoire.
+</tuto>
+	

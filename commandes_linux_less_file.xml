@@ -1,0 +1,70 @@
+<tuto>
+<h1>Les commandes less et file</h1>
+
+Les commandes <code>less</code> et <code>file</code> sont utiles pour travailler avec des fichiers.
+
+<h2><code>less</code></h2>
+
+La commande <code>less</code> permet de visualiser des fichiers texte. 
+Ceci est très pratique car la plupart des fichiers utilisés pour contrôler et configurer Linux sont des "fichiers texte".
+
+<h2>Qu'est-ce qu'un "fichier texte" ?</h2>
+
+Il existe de nombreuses façons de représenter des informations sur un ordinateur. 
+Toutes les méthodes impliquent la définition d'une système de codage entre une information et des chiffres qui seront utilisés pour la représenter. 
+Les ordinateurs, après tout, ne comprennent que les chiffres et convertissent toutes les données en représentation numérique.
+Certains de ces systèmes de codage sont très complexes (tels que les fichiers multimédias compressés), tandis que d'autres sont plutôt simples.
+Un des système les plus simples est appelé format ASCII. 
+ASCII est l'abréviation de American Standard Code for Information Interchange. 
+Il s'agit d'un schéma simple de codage de fichier texte qui a été utilisé pour la première fois sur des machines télétype pour mapper les caractères du clavier.
+Le texte est simple mappage un-à-un de caractères vers numéros, ainsi cinquante caractères de texte traduit ne font que cinquante octets de données. 
+Le système Linux fait une utilisation intensive des fichiers texte et la commande <code>less</code> permet de les visualiser.
+
+Le <code>less</code> programme est appelé en tapant simplement :
+<code>less fichier_texte</code>
+Cela permet d'afficher le fichier .
+
+<h2>Contrôle de <code>less</code></h2>
+
+Une fois démarré, <code>less</code> affichera le fichier de texte une page à la fois.
+Vous pouvez utiliser les touches Page Up et Page Down pour parcourir le fichier texte.
+Pour sortir de <code>less</code>, tapez "q". 
+
+Une fois <code>less</code> lancé voici quelques commandes qui permettent de le manipuler :
+- Page Up ou b : Faites reculer d'une page
+- Page Bas ou l'espace : Sauter à la page
+- G : Allez à la fin du fichier texte
+- 1G : Aller au début du fichier texte
+- /characters : Rechercher en avant dans le fichier texte pour une occurrence de caractères spécifiés
+- n : Répéter la recherche précédente
+- h : Help : Afficher la liste complète des commandes de <code>less</code> et des options
+- q : Quitter
+
+
+<h2><code>file</code></h2>
+
+Puisque Linux n'impose pas l'usage des extensions de fichier, il peut être utile de déterminer quel est le type de données qu'un fichier contient avant d'essayer de l'afficher. 
+C'est l'utilité de la commande <code>file</code>. 
+La commande <code>file</code> permet d'examiner un fichier et de dire de quel type de fichier il s'agit.
+Pour utiliser le programme <code>file</code> , tapez simplement :
+
+<code>file nom_du_fichier</code>
+
+Le programme <code>file</code> peut reconnaître la plupart des types de fichiers, tels que :
+- Texte ASCII : Le nom dit tout
+- Bourne-Again texte de script shell : Un script bash
+- ELF fichiers 32 bits LSB noyau : Un fichier core dump (créé par un programme lorsqu'il se bloque)
+- ELF 32 - bit LSB executable : Un programme binaire exécutable
+- 32 - bit LSB ELF objet partagé : Une bibliothèque partagée
+- Archive tar GNU : Un fichier d'archive. Une façon courante de stocker des groupes de fichiers (utilisez tar tvf pour voir la liste).
+- gzip données : Une archive compressée avec gzip
+- Document HTML texte : Une page web
+- JPEG données d'image : Une image compressée JPEG
+- PostScript texte du document : Un fichier PostScript
+- RPM : Une archive de Red Hat Package Manager
+- Données d'archive Zip : Une archive compressée avec zip
+
+Tous les formats de fichier indiquant un type "texte" peuvent être visionnés avec la commande <code>less</code>.
+
+</tuto>
+	

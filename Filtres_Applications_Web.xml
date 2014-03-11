@@ -1,0 +1,96 @@
+<tuto>
+<h1>Les filtres dans une application Java web</h1>
+
+Dans une application Java web les filtres sont des objets utilisés afin fournir une fonctionnalité de filtrage des requêtes entrantes ou sortantes.
+Cela permet de coder dans une classe unique des actions qui auront lieu sur de nombreuses urls différentes.
+Une application Java web peut ainsi configurer des filtres à travers lesquels les requètes devront passer
+soit avant, soit après avoir accédé aux fonctionnalités applicatives.
+Les filtres ne sont généralement pas générateurs de contenu mais sont utilisés pour transformer 
+l'en-tête ou le contenu (ou les deux) d'une requète ou d'une réponse. 
+D'autre part les filtres diffèrent des composants Web en ce qu'il ne créent pas de réponse.
+
+Les principales fonctions que peut remplir un filtre sont les suivantes:
+        <li>Interroger la requète et agir en conséquence.</li>
+        <li>Bloquer la paire requète-réponse.</li>
+        <li>Modifier les en-têtes et les données des requètes ou réponses.</li>
+        <li>Interagir avec les ressources externes.</li>
+Un cas d'utilisation classique pour un filtre est de vérifier que l'utilisateur est bien connecté à la session HTTP 
+avant de laisser se poursuivre la requête.
+
+Un filtre est représenté par une classe qui implémente l'interface <code>javax.servlet.Filter</code>
+et qui dont la fonctionnalité principale est codée dans la méthode doFilter().
+Par exemple, si l'application reçoit une requète pour une ressource particulière (une servlet par exemple), 
+le filtre peut déterminer si l'utilisateur a les autorisations d'accès et rejetter la requète en renvoyant
+ l'utilisateur vers une page d'erreur dans le cas contraire.
+
+Un filtre est déclaré dans le fichier web.xml avec la syntaxe suivante : 
+<code type="xml">
+	...
+	<filter>
+		<filter-name>SecurityFilter</filter-name>
+		<filter-class>com.tutotechno.MonFiltre</filter-class>
+		<init-param>
+			<param-name>param-security-level</param-name>
+			<param-value>security-level-high</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>SecurityFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	...
+</code>
+Ici on note que des paramètres d'initialisation sont fournis au filtre, cela peut permettre de faire varier la 
+configuration, par exemple en fonction des environnements.
+Le filtre est mappé sur l'url-pattern "/*" : cela signifie que toutes les requêtes vont passer par le filtre "SecurityFilter".
+
+L'exemple du filtre "SecurityFilter" est fourni ci-dessous :
+
+<code type="java">
+package com.tutotechno;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Enumeration;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
+public class SecurityFilter implements Filter {
+
+	private String securityLevel;
+	
+	public void init (FilterConfig filterConfig) throws ServletException {
+       if (filterConfig != null) { 
+           securityLevel = filterConfig.getInitParameter("param-security-level");
+       }
+	}
+	
+	public void destroy() {
+	}
+
+	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+			throws IOException, ServletException {
+		throws IOException, ServletException {
+		
+		// On teste si l'utilisateur est autorisé
+		if (isSecurityOk(servletRequest)) {
+			// On passe la main aux filtres suivants
+			chain.doFilter(request, response);
+		} else {
+			// On redirige vers une page d'erreur
+			request.getRequestDispatcher("/WEB-INF/securityError.jsp").forward(request, response);
+		}
+	}
+	
+	private boolean isSecurityOk(ServletRequest servletRequest){
+		// TODO : mise en place de la procédure d'autentification...
+	}
+}
+</code>
+
+</tuto>

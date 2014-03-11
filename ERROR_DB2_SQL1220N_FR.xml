@@ -1,0 +1,17 @@
+<tuto>
+	<h1>Erreur DB2 SQL1220N</h1>
+
+Error message :
+SQL1220N  The database manager shared memory set cannot be allocated.
+
+Le systeme n'a pas assez de mémoire par rapport à la valeur configurée.
+
+Correction :
+Dans le fichier ./sqllib/db2dump/db2diag.log, on peut voir l'erreur :
+<code type="txt">
+     INSTANCE_MEMORY setting of YYYYYY cannot exceed physical memory limit of XXXXXX
+</code>
+
+Il suffit de diminuer la valeur avec :
+<shell>db2 update dbm cfg using instance_memory XXXXXX</shell>
+</tuto>

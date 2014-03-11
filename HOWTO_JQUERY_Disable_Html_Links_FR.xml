@@ -1,0 +1,45 @@
+<tuto>
+ <h1>Comment désactiver tous les liens d'une page web avec JQuery ?</h1>
+
+Ce tutoriel vous montre comment désactiver tous les liens d'une page Web, à l'aide d'un code JQuery très simple .
+Quel est l'intéret de désactiver tous les liens d'une page ?
+Eh bien, il peut y avoir plusieurs raisons de le faire , ici nous allons considérer que les liens ne devraient pas être cliquable jusqu'à ce que la page soit complètement chargée.
+Dans les navigateurs récents, les éléments HTML sont affichés dès qu'ils sont processés. Certains liens peuvent donc apparaître bien avant le reste de la page.
+Disons que notre application veut empêcher les clics sur les liens pendant le chargement des pages.
+Et pour cela, nous allons utiliser JQuery.
+
+1) Installer JQuery
+Si votre application n'utilise pas déjà JQuery, vous devez télécharger le fichier JQuery et le déclarer dans vos pages.
+JQuery peut être téléchargé <lien src="">ici</link>.
+Placez-le dans votre application, disons dans un répertoire "javascripts", et puis déclarez-le dans votre page :
+<code type="html">
+	<script src="javascripts/jquery1.9.1.js"></script>
+</code>
+
+2) Declarer le script JQuery
+Insérez le script suivant dans votre page html :
+<code type="html">
+	<script type="javascript">
+		var isPageLoaded=false;
+	
+		$("a, input").click(function(){
+		    if(!isPageLoaded){
+			return false;
+		    }
+		});
+
+		addEvent(window,'load', function() {
+			// enabling the clicks when the page is fully loaded
+			isPageLoaded=true;
+		});
+	</script>
+</code>
+
+Vous avez noté que deux types de liens ont été désactivés : les liens simples : "a" et les liens de type "input".
+Tant que la page n'est pas encore chargé, la fonction associée à ces éléments renvoie la valeur "false", ce qui signifie que les clics seront ignorés.
+Ensuite, un événement est enregistré pour réactiver les liens lorsque la page est complètement chargée.
+Simple, non ?
+
+Il y a toutefois un inconvénient à cette méthode : si le chargement de la page se bloque, suite à un problème serveur par exemple, vos liens ne seront jamais activés...
+
+</tuto>

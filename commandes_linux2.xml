@@ -1,0 +1,168 @@
+<tuto>
+<!-- http://linuxcommand.org/lc3_lts0060.php -->
+<h1>Introduction aux commandes <code>type</code>, <code>which</code>, <code>man</code> et <code>--help</code></h1>
+
+Précédemment, nous avons vu un certain nombre de commandes, leurs options et arguments. Dans ce tutorial, nous allons présenter les commandes suivantes:
+    <li>type  - Affiche des informations sur le type d'une commande</li>
+    <li>which - Localise une commande</li>
+    <li>help  - Affiche une page de référence pour les commande "builtin"</li>
+    <li>man   - Affiche le manuel d'une commande</li>
+
+<h2>Identifier les différents types de commandes</h2>
+
+Pour bien comprendre comment fonctionnent les commandes linux, il faut savoir qu'une commande peut être de 4 types différents:
+
+    <li><b>Un programme exécutable.<b> Comme tous les fichiers que nous avons vu dans /usr/bin. Dans cette catégorie on a les programmes compilés binaires tels que les programmes écrits en C et C++, ou des programmes écrits en langages de script tels que le shell, Perl, Python, Ruby, etc</li>
+    <li><b>Une commande interne au shell.<b> Autrement dit un builtin du shell. Bash fournit un certain nombre de commandes appelées "shell builtins". La commande <a href="#">cd</a> en est un exemple.</li>
+    <li><b>Une fonction shell.<b> Ce sont des scripts shell intégrés dans l'environnement. La configuration de l'environnement et l'écriture des fonctions shell seront traités ultérieurement.</li>
+    <li><b>Un alias.<b> Des commandes que l'on peut définir soi-même, construites à partir d'autres commandes. Ce point sera traité dans une prochaine leçon.</li>
+
+<h3><code>type</code></h3>
+
+Il est souvent utile de savoir quel est le type exact de commande que l'on utilise. 
+La commande <code>type</code> est une commande intégrée au shell qui affiche le type d'une autre commande: 
+	<code>type <i>commande_a_examiner</i></code>
+
+où «commande_a_examiner» est le nom de la commande dont vous voulez connaître le type. Voici quelques exemples:
+<shell>
+programmer_alpha@tutotechno.com:~$ type type
+type is a shell builtin
+
+programmer_alpha@tutotechno.com:~$ type ls
+ls is aliased to `ls --color=tty'
+
+programmer_alpha@tutotechno.com:~$ type cp
+cp is /bin/cp
+</shell>
+
+On voit que la commande ls est en fait un alias pour la commande ls avec l'option "- color = tty". Maintenant, nous savons pourquoi la sortie de ls est affichée en couleur!
+
+<h3><code>which</code></h3>
+
+Parfois, il y a plus d'une version d'un programme exécutable installées sur un système. Pour déterminer l'emplacement exact d'un exécutable donné, la commande <code>which</code> est utilisée:
+
+<shell>
+programmer_alpha@tutotechno.com:~$, which ls
+/bin/ls
+</shell>
+
+La commande <code>which</code> ne fonctionne que pour les programmes exécutables, et non pour les builtins ni alias qui ne sont que les substituts de programmes exécutables réels.
+
+<h2>Afficher la documentation d'une commande</h2>
+
+<code>help</code>
+
+bash a une fonction <code>help</code> disponible pour chacune des commandes internes shell. Pour l'utiliser, tapez <code>help</code> suivi du nom de la commande interne. En option, vous pouvez ajouter l'option "-m" pour modifier le format de la sortie. Par exemple:
+<shell>
+programmer_alpha@tutotechno.com:~$ help cd
+NAME
+    cd - Change the shell working directory.
+
+SYNOPSIS
+    cd [-L|[-P [-e]]] [dir]
+
+DESCRIPTION
+    Change the shell working directory.
+    
+    Change the current directory to DIR.  The default DIR is the value of the
+    HOME shell variable.
+    
+    The variable CDPATH defines the search path for the directory containing
+    DIR.  Alternative directory names in CDPATH are separated by a colon (:).
+    A null directory name is the same as the current directory.  If DIR begins
+    with a slash (/), then CDPATH is not used.
+    
+    If the directory is not found, and the shell option `cdable_vars' is set,
+    the word is assumed to be  a variable name.  If that variable has a value,
+    its value is used for DIR.
+    
+    Options:
+        -L	force symbolic links to be followed
+        -P	use the physical directory structure without following symbolic
+    	links
+        -e	if the -P option is supplied, and the current working directory
+    	cannot be determined successfully, exit with a non-zero status
+    
+    The default is to follow symbolic links, as if `-L' were specified.
+    
+    Exit Status:
+    Returns 0 if the directory is changed, and if $PWD is set successfully when
+    -P is used; non-zero otherwise.
+
+SEE ALSO
+    bash(1)
+
+IMPLEMENTATION
+    GNU bash, version 4.2.25(1)-release (x86_64-pc-linux-gnu)
+    Copyright (C) 2011 Free Software Foundation, Inc.
+    License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+</shell>
+
+Une précision sur la notation: Quand des crochets apparaissent dans la description de la syntaxe d'une commande, ils indiquent les éléments facultatifs. Une barre verticale indique les éléments qui s'excluent mutuellement. Dans le cas de la commande cd ci-dessus:
+
+	 cd [-L |-P] [dir]
+
+Cette notation indique que la commande cd peut être suivie optionnellement soit par un "-L" ou un "-P" et plus loin, éventuellement suivie par l'argument "dir".
+
+<code>--help</code>
+
+De nombreux programmes exécutables ont une option <code>--help</code> qui affiche une description de la syntaxe et des options de la commande. Par exemple:
+
+<shell>
+programmer_alpha@tutotechno.com:~$ mkdir --help
+
+Usage: mkdir [OPTION]... DIRECTORY...
+Create the DIRECTORY(ies), if they do not already exist.
+
+Mandatory arguments to long options are mandatory for short options too.
+  -m, --mode=MODE   set file mode (as in chmod), not a=rwx - umask
+  -p, --parents     no error if existing, make parent directories as needed
+  -v, --verbose     print a message for each created directory
+  -Z, --context=CTX  set the SELinux security context of each created
+                      directory to CTX
+      --help     display this help and exit
+      --version  output version information and exit
+
+General help using GNU software: &lt;http://www.gnu.org/gethelp/&gt;
+</shell>
+	
+Toutefois certains programmes ne prennent pas en charge l'option "--help".
+
+<code>man</code>
+
+La plupart des programmes exécutables destinés à une utilisation en ligne de commande fournissent une documentation formelle appelée manuel. Un programme appelé <code>man</code> permet de la visualiser:
+
+	 <code>man <i>commande_a_examiner</i></code>
+
+où "commande_a_examiner" est le nom de la commande dont on veut afficher le manuel. Les pages de manuel contiennent généralement un titre, un résumé de la syntaxe de la commande, une description de l'usage de la commande, la liste et description de chacune des options de la commande. Les pages de manuel, cependant, ne comportent généralement pas d'exemples, et sont conçus comme une référence, pas un tutoriel. À titre d'exemple, nous allons essayer d'afficher le manuel de la commande <code>ls</code>:
+
+<shell>
+programmer_alpha@tutotechno.com:~$ man ls
+
+NAME
+       ls - list directory contents
+
+SYNOPSIS
+       ls [OPTION]... [FILE]...
+
+DESCRIPTION
+       List  information  about  the FILEs (the current directory by default).
+       Sort entries alphabetically if none of -cftuvSUX nor --sort  is  speci-
+       fied.
+
+       Mandatory  arguments  to  long  options are mandatory for short options
+       too.
+
+       -a, --all
+              do not ignore entries starting with .
+
+       -A, --almost-all
+              do not list implied . and ..
+</shell>
+
+Sur la plupart des systèmes Linux, <code>man</code> utilise <code>less</code> pour afficher la page de manuel.
+
+<h2>Le fichier README et les autres fichiers de documentation</h2>
+
+De nombreux logiciels ont des fichiers de documentation qui résident dans le répertoire /usr/share/doc. La plupart d'entre eux sont au format texte brut et peuvent être consulté avec <code>less</code>. Certains fichiers sont au format HTML et peuvent être consultés avec votre navigateur Web. 
+</tuto>

@@ -1,0 +1,54 @@
+<tuto>
+<h1>Revenir à une ancienne version d'un fichier avec Git<h1>
+
+Ici on se place dans le cas de la manipulation d'un fichier unique.
+
+<h2>Quelle action réaliser exactement ?</h2>
+Les actions à réaliser avec Git ne sont pas le mêmes selon l'état du fichier modifier 
+
+<h2>Dans le cas de modifications non commitées</h2>
+Pour revenir à la dernière version d'un fichier, autrement dit la HEAD, et ainsi perdre les modifications non-commitées, rien de plus simple : 
+<shell>
+git checkout -- nom_du_fichier
+</shell>
+Ceci va "écraser" les modifications en cours : elles seront perdues. 
+Note : pour info les "--" sont importants pour éviter un checkout de branche.
+
+<h2>Dans le cas de modifications commitées</h2>
+
+<h2>Visualiser les anciennes versions d'un fichier</h2>
+Pour réaliser un tel retour en arrière, la première étape est de déterminer la version à laquelle l'on souhaite revenir. 
+<shell>
+git log nom_du_fichier
+</shell>
+Cette commande vous affiche une liste des derniers commits réalisés sur le fichier.
+
+En cas de doute sur le commit à selectionner, on peut vérifier le contenu d'un commit avec la commande <code>diff</code> :
+<shell>
+git diff commit-id nom_du_fichier
+</shell>
+
+<h2>Revenir à une version spécifique du fichier</h2>
+Ensuite, pour revenir à cette version spécifique du fichier, il faut utiliser la commande <code>reset</code> en spécifiant l'identifiant du commit sélectionné :
+<shell>
+git reset commit-id nom_du_fichier
+</shell>
+Les modifications du fichier ne sont pas perdues, mais retrouvent un état non-commité.
+Idéalement à cette étape, on procède à la correction du fichier avant de le commiter de nouveau. 
+
+Si l'on utilise HEAD au lieu d'un id de commit on va reseter sur la dernière version commitée en local.
+<shell>
+git reset HEAD nom_du_fichier
+</shell>
+Contrairement à SVN, ceci ne ramène pas la dernière version commitée sur le repository distant !
+Le reset reste une action locale.
+
+<h2>Supprimer le commit visé</h2>
+Une fois commitée, une modification fait partie intégrante d'un commit.
+La commande git reset va vous faire pointer vers une version précédente d'un fichier mais cela ne va pas supprimer les commits intermédiaires.
+Si ce que vous souhaitez est en fait de supprimer une modification en supprimant le commit local associé, 
+alors suivez le tutorial <link href="">supprimer un commit local</link>.
+
+Par contre, si le commit a déjà été pushé, alors sa suppression n'est pas souhaitable.
+Il vaut mieux supprimer les modifications à l'aide d'un <link>revert</link>.
+</tuto>

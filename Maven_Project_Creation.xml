@@ -1,0 +1,69 @@
+<tuto>
+<h1>Création d'un projet maven</h1>
+
+La création d'un projet Maven est extrêmement facile à l'aide du plugin "archetype". 
+Un projet Maven simple se crée en une seule commande Maven (autrement dit un goal Maven) "archetype:create" de la façon suivante :
+
+<code type="shell">
+mvn archetype:create -DgroupId=com.tutotechno -DartifactId=monProjet
+</code>
+
+Cette commande va créer un projet nommé "monProjet" et faisant partie du groupe identifié par "com.tutotechno". 
+Le groupe spécifie où le projet est situé hiérarchiquement dans le repository, 
+et permet le regroupement de projets apparentés dans un groupe unique.
+
+Lorsqu'on lance la commande pour la première fois, Maven télécharge les ressources dont il a besoin à partir du dépôt central.
+Lorsque le goal "archetype:create" est terminé, nous pouvons voir apparaître un nouveau répertoire "monProjet" : le projet a bien été créé.
+Si nous examinons le projet que nous venons de créer, nous constatons qu'il contient un répertoire "src" et un fichier "pom.xml".
+Le répertoire "src" est évidemment destiné à contenir les sources du projet.
+Le fichier "pom.xml" pour "Project Object Model" est le descripteur du projet au format xml.
+Ce fichier contient toutes les informations nécessaires pour que Maven puisse compiler et packager correctement le projet.
+C'est d'ailleurs ici que l'on va lister l'ensemble des dépendances nécessaires.
+
+Notez que la structure du package "com.tutotechno" a été créée dans "src/main/java", 
+et qu'un fichier "AppTest.java" a été créé dans "src/test/java/com/tutotechno". 
+Il s'agit d'une simple classe de test de démonstration de JUnit.
+Maven intègre de façon native le lancement des tests JUnit dans le cycle de vie de l'application. 
+Ainsi, lorsque l'on builde (un bel anglicisme très répandu) le projet avec la commande "mvn clean install", 
+les tests sont joués par défaut.
+
+<h2>Le coeur du projet Maven : le pom.xml</h2>
+Le pom.xml est un fichier essentiel au fonctionnement de Maven.
+C'est un fichier de métadonnées du projet qui décrit les divers aspects du projet.
+Il contient ainsi le nom du projet, le groupe, la version, la liste des dépendances, et beaucoup d'autres choses encore.
+Le contenu du fichier "pom.xml" généré est affiché ci-dessous :
+
+<code type="xml">
+	<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	  <modelVersion>4.0.0</modelVersion>
+	  <groupId>com.tutotechno</groupId>
+	  <artifactId>monProjet</artifactId>
+	  <packaging>jar</packaging>
+	  <version>1.0.0-SNAPSHOT</version>
+	  <name>Mon Projet</name>
+	  <url>http://maven.apache.org</url>
+	  <dependencies>
+		<dependency>
+		  <groupId>junit</groupId>
+		  <artifactId>junit</artifactId>
+		  <version>3.8.1</version>
+		  <scope>test</scope>
+		</dependency>
+	  </dependencies>
+	</project>
+</code>
+
+L'élément "modelVersion" indique la version du format du fichier "pom.xml", normalement cette valeur n'est pas modifiée. 
+L'élément "groupId" reprend la valeur donnée dans la commande initiale. 
+De même "artifactId" reprend la valeur initiale et fournira le nom du fichier d'artefact.
+L'élément "packaging" désigne le type de package à construire. Les valeurs les plus courantes sont : jar , war et ear.
+L'élément "version " désigne le numéro de version donné au moment du packaging de l'artefact. 
+C'est l'extension numérique qui suit le nom de fichier de librairie, comme dans "junit-1.2.3.jar".
+L'élément "name" est le nom d'affichage du projet. 
+L'élément "url" permet de spécifier l'emplacement du "site" du projet, utilisé pour la documentation du projet.
+
+Notez également que la dépendance JUnit a été incluse dans le fichier pom.xml.
+En effet, la classe "AppTest" étant un test JUnit, le projet nécessite bien la dépendance JUnit.
+
+</tuto>

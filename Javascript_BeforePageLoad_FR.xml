@@ -1,0 +1,72 @@
+<tuto>
+
+<h1>Peut-on exécuter du javascript avant le chargement d'une page HTML ?<h1>
+
+Non seulement c'est possible mais c'est le comportement par défaut !
+Lors de l'analyse du code HTML, lorsque le navigateur rencontre une balise de script, il arrête l'analyse et lance l'interpréteur JavaScript, qui va exécuter le script.
+Et c'est uniquement lorsque l'exécution du script est terminée que l'interpréteur va continuer à parser la page.
+Par exemple, le script peut tout à fait utiliser <code style="javascript">document.write</code> pour créer des balises que l'interpréteur gérera par la suite.
+C'est le comportement par défaut, toutefois les attributs "defer" et "async" de la balise <code style="html">script</code> permettent d'éviter l'exécution immédiate du script.
+
+Considérez le code suivant :
+<code style="html">
+<html>
+<body>
+<p>Paragraphe un</ p >
+<script type='text/javascript'>
+    alert ("Arrête analyse !");
+</script>
+<p>Paragraphe deux</p>
+</body>
+</html>
+</code>
+
+Si vous chargez la page, vous verrez apparaître le paragraphe "Paragraphe un", puis l'alerte.
+Le paragraphe "Paragraphe deux" n'apparaît qu'une fois l'alerte fermée.
+En cas d'interaction avec le DOM, le script peut manipuler ce qui a été construit par l'interpréteur avant d'arriver au script.
+
+Le code ci-dessous démontre comment réaliser un simple accès aux éléments précédant le script :
+<code style="html">
+<html>
+<body>
+<p id='p1'>Paragraphe un</ p >
+<script type='text/javascript'>
+    document.write("<p>p1 est null ? " + (document.getElementById('p1') == null " oui " : "non") + "</p>");
+    document.write("<p>p2 est null ? " + (document.getElementById('p2') == null " oui " : "non") + "</p>");
+</script>
+<p id='p2'>Paragraphe deux</p>
+</body>
+</html>
+</code>
+
+La sortie est la suivante :
+Paragraphe un
+p1 est null ? oui
+p2 est null ? non
+Paragraphe deux
+
+Cet exemple illustre bien que "Paragraphe un" existe avant que le script s'exécute, mais pas "Paragraphe deux".
+Toutefois, même s'il est tout à fait possible d'accéder aux éléments qui précèdent la balise <code style="html">script</code>, il est préférable d'éviter les interactions avec le DOM jusqu'à ce qu'il soit entièrement construit.
+
+<h2>Eviter l'exécution immédiate d'un script avec les attributs "defer" et "async"</h2>
+Les attributs "defer" et "async" sont des attributs booléens de la balise <code style="html">script</code> qui indiquent comment le script doit être exécuté. 
+Ces attributs ne doivent pas être spécifiées si l'attribut src n'est pas présent.
+
+L'exécution d'une balise <code style="html">script</code> peut suivre trois modes différents selon ces attributs :
+- Si l'attribut async est présent, alors le script sera exécuté de façon asynchrone, dès qu'il est disponible (c'est à dire téléchargé par le navigateur). 
+L'intérêt de cet attribut réside dans le fait que la durée d'exécution du script, potentiellement longue, n'empèche pas l'affichage de la page.
+- Si l'attribut async n'est pas présent mais l'attribut defer est présent, alors le script est exécuté lorsque la page a fini d'être interprétée. 
+- Si aucun des deux attribut n'est présent, alors le script est récupéré et exécuté immédiatement, comme expliqué précédemment.
+
+<h2>Exécuter un script juste après le chargement de la page avec l'évenement "load"</h2>
+En javascript rien de plus simple que de déclencher l'exécution d'un script une fois que la page est complètement chargée :
+<code style="html">
+<script type='text/javascript'>
+	addEvent(window,'load', function() {
+		alert("Le chargement de la page est terminé");
+		// Ici on peut faire le vrai travail
+	});
+</script>
+</code>
+
+</tuto>

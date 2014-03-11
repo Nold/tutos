@@ -1,0 +1,78 @@
+<tuto>
+<h1>Exclure des URL d'un filter-mapping dans le fichier web.xml</h1>
+
+En configurant un filter-mapping du fichier web.xml on est parfois amené à utiliser un pattern de mapping "aggressif" : 
+<code style="xml">
+	<filter-mapping>
+		<filter-name>monFiltre</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+</code>
+
+Le pattern "/*" mappe toutes les urls de l'application, ce qui peut parfois être une sélection trop large.
+Evidemment ce qui serait pratique ça serait de combiner <code style="xml"><url-pattern>/*</url-pattern></code> avec un pattern d'exclusion.
+Par exemple, on pourrait vouloir exclure "/css/*" ou "/script/*". 
+Malheureusement il n'y a pas de telle option dans la syntaxe du fichier web.xml.
+
+Toutefois il est possible d'inclure une telle exclusion dans la logique du filtre même :
+<code style="xml">
+	...
+	<filter>
+		<filter-name>monFiltre</filter-name>
+		<filter-class>com.tutotechno.FiltreAvecExclusions</filter-class>
+		<init-param>
+			<param-name>excluded-patterns</param-name>
+			<param-value>/css/*,/script/*</param-value>
+		</init-param>
+	</filter>
+	...	
+</code>
+
+En Java on codera le filtre de la façon suivante : 
+
+<code style="java">
+public class FiltreAvecExclusionsFilter implements Filter {
+
+	private String excludePatternsString = null;
+
+	@Override
+	public void init(FilterConfig cfg) throws ServletException {
+		this.excludePatternsString = cfg.getInitParameter("excluded-patterns");
+		
+		// Procéder à la configuration du filtre...
+	}
+
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) 
+		throws IOException, ServletException {
+		String url = request.getRequestURL().toString();
+		if (isExcluded(url)) {
+			// On sort de l'exécution du filtre
+			chain.doFilter(request, response);
+			return;
+		} else {
+			// Pas d'exclusion : procéder à l'action normale du filtre...
+		}
+	}
+	
+	private boolean isExcluded(String url){
+		// Exemples de patterns d'exclusion : "/css/*,/script/*,/truc/*"
+		String[] excludedPatterns = excludePatternsString.split(",");
+		for (String excludedPattern : excludedPatterns){
+			Pattern pattern = Pattern.compile(excludedPattern);
+			Matcher matcher = pattern.matcher(url);
+			if (matcher.find()){
+				// Un des patterns exclut l'url
+				return true;
+				System.out.println("Matching " + excludedPattern + " url : " + url);
+			} else {
+				System.out.println("Not matching " + excludedPattern + " url : " + url);
+			}
+		}
+		
+		// Aucun pattern n'a matché
+		return false;
+	}
+}
+</code>
+
+</tuto>

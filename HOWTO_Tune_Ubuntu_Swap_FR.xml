@@ -1,0 +1,22 @@
+<tuto>
+	<h1>Comment configurer le Swap de Ubuntu ?</h1>
+
+Ce tutorial va vous montrer comment configurer le Swap sur Ubuntu.
+
+Par défaut, Ubuntu est configuré pour commencer à swapper à partir de 60 % de ram restante.
+Sur un poste ayant 16 Go de ram, cela represente à peine 6.4 go de ram utilisée.
+
+1) Verifier la valeur de swap
+<shell>cat /proc/sys/vm/swappiness</shell>
+
+2) Modifier la valeur de swap
+<shell>vi /etc/sysctl.d/99-Custom.conf</shell>
+
+et y copier les lignes suivantes
+<code type="txt">
+    # Fine Swap Tunning
+    vm.swappiness=10
+</code>
+
+Source : http://doc.ubuntu-fr.org/swap
+</tuto>

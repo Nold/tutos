@@ -1,0 +1,60 @@
+<tuto>
+<h1>Supprimer un commit local</h1>
+
+<h2>Vérifier les logs</h2>
+La supression d'un commit n'est pas une action anodine, avant de faire quoi que ce soit, nous devons vérifier la situation actuelle.
+Pour vérifier l’historique des commits sur l'ensemble du projet la commande git est : 
+<shell>
+git log
+</shell>
+Qui affiche les derniers commit sur le projet par ordre du plus récent : 
+<shell>
+commit 117653fr243118495e4114218e0d4182rrf3176e
+Author: Developper Alpha <dev.alpha@tutotechno.com>
+Date:   Thu Jun 5 04:05:06 2014 +0100
+
+    Message de commit numéro 3
+
+commit 227653fr243118495e4114218e0d4182rrf3176e
+Author: Developper Alpha <dev.alpha@tutotechno.com>
+Date:   Thu Jun 5 03:05:06 2014 +0100
+
+    Message de commit numéro 2
+
+commit 337653fr243118495e4114218e0d4182rrf3176e
+Author: Developper Alpha <dev.alpha@tutotechno.com>
+Date:   Thu Jun 5 02:05:06 2014 +0100
+
+    Message de commit numéro 1
+</shell>
+On note que chaque commit possède un id, par exemple : "337653fr243118495e4114218e0d4182rrf3176e".
+Pour naviguer dans les résultats du git log il faut utiliser les commandes du programme <link href="">less</link>.
+
+<h2>Revenir à un commit précis sans perte des modifications</h2>
+En revenant à un commit précis, les commits suivant seront annulés.
+Pour indiquer à quel commit on souhaite revenir, il existe plusieurs syntaxes :
+    git reset HEAD^ : revient à l'avant-dernier commit : annule le dernier commit
+    git reset HEAD^^ : revient à l'avant-avant-dernier commit : annule les deux derniers commits
+    git reset HEAD~3 : remonte de 3 commits en arrière : annule les trois derniers commits 
+    git reset d6d98923868578a7f38dea79833b56d0326fcba1 : revient au commit dont l'id est précisé
+
+En exécutant un git reset simple, seul le commit est retiré de git, les fichiers restent modifiés.
+
+<h2>Revenir à un commit précis en annulant toutes les modifications (--hard)</h2>
+Si vous voulez annuler votre dernier commit et perdre tous les changements des fichiers, il faut faire un :
+<shell>
+git reset --hard
+</shell>
+Vérifiez bien que vous n'allez pas perdre votre travail. Les modifications seront perdues !
+
+Les syntaxes sont similaires à un reset normal : 
+    git reset --hard HEAD^ : revient à l'avant-dernier commit : annule le dernier commit et perd tous les changements
+    git reset --hard HEAD^^ : revient à l'avant-avant-dernier commit : annule les deux derniers commits et perd tous les changements
+    git reset --hard HEAD~3 : remonte de 3 commits en arrière : annule les trois derniers commits et perd tous les changements
+    git reset --hard d6d98923868578a7f38dea79833b56d0326fcba1 : revient au commit dont l'id est précisé et perd tous les changements
+
+Pour revenir sur les modifications d'un fichier unique suivez <link>ce tutorial</link>.
+	
+</tuto>
+
+

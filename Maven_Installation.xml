@@ -1,0 +1,71 @@
+<tuto>
+<h1>Installation de Maven</h1>
+
+<h2>Introduction à Maven</h2>
+
+Maven est un outil incontournable permettant de builder un projet Java et de gérer ses dépendances.
+Une des fonctionnalités les plus importante de Maven est la création d'un dépôt (en anglais "repository" alias "repo") 
+pour gérer les librairies (fichiers jar) et les mettre à disposition des différents projets.
+Maven se charge lui-même de télécharger sur votre machine locale
+les librairies Java stockés dans des dépôts online tels que <href url="">Maven Central</href>.
+Ces fichiers jar sont alors accessibles pour tous les projets et Maven permet d'en gérer les différentes versions.
+Mieux encore, Maven se charge de récupérer les dépendances transitives de votre projet 
+et récupère lui-même les dépendances déclarées par les librairies externes ! 
+Construire les différents types de packaging java (jar, war, ear) 
+devient un tel jeu d'enfant avec Maven qu'on en vient à se demander comment on faisait avant !
+De plus les fonctionnalités annexes de Maven sont très nombreuses et en font un outil quasi-indispensable de tout projet Java.
+
+Dans ce tutoriel nous allons montrer comment installer Maven 2.
+Pour configurer Maven , vous devez :
+    Télécharger le zip de Maven et le décompresser
+    Créer une variable système "JAVA_HOME"
+    Créer une variable système "M2_HOME"
+    Ajouter "%JAVA_HOME%\bin;%M2_HOME%\bin;" à la variable système PATH.
+
+<h2>Téléchargement et extraction du zip</h2>
+	
+Pour commencer, téléchargez la dernière version de Maven sur : 
+<href url="http://maven.apache.org/download.html">http://maven.apache.org/download.html</href>. 
+Récupérer le fichier, par exemple "apache-maven-2.0.8-bin.zip" et désippez-le dans "C:\dev\apache-maven-2.0.8".
+
+<h2>Création des variables d'environnement</h2>
+
+Allez à vos variables Propriétés système. 
+Dans Windows on y accède par : Panneau de configuration -> Système -> Avancé -> Variables d'environnement.
+Créer une variable système JAVA_HOME et pointer vers votre installation de Java : par exemple C:\dev\jdk1.6.0_03.
+Créer une variable système M2_HOME et pointer à votre installation de Maven : par exemple C:\dev\apache-maven-2.0.8.
+Vous avez maintenant les deux variables système JAVA_HOME et M2_HOME.
+
+<h2>Modification du PATH</h2>
+
+La variable d'environnement PATH est une variable importante du système qui permet l'exécution des programmes.
+Ajouter "%JAVA_HOME%\bin;%M2_HOME%\bin;" à votre variable système PATH. 
+Cela met vos exécutables Java et Maven dans le chemin d'accès système de sorte 
+qu'ils peuvent être exécutés sans fournir leur chemin d'accès complet.
+
+<h2>Premières exécutions de Maven</h2>
+
+Ouvrez une console de commande, et à l'invite de commande, tapez "mvn -version".
+Vous devriez voir un message indiquant la version de Maven et la version de Java.
+
+Tapez la commande "mvn clean". 
+Vous verrez que certains fichiers jar nécessaires à Maven sont téléchargés à partir du dépôt central de Maven vers votre machine. 
+Après cela, nous voyons un "BUILD ERROR" (ça ne sera probablement pas le dernier de votre carrière...).
+Ce message est normal, il nous indique simplement qu'il n'y avait pas de projet Maven là où nous avons exécuté la commande.
+Maven a besoin d'un fichier pom.xml dans le répertoire d'exécution.
+
+A présent, si nous allons dans le répertoire personnel de l'utilisateur (par exemple C:\Users\tutotechno), 
+nous pouvons voir qu'un répertoire ".m2" a été créé par maven.
+Dans ce répertoire ".m2" nous trouvons le répertoire "repository". 
+C'est l'emplacement par défaut de votre repository local, 
+il est possible de le déplacer mais en général on conserve cet emplacement.
+Le repository local contiendra les fichiers jar que vos projets utiliseront. 
+En outre, il contient les fichiers jar et les choses que Maven nécessite lui-même. 
+Ainsi nous pouvons trouver la librairie utilisée par Maven pour réaliser la commande "clean" : 
+\.m2\repository\org\apache\maven\plugins\maven-plugin-propre\2.2.
+
+Voilà ! Maven est bien installé et fonctionne normalement. 
+Pour la création d'un projet Maven suivez le tutorial suivant : 
+<href url="">Création d'un projet Maven</href>. 
+
+</tuto>

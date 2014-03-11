@@ -1,0 +1,139 @@
+<tuto>
+<h1>Tutorial Ksh : boucles et instructions conditionnelles</h1>
+Cette page présente les commandes de "contrôle de flux de programme". 
+Les boucles et instructions conditionnelles sont bien souvent indispensables à la réalisation d'un programme.
+Les instructions conditionnelles permettent d'exécuter une commande si certaines conditions sont vraies.
+Les boucles, elles disent "répéter ces commandes", habituellement jusqu'à ce qu'une condition d'arrêt soit remplie.
+
+<h2>Les instructions conditionnelles : <code>if</code> et <code>case</code></h2>
+
+<h3>L'instruction <code>if</code></h3>
+C'est l'instruction de base qui permet de tester des conditions.
+
+<shell type="ksh">
+    if [$? - eq 0] ; then
+		print tout est ok
+    else
+		print quelque chose a échoué
+    fi
+</shell>
+La variable "$?" vérifie l'état de sortie de la dernière commande exécutée : généralement 0 pour une commande exécutée correctement, 1 pour un échec.
+Dans le code ci-dessus, si la variable $? est égale à 0, alors le programme affiche un message de succès.
+Sinon ("else"), il imprime un message différent. 
+
+<strong>Le «fi» final est obligatoire.</strong> 
+Cela permet de regrouper plusieurs lignes dans la même clause. 
+Ainsi on peut avoir plusieurs lignes entre "if" et "else", ou entre "else" et "fi", ou les deux.
+Vous pouvez même laisser le "else", si vous n'avez pas besoin d'un autre cas.
+
+<shell type="ksh">
+    if [$? - eq 0] ; then
+		print tout est ok
+		print on peut rajouter des lignes
+		print on peut mettre autant de lignes que voulu !
+    fi
+</shell>
+
+<h3>L'instruction <code>case</code></h3>
+L'instruction "case" fontionne comme le "switch" présent dans d'autres langages.
+Suivant la valeur d'une variable, l'instruction permet d'exécuter un ensemble donné de commandes, en fonction de la valeur particulière de la variable.
+
+<shell type="ksh">
+echo entrez oui ou non
+read reponse
+case $reponse in
+	oui|Oui|o)
+		echo réponse positive
+		# les ';;' suivants sont obligatoires pour clore l'ensemble de commandes
+		;;
+	non)
+		echo réponse négative
+		;;
+	q*|Q*)
+		# l'utilisateur souhaite quitter
+		exit
+		;;
+	*)
+		echo ici c'est la clause par défaut si l'utilisateur entre une valeur 
+		echo ne correspondant à aucune autre clause
+		;;
+esac
+</shell>
+
+Dans le code ci-dessus on peut voir deux points : 
+- La variable évaluée par l'instruction <code>case</code> ("reponse" dans l'exemple précédent) peut être une chaîne ou un entier.
+- Vous pouvez utiliser des caractères génériques (comme "*") avec une variable de type string.	
+
+Notez que l'instruction <code>case</code> n'exécute qu'un seul ensemble de commandes.
+On peut toutefois retrouver un comportement de type "fallback" en utilisant ";&" au lieu de ";;".
+		
+<h2>Les instructions de type boucles : <code>while</code>, <code>for</code> et <code>until</code></h2>
+
+<h3>L'instruction <code>while</code></h3>
+La boucle de base est la boucle "while" qui exécute une boucle tant que "quelque chose" est vrai.
+Ce "quelque chose" c'est la condition d'exécution de la boucle : une instruction qui est réévaluée à chaque tour de boucle pour vérifier s'il faut continuer de boucler.
+Il y a en réalité, toutefois, deux façons d'arrêter une boucle :
+	<li>le premier moyen, donc, c'est quand la condition d'exécution devient fausse
+	<li>l'autre moyen est d'utiliser une instruction <code>break</code> qui provoque la sortie immédiate de la boucle.
+
+<shell type="ksh">
+    ilfauttourner=1;
+	while [[ $ilfauttourner -eq 1 ]] ; do
+			read entree_utilisateur
+		if [[ "$entree_utilisateur" = "fin" ]] ; then
+			lancer_calcul_final
+			ilfauttourner=0
+		fi
+		if [[ "$entree_utilisateur" = "stop" ]] ; then
+			break;
+		fi
+	done
+</shell>
+
+<h3>L'instruction <code>until</code></h3>
+Le deuxième type de boucle de ksh, est la boucle <code>until</code>. 
+La différence avec la première est que <code>while</code> boucle tant que quelque chose est vrai.
+Alors que <code>until</code> va boucler jusqu'à ce que quelque chose de faux devienne vrai.
+
+<shell type="ksh">
+    until [[ $conditiondarret -eq 1 ]] ; do
+		echo executer ceci une fois
+		conditiondarret=1;
+		echo on ne reviendra pas ici
+	done
+</shell>
+
+<h3>L'instruction <code>for</code></h3>
+Une boucle <code>for</code>, est une boucle "limitée".
+Elle ne va boucler qu'un nombre de fois précis selon le paramètre d'entrée. 
+Une fois que la boucle est démarrée, le nombre de tour est fixé.
+La syntaxe est la suivante :
+<shell type="ksh">
+	for chiffres in un deux trois ; do
+		echo $chiffres
+	done
+</shell>
+
+La variable "chiffres", sera mise à jour par chaque valeur parmi celles qui suivent l'instruction <code>in</code>.
+Ainsi, la boucle ci-dessus affichera :
+<shell>
+    un
+    deux
+    trois
+</shell>
+
+Vous pouvez aussi avoir une variable définissant la liste de l'instruction.
+Elle ne sera vérifiée qu'une seule fois, lorsque vous démarrez la boucle.
+Toute modification ultérieure de la variable sera donc sans effet sur le déroulement de la boucle.
+<shell type="ksh">
+    liste="un deux trois"
+	for chiffres in $liste ; do
+		echo $chiffres
+		# Note: Changer la liste n'impacte pas la boucle !
+		liste="rien"
+	done
+</shell>
+
+Le programme affiche toujours "un", "deux" et "trois" sur trois lignes.
+Ne pas mettre <code>liste</code> entre quotes : "$list", cela n'afficherait qu'une ligne unique, "un deux trois".
+</tuto>
