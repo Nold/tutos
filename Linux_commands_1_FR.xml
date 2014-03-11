@@ -1,9 +1,4 @@
 <tuto>
-<meta>
-	<language>shell</language>
-	<platform>linux</platform>
-	<keywords>cp, mv, rm, mkdir</keywords>
-</meta>
 
 <h1>Introduction aux commandes de manipulation de fichiers</h1>
 
@@ -153,19 +148,14 @@ programmer_alpha@tutotechno.com:~$ mkdir repertoire1 repertoire2 ...
 <h2>Exemples d'utilisation des commandes avec les "wildcards"</h2>
 
 Les commandes que nous avons abordées ici acceptent toutes des noms de fichiers et de répertoires comme arguments, nous pouvons donc les utiliser avec des wildcards :
-<shell>
+
 cp *.html fichiers_html
-</shell>
 Copiez tous les fichiers se terminant par ".html" dans le répertoire "fichiers_html".
 
-<shell>
 mv ../mon_repertoire *.tar nouveau_repertoire
-</shell>
 Déplacez le répertoire "mon_repertoire" (du répertoire parent) et tous les fichiers se terminant par ".tar" (du répertoire courant) dans un nouveau répertoire nommé "nouveau_repertoire".
 
-<shell>
 rm *~
-</shell>
 Supprimez du répertoire de travail courant tous les fichiers dont le nom se termine par le caractère "~".
 Sous Linux, il est fréquent que des applications créent des fichiers de sauvegarde en utilisant ce caractère. 
 Grâce à cette commande, on va pouvoir les effacer simplement.
