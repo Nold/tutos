@@ -1,0 +1,17 @@
+<tuto>
+ <h1>Comment faire une copie complète d'un disque ?</h1>
+
+Pour faire une copie complète (full copy) d'un disque, incluant le MBR :
+
+1) Mettre la cible et le disque source sur la même machine
+
+2) Booter avec un "live Os"
+
+3) Assurez-vous de savoir quel est le disque source et le disque cible 
+   Cette commande pourra vous aider : 
+   <shell>sudo fdisk -l</shell>
+
+4) Lancer la copie
+   <shell>sudo dd if=/dev/sdXXX of=/dev/sdXXX</shell>
+   en remplaçant "XXX" par les lettres de votre disque.
+</tuto>
