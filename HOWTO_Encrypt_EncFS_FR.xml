@@ -1,0 +1,20 @@
+<tuto>
+ <h1>Comment crypter des fichiers ou répertoires avec EncFS ?</h1>
+
+Ce tutoriel va vous montrer comment crypter des fichiers avec EncFS, en utilisant un répertoire quelconque pour stocker les fichiers cryptés.
+
+1) Installer Encfs
+<shell>sudo apt-get install encfs</shell>
+    
+2) Créer et crypter le répertoire
+<shell>encfs /home/$USER/.safe/ /home/$USER/open_safe/</shell>
+
+3) Utiliser : "mount"
+<shell>encfs /home/$USER/.safe/ /home/$USER/open_safe/</shell>
+
+4) Utiliser : "unmount"
+<shell>fusermount -u /home/$USER/open_safe</shell>
+    
+5) Changer la "passphrase"
+<shell>encfsctl passwd /etc/ldapscripts/.secured</shell>
+</tuto>
