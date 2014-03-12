@@ -17,20 +17,22 @@ To checkout the tag you must provide the tag's name :
 You are now pointing to the tag, however you are in "detached head mode", not pointing to a branch.
 Although it is technically possible to commit in that mode, is not recommended since the resulting commit would not be visible on any branch...
 
-4) What really is a Git tag by the way ?
-A git tag is a pointer that references a point in the project history.
-A pointer can be a tag, a commit, a date or some other things.
-Contrairy to a tag, a branch is a mobile pointer.
-When you are "on" a branch and do a commit, the pointer that really is the branch is simply moved to the new commit which becomes the current branch position.
-The <code>HEAD</code> also is a pointer pointing to a specific branch which makes it the current working branch.
-When you clone a repository, the <code>HEAD</code> points by default on the <code>master</code> which, being a branch, also points to a commit. 
-The checkout operation, say : <shell>git checkout my_branch</shell>, simply moves the <code>HEAD</code> pointer to my_branch".
+4) Why can't I commit ? I mean what is so special about Git tags anyway ?
+I know this situation can seem confusing especially if you are coming from another SCM. SVN doesn't bother up about tags...
+Don't panic, it's quite simple : in Git a tag is a pointer that references a point in the project history.
+The most important pointers in Git are tags, commits and branches. 
+The difference between tags and branchs is that, unlike a tag, a branch is a mobile pointer.
+Now, the trick you need to catch is that a Git pointer can point to another pointer.
+When you are "on" a branch and do a commit, the pointer that really is the branch is simply moved to the new commit (also a pointer) which becomes the current branch position.
+The <code>HEAD</code> is a special pointer which, by pointing to a specific branch, makes it the current working branch.
+When you clone a repository, the <code>HEAD</code> points by default on the <code>master</code> branch. 
+Git's checkout operation, say : <shell>git checkout my_branch</shell>, simply moves the <code>HEAD</code> pointer to another branch, here : "my_branch".
 However when you checkout a tag, like : <shell>git checkout tags/my_tag1.0.0</shell>, you are pointing to a commit not pointed by any other branch.
 The <code>HEAD</code> is now "detached" and doesn't point to any branch : this is the "detached head mode".
-In that mode, Git will inform you of the risk of loosing your commits.
+In that mode, Git will inform you of the risk of loosing your commits since you can't merge them.
 
 5) How can I modify a tag then ?
-If you want to bring modification to the code of a specific tag the best way is to create a new branch from the tag and commit to it.
+If you want to bring changes to the code of a specific tag the best way is to create a new branch from the tag and commit to it.
 For example, to create the branch "1.0.1-patch" from the tag "my_tag1.0.0" you type : 
 <shell>git checkout -b 1.0.1-patch my_tag1.0.0</shell>
 
