@@ -118,7 +118,7 @@ L'utilisation de CsrfGuard nécessite la déclaration des filtres et mapping sui
 		</init-param>
 		<init-param>
 			<param-name>referer-pattern</param-name>
-			<param-value>.*localhost.*</param-value>
+			<param-value>.*</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
