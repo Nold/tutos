@@ -8,9 +8,6 @@ This tutorial will show you how to create a headless virtualbox host.
 We install a standard server first. (see machine "server")
 The standard server installs opensshd, so from now on, the installation will go headless using putty.
 
-Change 'devadm' password: 
-<shell>passwd devadm</shell>
-
 To install virtualbox-ose :
     <shell>sudo apt-get install --no-install-recommends virtualbox-ose virtualbox-ose-dkms</shell>
 Restart machine
