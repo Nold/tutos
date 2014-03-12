@@ -1,0 +1,37 @@
+<tuto>
+<h1>How to checkout a tag with Git ?<h1>
+
+1) Get a clean repository
+If you haven't done it yet you must get the repository with a "git clone".
+If you already have the repository you may want to get the latests tags with a "git pull".
+
+2) Display the available tags
+You can list the available tags with :
+<shell>git tag -l</shell> 
+
+If you can't see the required tag, then you have probably not pulled your repository, all you have to do is a "git pull".
+
+3) Checkout the tag
+To checkout the tag you must provide the tag's name : 
+<shell>git checkout tags/my_tag1.0.0</shell>
+You are now pointing to the tag, however you are in "detached head mode", not pointing to a branch.
+Although it is technically possible to commit in that mode, is not recommended since the resulting commit would not be visible on any branch...
+
+4) What really is a Git tag by the way ?
+A git tag is a pointer that references a point in the project history.
+A pointer can be a tag, a commit, a date or some other things.
+Contrairy to a tag, a branch is a mobile pointer.
+When you are "on" a branch and do a commit, the pointer that really is the branch is simply moved to the new commit which becomes the current branch position.
+The <code>HEAD</code> also is a pointer pointing to a specific branch which makes it the current working branch.
+When you clone a repository, the <code>HEAD</code> points by default on the <code>master</code> which, being a branch, also points to a commit. 
+The checkout operation, say : <shell>git checkout my_branch</shell>, simply moves the <code>HEAD</code> pointer to my_branch".
+However when you checkout a tag, like : <shell>git checkout tags/my_tag1.0.0</shell>, you are pointing to a commit not pointed by any other branch.
+The <code>HEAD</code> is now "detached" and doesn't point to any branch : this is the "detached head mode".
+In that mode, Git will inform you of the risk of loosing your commits.
+
+5) How can I modify a tag then ?
+If you want to bring modification to the code of a specific tag the best way is to create a new branch from the tag and commit to it.
+For example, to create the branch "1.0.1-patch" from the tag "my_tag1.0.0" you type : 
+<shell>git checkout -b 1.0.1-patch my_tag1.0.0</shell>
+
+</tuto>
