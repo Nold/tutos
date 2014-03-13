@@ -1,0 +1,162 @@
+<tuto>
+<h1>How to modify an XML file with a DOM Parser in Java ?</h1>
+
+In this tutorial we will modify an XML file using javax.xml.parsers.DocumentBuilder API.
+Our example will be an XML formated HTML file where we want to manipulate hidden fields inside "form" elements.
+
+We want to make the following modifications : 
+1) Element Content modification
+2) Element Attribute modification
+3) Element creation
+4) Element deletion
+
+<h2>Implementing the parser class</h2>
+
+<code type="java">
+package com.tutotechno.util.parsers;
+
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+public class DomParserExample {
+
+	public static void main(String args[]) {
+
+		try {
+			// Getting a document builder
+			final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
+					.newInstance();
+			final DocumentBuilder documentBuilder = documentBuilderFactory
+					.newDocumentBuilder();
+
+			// Opening the document from the file
+			final String xmlFilePath = "/main/users/nfuchs/actions_courantes/fortify/hidden_fields/testfile.xml";
+			final Document document = documentBuilder.parse(xmlFilePath);
+
+			// Retrieving the list of "form" elements in the document
+			final NodeList nodeList = document.getElementsByTagName("form");
+
+			for (int i = 0; i &lt; nodeList.getLength(); i++) {
+				final Node formNode = nodeList.item(i);
+				if (formNode.getNodeType() == Node.ELEMENT_NODE) {
+					final Element formElement = (Element) formNode;
+					final String formId = formElement.getAttribute("id");
+
+					if ("form1".equals(formId)) {
+						// Retrieving the list of "div" elements children to the "form"
+						final NodeList divs = formElement.getElementsByTagName("div");
+						
+						// Modifying the text of the first div element
+						divs.item(0).setTextContent("The content has been modified");
+						
+						// Creating a new input element
+						final Element newInputElement = document.createElement("input");
+
+						// Adding attributes to the new input element
+						final Attr type = document.createAttribute("type");
+						type.setValue("hidden");
+						newInputElement.setAttributeNode(type);
+												
+						// Append the new input element to first form
+						formElement.appendChild(newInputElement);
+
+					} else {						
+						// Retrieving the list of "input" elements children to the "form"
+						final NodeList inputs = formElement.getElementsByTagName("input");
+
+						// Removing the first input child
+						formElement.removeChild(inputs.item(0));
+						
+						// Modifying form's id attribute
+						final NamedNodeMap attributes = formElement.getAttributes();
+						final Node nodeAttribute = attributes.getNamedItem("id");
+						nodeAttribute.setTextContent("form3");
+					}
+				}
+			}
+
+			// Writing the changes to the original file
+			final TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
+			final Transformer transformer = transformerFactory.newTransformer();
+			final StreamResult result = new StreamResult(new File(xmlFilePath));
+			final DOMSource source = new DOMSource(document);
+			transformer.transform(source, result);
+
+			System.out.println("Parsing successfull");
+
+		} catch (ParserConfigurationException ex) {
+			ex.printStackTrace();
+		} catch (SAXException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} catch (TransformerException ex) {
+			ex.printStackTrace();
+		}
+	}
+}
+</code>
+
+
+<h2>Example of an XML file</h2> 
+
+Copy this XML code into a new "DOM_parser_test_file.xml" file :
+<code type="xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+    <body>
+	<form id="form1">
+		<div>My div content</div>
+		<input id="12"  type="image" src="./images/buttonSubmit.gif" />
+	</form>
+	<form id="form2">
+		<input id="21" type="hidden" value="hiddenvalue"/>
+		<input id="22" type="image" src="./images/buttonCancel.gif" />
+	</form>
+   </body>
+</html>
+</code>
+
+By running the above Java code, the file should be modified to : 
+<code type="xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+    <body>
+	<form id="form1">
+		<div>The content has been modified</div>
+		<input id="12" src="./images/buttonSubmit.gif" type="image">
+		<input type="hidden">
+	</form>
+	<form id="form3">
+		<input id="22" src="./images/buttonCancel.gif" type="image">
+	</form>
+   </body>
+</html>
+</code>
+
+We can see the following modifications : 
+1) Content modification : the div element's text content has been modified
+2) Attribute modification : second form id attribute has been set to "form3"
+3) Element creation : a new "input" element (with attributes) has been created into the first "form"
+4) Element deletion : the first "input" element of the secont form has been deleted
+
+</tuto>
