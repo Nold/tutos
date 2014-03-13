@@ -1,0 +1,73 @@
+<tuto>
+<h1>How to handle custom tags in jsp with doStartTag and doEndTag</h1>
+
+In this tutorial we will see how to handle custom tags in jsp with the two methods "doStartTag" and "doEndTag".
+
+Tag handler method doEndTag() is defined by a Tag interface that is called by the Jsp page's servlet when an end tag is evaluated.
+The method <code type="java">doStartTag()</code> is invoked when a start tag is found by the jsp processor.
+Similarly, the method <code type="java">doEndTag()</code> is invoked when an end tag tag is found.
+Those functions return defined integer constant value :
+    <li>SKIP_BODY : returned by doStartTag() to skip body evaluation</li>
+    <li>EVAL_BODY_INCLUDE : returned by doStartTag() to evaluate body into existing out stream</li>
+    <li>SKIP_PAGE : returned by doEndTag() to skip the rest of the page</li>
+    <li>EVAL_PAGE : returned by doEndTag() to continue evaluating the page.</li>
+
+Now, these are the steps we will follow : first we will create a tag handler class.
+Then, we will create a TLD file and to finish we will use our custom tag in the jsp file.
+	
+1) Create a tag handler class 
+We create a java class named CustomTagTest.java which extends the TagSupport class.
+The TagSupport class comes in handy here as it saves you from implementing all the methods of the Tag interface.
+So we only need to define the doEndTag() method which will be executed when a closed custom tag will be evaluated or on the jsp page.
+
+<code type="java">
+public class CustomTagTest extends TagSupport { 
+	public int doStartTag() {
+		return EVAL_BODY_INCLUDE;
+		//return SKIP_BODY;
+	} 
+	
+	public int doEndTag() {
+		return EVAL_PAGE;
+		//return SKIP_PAGE;
+	} 
+}
+</code>
+
+2) Create a TLD file 
+We need to create a custom TDL file named CustomTagTest.tld to hold our custom tag declaration.
+This file is to be placed in WEB-INF directory, here we'll use the folder "WEB-INF/tlds" for more tidiness.
+
+<code type="xml">
+	<taglib>
+		<tlib-version>1.0</tlib-version>
+		<jsp-version>2.0</jsp-version>
+		<tag>
+			<name>myCustomTag</name>
+			<tag-class>com.tutotechno.jsp.tag.CustomTagTest</tag-class> 
+		</tag>
+	</taglib>
+</code>
+
+3) Use the custom tag in the jsp
+Of course we need a JSP page, we'll name it CustomTagTest.jsp.
+Then we declare the taglib in the jsp : 
+<code type="jsp"><%@taglib uri="/WEB-INF/tlds/CustomTagTest.tld" prefix="cust" %></code>
+And that's it ! We can start using our custom tag like any other tag !
+
+Example of custom tag jsp : CustomTagTest.jsp
+<code type="jsp">
+	<%@taglib uri="/WEB-INF/tlds/CustomTagTest.tld" prefix="cust" %>
+	<html>
+		<head>
+			<title>doEndTag() Example</title>
+		</head>
+		<body>
+			Jsp page content before the custom tag.
+			<cust:myCustomTag />
+			<br>Jsp page content after closing tag.
+		</body>
+	</html>
+</code>
+
+</tuto>
