@@ -159,4 +159,22 @@ We can see the following modifications :
 3) Element creation : a new "input" element (with attributes) has been created into the first "form"
 4) Element deletion : the first "input" element of the secont form has been deleted
 
+<h2>Validation problems</h2> 
+
+Java DOM parser has the capacity to validate the given xml with it's DTD or XmlSchema.
+However what is generaly a good idea can sometime cause several problems.
+First it can greatly slow down the parsing, depending of the validation complexity.
+Secondly the parser may try to connect to external resources (such as URLs) which is not always suitable.
+And lastly if the parser tries to connect when there is no connection available, then it will wait for a connection timeout.
+What that means is that your parsing is stalled for several minutes !
+
+To avoid those problems you must configure the <code type="java">DocumentBuilderFactory</code> class with the following :
+<code type="java">
+documentBuilderFactory.setValidating(false);
+documentBuilderFactory.setFeature("http://xml.org/sax/features/namespaces", false);
+documentBuilderFactory.setFeature("http://xml.org/sax/features/validation", false);
+documentBuilderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
+documentBuilderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+</code>
+
 </tuto>
