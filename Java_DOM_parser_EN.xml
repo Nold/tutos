@@ -48,7 +48,7 @@ public class DomParserExample {
 					.newDocumentBuilder();
 
 			// Opening the document from the file
-			final String xmlFilePath = "/main/users/nfuchs/actions_courantes/fortify/hidden_fields/testfile.xml";
+			final String xmlFilePath = "/home/tutotechno/tests/DOM_parser_test_file.xml";
 			final Document document = documentBuilder.parse(xmlFilePath);
 
 			// Retrieving the list of "form" elements in the document
@@ -157,7 +157,7 @@ We can see the following modifications :
 1) Content modification : the div element's text content has been modified
 2) Attribute modification : second form id attribute has been set to "form3"
 3) Element creation : a new "input" element (with attributes) has been created into the first "form"
-4) Element deletion : the first "input" element of the secont form has been deleted
+4) Element deletion : the first "input" element of the second form has been deleted
 
 <h2>Validation problems</h2> 
 
