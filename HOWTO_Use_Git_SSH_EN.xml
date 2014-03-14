@@ -1,0 +1,42 @@
+<tuto>
+	<h1>How to configure SSH for Git ?</h1>
+
+Git and SSH work pretty well together provided the configuration is done properly.
+
+<h2>Step 1 : create a ssh alias</h2>
+Create a "config" file in ".ssh"
+
+<shell>gedit ~/.ssh/config</shell>    
+     
+The file should contain this : 
+<code type="txt">
+     Host git
+        Hostname xxx.xxx.xxx.xxx (replace by your IP)
+        Port 2218
+        # (Could be modified during step 2)
+        IdentityFile id_rsa 
+</code>
+     
+This is an ssh alias to Git server and allows you to do :
+<shell>ssh git</shell>
+
+Instead of :
+<shell>ssh xxx.xxx.xxx.xxx -p 2218</shell>
+     
+<h2>Step 2 : generate a private key</h2>
+So you don't have to enter your password on each "push/pull/clone", we must generate a "rsa" key :
+<shell>ssh-keygen</shell>
+     
+This command asks you the key name (defaults to "id_rsa"), as well as the passphrase.
+Then you must deploy the key on Git's server :
+<shell>ssh-copy-id -i .ssh/id_rsa.pub git</shell>
+
+Of course, if you changed the key name from "id_rsa" : you also need to change it in the above command.
+
+<h2>Step 3 : testing</h2>
+Testing requires a single command :
+<shell>ssh git</shell>
+
+Git will then request your passphrase : once given Git won't ask it from you again (but keep it at hands, you never know...). 
+
+</tuto>
