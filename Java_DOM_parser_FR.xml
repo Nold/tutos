@@ -1,0 +1,178 @@
+<tuto>
+<h1>Comment modifier un fichier XML avec un parser DOM en Java ?</h1>
+
+Voici comment modifier un fichier XML avec l'API javax.xml.parsers.DocumentBuilder.
+Mettons que nous avons un fichier XHTML où nous souhaitons manipuler le contenu des balises "form".
+
+Avec <code type="java">DocumentBuilder</code> nous avons accès à tous types de modifications du XML : 
+1) Modification du contenu des balises
+2) Modification de la valeur des attributs
+3) Creation de balises ou d'attributs
+4) Suppression de balises ou d'attributs
+
+<h2>Implementation du parser</h2>
+
+<code type="java">
+package com.tutotechno.util.parsers;
+
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+public class DomParserExample {
+
+	public static void main(String args[]) {
+
+		try {
+			// Instanciation du document builder
+			final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
+					.newInstance();
+			final DocumentBuilder documentBuilder = documentBuilderFactory
+					.newDocumentBuilder();
+
+			// Ouvrir le document depuis le fichier XML
+			final String xmlFilePath = "/home/tutotechno/tests/DOM_parser_test_file.xml";
+			final Document document = documentBuilder.parse(xmlFilePath);
+
+			// Récupération de la liste des éléments "form" présents dans l'ensemble du document
+			final NodeList nodeList = document.getElementsByTagName("form");
+
+			for (int i = 0; i &lt; nodeList.getLength(); i++) {
+				final Node formNode = nodeList.item(i);
+				if (formNode.getNodeType() == Node.ELEMENT_NODE) {
+					final Element formElement = (Element) formNode;
+					final String formId = formElement.getAttribute("id");
+
+					if ("form1".equals(formId)) {
+						// Récupération de la liste des éléments "div" enfants du "form"
+						final NodeList divs = formElement.getElementsByTagName("div");
+						
+						// Modification du texte du premier élément "div"
+						divs.item(0).setTextContent("Le contenu a été modifié");
+						
+						// Création d'un nouvel élément "input"
+						final Element newInputElement = document.createElement("input");
+
+						// Création d'un attribut "type" et ajout à l'élément "input"
+						final Attr type = document.createAttribute("type");
+						type.setValue("hidden");
+						newInputElement.setAttributeNode(type);
+												
+						// Ajout de l'élément "input" au premier "form"
+						formElement.appendChild(newInputElement);
+
+					} else {						
+						// Récupération de la liste des éléments "input" enfants du "form"
+						final NodeList inputs = formElement.getElementsByTagName("input");
+
+						// Suppression du premier "input"
+						formElement.removeChild(inputs.item(0));
+						
+						// Modication de la valeur de l'attribut "id"
+						final NamedNodeMap attributes = formElement.getAttributes();
+						final Node nodeAttribute = attributes.getNamedItem("id");
+						nodeAttribute.setTextContent("form3");
+					}
+				}
+			}
+
+			// Ecriture des changements dans le fichier original
+			final TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
+			final Transformer transformer = transformerFactory.newTransformer();
+			final StreamResult result = new StreamResult(new File(xmlFilePath));
+			final DOMSource source = new DOMSource(document);
+			transformer.transform(source, result);
+
+			System.out.println("Parsing terminé");
+
+		} catch (ParserConfigurationException ex) {
+			ex.printStackTrace();
+		} catch (SAXException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} catch (TransformerException ex) {
+			ex.printStackTrace();
+		}
+	}
+}
+</code>
+
+
+<h2>Exemple de fichier XML</h2> 
+
+Copiez ce XML dans un fichier "DOM_parser_test_file.xml" :
+<code type="xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+    <body>
+	<form id="form1">
+		<div>Mon élément div</div>
+		<input id="12"  type="image" src="./images/buttonSubmit.gif" />
+	</form>
+	<form id="form2">
+		<input id="21" type="hidden" value="hiddenvalue"/>
+		<input id="22" type="image" src="./images/buttonCancel.gif" />
+	</form>
+   </body>
+</html>
+</code>
+
+En exécutant le code Java ci-dessus, le fichier devrait être modifié de la façon suivante : 
+<code type="xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+    <body>
+	<form id="form1">
+		<div>Le contenu a été modifié</div>
+		<input id="12" src="./images/buttonSubmit.gif" type="image">
+		<input type="hidden">
+	</form>
+	<form id="form3">
+		<input id="22" src="./images/buttonCancel.gif" type="image">
+	</form>
+   </body>
+</html>
+</code>
+
+On peut donc constater les différences : 
+1) Modification de contenu : le texte de la balise "div" a été modifié
+2) Modification d'attribut : l'attribut "id" du second "form" a pris la valeur : "form3"
+3) Creation d'éléments et d'attributs : un nouvel élément "input" (avec un nouvel attribut "type") a été créé dans le premier "form"
+4) Suppression d'élément : le premier élément "input" du deuxième "form" a été supprimé
+
+<h2>Problèmes de validation </h2> 
+Le parser java DOM a la capacité de valider le document XML avec son DTD ou XmlSchema.
+C'est une bonne pratique mais cela peut causer des problèmes.
+On peut voir le parsing se ralentir considérablement, en fonction de la complexité de la validation.
+On peut aussi avoir des tentatives de connexion à des ressources externes (des URLs) ce qui n'est pas forcément voulu.
+Enfin, s'il n'y a pas de connection disponisble le parser peut se mettre à attendre le timeout de connextion et donc rester bloqué plusieurs minutes !
+
+La solution pour cela est de configurer le <code type="java">DocumentBuilderFactory</code> de la façon suivante :
+<code type="java">
+documentBuilderFactory.setValidating(false);
+documentBuilderFactory.setFeature("http://xml.org/sax/features/namespaces", false);
+documentBuilderFactory.setFeature("http://xml.org/sax/features/validation", false);
+documentBuilderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
+documentBuilderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+</code>
+
+</tuto>
