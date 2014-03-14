@@ -1,0 +1,52 @@
+<tuto>
+<h1>How to retrieve the previous version of a file with Git ?<h1>
+
+This tutorial concerns the manipulation of a single file.
+With Git, the actions you make on a file depend on the current state of the file.
+
+<h2>In the case of uncommited modifications</h2>
+If you have uncommited modifications of your file, and you want to go back to the HEAD version, thus loosing your modifications, simply do : 
+<shell>
+git checkout -- file_name
+</shell>
+This will "overwrite" your current modifications : they will be gone. 
+Note : in most case you may skip the "--", they're only here to avoid confusing files with branches having the same name, which is quite rare anyway...
+
+<h2>In the case of commited modifications</h2>
+
+<h3>See the previous version of a file</h3>
+When going back to a previous version of a file, the first step is often to determine which is the version we need. 
+We can see the lasts commits on a file with : 
+<shell>
+git log file_name
+</shell>
+
+Of course the commit message may not be enough to choose, in which case you can check the content of the commit for a specific file with :
+<shell>
+git diff commit-id file_name
+</shell>
+
+<h3>Going back to a specific commit</h3>
+To go back to a specific version of a file, you simply need to use the <code>reset</code> command, giving the commit id and the file name :
+<shell>
+git reset commit-id file_name
+</shell>
+Modifications of the file are not lost but return to an uncommited state.
+At this step, we usualy proceed to the file correction before commiting it again. 
+
+If we use HEAD instead of a commit ID we are reseting the last local commited version.
+<shell>
+git reset HEAD file_name
+</shell>
+Note that, contrary to SVN for example, this will not bring back the last remote repository version !
+The reset action is a local action.
+
+<h3>Suppress an unwanted commit</h3>
+Once commited, a modification is a part of a commit.
+Git's reset commant will make your repository to point to a previous version of a file but it won't delete the intermediary commits.
+If those commits are only local and you really want to delete them, then just follow this tutorial : <link href="">remove a local commit</link>.
+
+However, in the case of a remote commit (a commit already pushed), then you'd better not try to remove the commit directly.
+The best way to remove remote commited modifications is to simply <link>revert</link> them.
+
+</tuto>
