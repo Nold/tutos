@@ -1,0 +1,108 @@
+<tuto>
+
+<h1>Navigation flow of a Struts request</h1>
+
+In this tutorial we will see the steps taken by a Struts request when receiving an HTTP request.
+
+1) When a request reaches the server with a specific URI, for example "/myLoggin.do", the server checks first the "web.xml" file.
+In the file, it looks for the mapping of the URI "/myLoggin.do".
+This will allow to find the requied ActionServlet and to load it.
+
+Example of a "web.xml" ActionServlet declaration :
+<code type="xml">
+	<!-- servlet and mapping deployment descriptor -->
+	<servlet>
+		<servlet-name>action</servlet-name>
+		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>/WEB-INF/struts-config.xml</param-value>
+		</init-param>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>2</param-value>
+		</init-param>
+		<init-param>
+			<param-name>detail</param-name>
+			<param-value>2</param-value>
+		</init-param>
+		<init-param>
+			<param-name>validate</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>convertNull</param-name>
+		        <param-value>true</param-value>
+    		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	...
+	<servlet-mapping>
+	        <servlet-name>action</servlet-name>
+        	<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+</code>
+
+2) While loading the ActionServlet will call its <code>init()</code> callback method (like any other servlet).
+Note that the ActionServlet class only extends the HttpServlet class.
+
+3) The <code>init()</code> method, reads the "init-param" parameters of "web.xml" file and loads the "struts-config.xml" file.
+
+Example of "init-param" parameters : 
+<code type="xml">
+	...
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>/WEB-INF/struts-config.xml</param-value>
+		</init-param>
+	...
+</code>
+
+4) Then the ActionServlet calls the RequestProcessor <code>proceed()</code> method.
+
+5) The <code>proceed()</code> method will check the mapping Struts for the request.
+It will create the ActionMapping object and map the request URI to the action declared in the "struts-config.xml" file.
+Example of "struts-config.xml" file "action-mapping" :
+<code type="xml">
+	...
+	<form-beans type="org.apache.struts.action.ActionFormBean">
+		<form-bean name="forwardForm" type="com.tutotechno.struts.form.ForwardForm" />
+	</form-beans>
+	...
+	<action-mappings>
+		<action path="/login"
+		        validate="false"
+		        type="com.tutotechno.struts.action.ForwardAction"
+				input="/error.jsp"
+		        name="forwardForm">
+			<forward name="success" path="/login.jsp"/>
+		</action>
+	</action-mappings>
+	...
+</code>
+
+6) Then it creates an "ActionForm" objet for the mapped action.
+In the above example, we create a "ForwardForm" bean which extends the "org.apache.struts.action.ActionForm" class of Struts framework.
+
+7) Then it calls the setters and <code>reset()</code> methods of the ActionForm.
+
+8) If the "action" node in "struts-config.xml" file has <code>validate="true"</code>, then the <code>validate()</code> method of the ActionForm is called.
+
+9) If validation errors are detected, then the request is sent back to the component defind by the attribute <code>input="/error.jsp"</code> of the "action-mappings".
+
+10) If there are no validation errors, then a Struts "Action" class is created for this mapping and next, its <code>execute()</code> method is called.
+
+11) The <code>execute()</code> methode executes the fonctional logic of the Action as you defined it and returns with an ActionForward key.
+
+12) This key, for example "success", is looked for in the mapping specified by the "forward" tag.
+<code type="xml">
+	...	
+	<forward name="success" path="/login.jsp"/>
+	...
+</code>
+
+13) The required display component, here : "/login.jsp", is then called and its return is sent back to the navigator.
+
+This seems complex enough, however knowing what your application can still need to take <link href="">Struts tiles</link> into account !
+
+</tuto>
