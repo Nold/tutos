@@ -1,0 +1,91 @@
+<tuto>
+<h1>J2EE Filters in a Java web application</h1>
+
+In a java web application, filters are objects used to bring a filtering fonctionnality on incoming or outgoing requests.
+This way you can code on a single class the actions that will take place for a large number of different URLs.
+Filters are usually not generating content but are used to transform a request or response header or content. 
+So filters do not create the response but can have the following function : 
+        <li>Analyse the request and react occordingly.</li>
+        <li>Block the request or response.</li>
+        <li>Modify header and content (on request or response).</li>
+        <li>Interact with external resources.</li>
+One common use case for filters is to check that the user is correctly bien connecté à la session HTTP 
+avant de laisser se poursuivre la requête.
+
+Un filtre est représenté par une classe qui implémente l'interface <code>javax.servlet.Filter</code>
+et qui dont la fonctionnalité principale est codée dans la méthode doFilter().
+Par exemple, si l'application reçoit une requète pour une ressource particulière (une servlet par exemple), 
+le filtre peut déterminer si l'utilisateur a les autorisations d'accès et rejetter la requète en renvoyant
+ l'utilisateur vers une page d'erreur dans le cas contraire.
+
+Un filtre est déclaré dans le fichier web.xml avec la syntaxe suivante : 
+<code type="xml">
+	...
+	<filter>
+		<filter-name>SecurityFilter</filter-name>
+		<filter-class>com.tutotechno.MonFiltre</filter-class>
+		<init-param>
+			<param-name>param-security-level</param-name>
+			<param-value>security-level-high</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>SecurityFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	...
+</code>
+Ici on note que des paramètres d'initialisation sont fournis au filtre, cela peut permettre de faire varier la 
+configuration, par exemple en fonction des environnements.
+Le filtre est mappé sur l'url-pattern "/*" : cela signifie que toutes les requêtes vont passer par le filtre "SecurityFilter".
+
+L'exemple du filtre "SecurityFilter" est fourni ci-dessous :
+
+<code type="java">
+package com.tutotechno;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Enumeration;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
+public class SecurityFilter implements Filter {
+
+	private String securityLevel;
+	
+	public void init (FilterConfig filterConfig) throws ServletException {
+       if (filterConfig != null) { 
+           securityLevel = filterConfig.getInitParameter("param-security-level");
+       }
+	}
+	
+	public void destroy() {
+	}
+
+	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+			throws IOException, ServletException {
+		throws IOException, ServletException {
+		
+		// On teste si l'utilisateur est autorisé
+		if (isSecurityOk(servletRequest)) {
+			// On passe la main aux filtres suivants
+			chain.doFilter(request, response);
+		} else {
+			// On redirige vers une page d'erreur
+			request.getRequestDispatcher("/WEB-INF/securityError.jsp").forward(request, response);
+		}
+	}
+	
+	private boolean isSecurityOk(ServletRequest servletRequest){
+		// TODO : mise en place de la procédure d'autentification...
+	}
+}
+</code>
+
+</tuto>
