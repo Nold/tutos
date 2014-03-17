@@ -1,0 +1,48 @@
+<tuto>
+<h1>How to move recent commits to another branch with Git ?</h1>
+
+This tutorial will show you first how to move your last commits done on the master to a new branch.
+Secondly we'll see how to move the commits to an existing branch.
+In either case the master will get back to it's previous state (before the commits were done).
+
+<h2>Move Git commits to a new branch</h2>
+
+First you need to create a new branch.
+Be carefull not to loose uncommited modifications : commit or stash them as necessary.
+Simply execute these commands : 
+<shell>
+git branch new_branch
+git reset --hard HEAD~3  # This command will make you go back from 3 commits. Uncommited modifications will be lost !
+git checkout new_branch
+<shell>
+
+You must make yourself sure of the numbers of commits to move.
+Those commits will be taken away from the master branch and moved to "new_branch".
+This only works because a new branch was created by the first command. 
+
+<h2>Move Git commits to an existing branch</h2>
+To move your commits to an existing branch, you will need to merge your modification to the existing branch first.
+Then you only need to execute the reset : <code>git reset - hard HEAD~3</code>.
+Don't forget to merge or your modifications will be lost !
+
+The required commands : 
+<shell>
+git checkout existing_branch
+git merge master
+git checkout master
+git reset --hard HEAD~3  # This command will make you go back from 3 commits. Uncommited modifications will be lost !
+git checkout existing_branch
+<shell>
+
+<h2>How does it work ?</h2>
+In Git, a branch is just a pointer. 
+Initially the master was a pointer on the last commit. 
+By creating the new branch "new_branch", you have created a new pointer on the last commit. 
+The "git reset" command has only moved the master's pointer back of 3 commits.
+But since you didn't move "new_branch" pointer, it is still pointing to the original commit : the last commit.
+
+<h2>Notes</h2>
+Note that Git's reset command works in local mode. You still have to push your changes afterwards.
+Also know that the general approach to moving commits between branches is the "<link>git cherry-pick<link>" command.
+
+</tuto>
