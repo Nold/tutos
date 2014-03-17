@@ -11,7 +11,7 @@ Cela peut être fait facilement en créant une branche puis en reculant.
 Attention à ne pas perdre des modifications non-commitées.
 
 <shell>
-branche git nouvelle_branche
+git branch nouvelle_branche
 git reset --hard HEAD~3  # Cette commande permet de revenir en arrière de 3 commits. Les modifications non-commitées seront perdues.
 git checkout nouvelle_branche
 <shell>
