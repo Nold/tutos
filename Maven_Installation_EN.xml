@@ -1,0 +1,59 @@
+<tuto>
+<h1>How to install Maven ?</h1>
+
+In this tutorial we are going to install Maven 2.
+Therefore we will need to :
+    - Download Maven's zip file and unzip it
+    - Create two system variables "JAVA_HOME" and "M2_HOME"
+    - Add "%JAVA_HOME%\bin;%M2_HOME%\bin;" to the "PATH" system variable if not already done.
+
+<h2>A short introduction to Maven</h2>
+
+Maven is an essential tool for java project building and dependency management.
+One of the most crucial functionnalities of Maven is the creation of a dependency repository
+to handle the libraries (jar files) and to provide them to several projects.
+Maven can download by himself the necessary libraries for your projects directly from online repositories such as <href url="">Maven Central</href>.
+Once handled by Maven, those jar files are accessible for any project, Maven allowing the management of the different versions.
+Even better, Maven will also retrieve your project's transitive dependencies without even asking ! 
+You see, with Maven building the different java packaging types (jar, war, ear) is plain easy.
+Maven also provides numerous side-funtionnalities through the use of plugins which make it an inevitable tool for any Java project.
+
+<h2>Downloading and extracting the zip</h2>
+Get the latest Maven version on : 
+<href url="http://maven.apache.org/download.html">http://maven.apache.org/download.html</href>. 
+Save the file, for example "apache-maven-2.0.8-bin.zip" and unzip it in your installation folder, for example "C:\dev\apache-maven-2.0.8".
+
+<h2>Creating the system variables</h2>
+Go to your system variables. 
+Using Windows you must follow : kkkk Panneau de configuration -> System -> Advanced -> kkkk System Variables.
+Create a "JAVA_HOME" variable and make it point to your Java install : for example "C:\dev\jdk1.6.0_03".
+Create a "M2_HOME" variable and make it point to your Maven install : for example "C:\dev\apache-maven-2.0.8".
+
+<h2>Modifing the PATH variable</h2>
+The "PATH" system variable is vital as it allows programs execution.
+Add "%JAVA_HOME%\bin;%M2_HOME%\bin;" to your "PATH" system variable to allow Maven execution (and of course Maven needs Java). 
+
+<h2>First executions of Maven</h2>
+Open a console and type "mvn -version".
+You should see a message showing Maven's and Java's versions.
+
+Type the command "mvn clean". 
+You will see Maven downloading the necessary jar files from the central repository. 
+After this you will get a "BUILD ERROR" (it probably won't the last one of your Maven career...).
+That's normal : there was no Maven project at the position where we executed the command.
+Maven needs a pom.xml file in the execution folder.
+
+Now, if we are going into the user's personal system folder (for example "C:\Users\tutotechno"), 
+we can see that a new folder ".m2" was created by Maven.
+This ".m2" folder holds the famous "repository" folder which contains your local repository. 
+Note that you can move the repository to another place but generally this default place is kept.
+The local repository will hold the jar files that your projects will depend on and it will also contain your projects installations. 
+Moreover, the repository also holds the libraries and plugins needed by Maven itself. 
+That's the reason we can find the library used by Maven to execute the "clean" command : 
+"\.m2\repository\org\apache\maven\plugins\maven-plugin-clean\2.2."
+
+That's it ! Maven is correctly installed and works properly. 
+Now to create a full fledge Maven project, follow this tutorial : 
+<href url="">How to create a Maven project ?</href>. 
+
+</tuto>
