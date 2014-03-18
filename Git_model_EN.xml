@@ -1,0 +1,54 @@
+<tuto>
+<h1>Git's object model</h1>
+
+<h2>Git's objects</h2>
+A Git repository can hold four different types of objects.
+A Git object is either a blob (a file), a tree (a folder), a commit, or a tag.
+Each object in the repository is unique and identified by an hexadécimal number with 40 digits, which is the SHA-1 hash of it's content.
+Git's objects ids can be rendrered readable by the reduction of the id, or by classic named referencing.
+Those ids are used for the referencing by other Git objects.
+
+Blobs and trees represent the files and folders.
+Tags are named references to another object (usually a commit), in other terms tags are pointers with some usefull added metadata.
+Commit objects are central to Git's object model, as such they contain vital data :  
+- zero, one or more parents, that are precise commit ids
+- a tree id
+- a log message
+- a author (name, email, date)
+- a "commiter" (nom, email, date)
+"What about branches ?" you may ask. Are branches not considered objects ? Well surprisingly, no.
+In Git, branches are simply some lightweight movable named pointers to some commits, "master" simply being the default branch name.
+Branches are not considered objects in the sense that they don't really hold any information.
+
+<h2>The repository</h2>
+A Git repository is a collection of branches and tags.
+Like we already said, a branch is only a mobile pointer to a commit.
+The repository keeps a special pointer : the HEAD which points to the branch you are currently using.
+So the repository is made as a list of pointers which looks like this :
+- HEAD -> refs/heads/master
+- refs/heads/master -> commit fec6ed
+- refs/heads/my_branch -> commit ce5c1e
+- refs/tags/v1.2.3 -> commit e8ce2f
+- refs/tags/v1.2.4 -> commit 4b5127
+
+In that way the repository holds the DAG (for directed acyclic graph) : all the objects pointed by branches and tags.
+This is possible because commits contribute to the graph by holding a reference to their parents.
+
+<h2>Git branches<h2>
+Linus conceived Git as to allow for very practical management of branches and merges.
+Each repository can hold any number of branches and we can manage them easily and with very good performance.
+Not all VCS can pretend this (trust me) !
+Branches being only references, that is pointers on the commits DAG, they don't consume much memory.
+Furthermore, pointers are not versionned, so you don't have any worries to create experimental branches with Git and throw them afterwards.
+In few words : Git is branch-friendly !
+
+<h2>Git history : the log<h2>
+Git holds the log of your entire project, not idividual files history.
+However, contrary to some other VCS, Git does not track files renamming as repository metadata.
+Instead of that, renamings are automatically detected depending on the file content when available.
+Git's history is also conceived a to be a secured history and to prevent malicious history modifications.
+For example, a commit ID is a cryptographic key which certifies the integrity of the total repository's history uptill that commit.
+That functionnality is often missing on other VCS, especially non-distributed ones.
+Git provides powerfull tools to rewrite the history, most of the time in order to simplify it.
+
+</tuto>
