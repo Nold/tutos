@@ -62,7 +62,7 @@ il est possible de le déplacer mais en général on conserve cet emplacement.
 Le repository local contiendra les fichiers jar que vos projets utiliseront. 
 En outre, il contient les fichiers jar et les choses que Maven nécessite lui-même. 
 Ainsi nous pouvons trouver la librairie utilisée par Maven pour réaliser la commande "clean" : 
-\.m2\repository\org\apache\maven\plugins\maven-plugin-propre\2.2.
+\.m2\repository\org\apache\maven\plugins\maven-plugin-clean\2.2.
 
 Voilà ! Maven est bien installé et fonctionne normalement. 
 Pour la création d'un projet Maven suivez le tutorial suivant : 
