@@ -1,0 +1,11 @@
+<tuto>
+	<h1>How to modify the hostname ?</h1>
+
+1) Modify the hostname in the file "/etc/hostname"
+
+2) Modify the file "etc/hosts"
+
+3) Launch the command <shell>start hostname</shell>
+
+4) Restart the station   
+</tuto>
