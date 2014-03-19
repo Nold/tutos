@@ -1,0 +1,76 @@
+<tuto>
+<h1>Comment créer des tags JSP avec doStartTag et doEndTag</h1>
+
+Dans ce tutoriel nous allons créer un tag JSP personnalisé en implémentant en Java les deux méthodes "doStartTag" et "doEndTag".
+
+Les méthodes <code type="java">doStartTag()</code> et <code type="java">doEndTag()</code> sont des méthodes de l'interface 
+<code type="java">Tag</code> qui sont exécutées par la page JSP lors de l'évaluation d'une balise ouvrante ou d'une balise fermante, respectivement.
+
+Ces méthodes pouvent retourner les constantes suivantes : 
+doStartTag() :
+    <li>SKIP_BODY : cette valeur de retour bloque la suite de l'évaluation du contenu de la balise</li>
+    <li>EVAL_BODY_INCLUDE : cette valeur de retour autorise la suite de l'évaluation du contenu de la balise</li>
+doEndTag() :
+    <li>SKIP_PAGE : cette valeur de retour bloque la suite de l'évaluation de la page</li>
+    <li>EVAL_PAGE : cette valeur de retour autorise la suite de l'évaluation de la page</li>
+
+Nous allons dans un premier temps créer une classe de tag implémentant ces méthodes.
+Puis nous devrons déclarer notre classe de Tag dans un fichier TLD avant de pouvoir utiliser notre nouveau tag dans la page JSP.
+
+1) Création de la classe de Tag
+On crée une classe nommée CustomTagTest, qui va étendre la classe <code type="java">TagSupport</code>.
+La classe <code type="java">TagSupport</code> va nous éviter d'implémenter toutes les méthodes déclarées par l'interface <code type="java">Tag</code>.
+On implémente donc seulement les méthodes <code type="java">doStartTag()</code> et <code type="java">doEndTag()</code> qui seront exécutées lors de l'évaluation de notre tag.
+
+<code type="java">
+public class CustomTagTest extends TagSupport { 
+	public int doStartTag() {
+		// Le code fonctionnel ici
+		return EVAL_BODY_INCLUDE;
+		//return SKIP_BODY;
+	} 
+	
+	public int doEndTag() {
+		// Le code fonctionnel ici
+		return EVAL_PAGE;
+		//return SKIP_PAGE;
+	} 
+}
+</code>
+
+2) Création d'un fichier TLD (la taglib)
+On crée un fichier TDL nommé CustomTagTest.tld qui va contenir notre déclaration de tag.
+Pour fonctionner ce fichier doit être placé dans le répertoire "WEB-INF" de l'application web, ici on utilise "WEB-INF/tlds" pour plus d'organisation.
+
+<code type="xml">
+	<taglib>
+		<tlib-version>1.0</tlib-version>
+		<jsp-version>2.0</jsp-version>
+		<tag>
+			<name>monTagPerso</name>
+			<tag-class>com.tutotechno.jsp.tag.CustomTagTest</tag-class> 
+		</tag>
+	</taglib>
+</code>
+
+3) Utilisation du nouveau tag dans la JSP
+Dans notre page JSP "CustomTagTest.jsp", on déclare l'utilisation du fichier TLD (la taglib) : 
+<code type="jsp"><%@taglib uri="/WEB-INF/tlds/CustomTagTest.tld" prefix="cust" %></code>
+Il n'y a plus qu'à utiliser notre tag normalement !
+
+Exemple de jsp : CustomTagTest.jsp
+<code type="jsp">
+	<%@taglib uri="/WEB-INF/tlds/CustomTagTest.tld" prefix="cust" %>
+	<html>
+		<head>
+			<title>Exemple de tag </title>
+		</head>
+		<body>
+			Page JSP avant le tag personnalisé
+			<cust:monTagPerso />
+			Page JSP après le tag personnalisé
+		</body>
+	</html>
+</code>
+
+</tuto>
