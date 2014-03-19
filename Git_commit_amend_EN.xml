@@ -1,0 +1,36 @@
+<tuto>
+<h1>How to modify your last commit with Git "amend" ?</h1>
+
+Git allows for easy modifying of the last commit. 
+This is especially handy when you have forgotten to put some changes into that last commit.
+It can be the case of a completely new file or a simple additional change into an already commited file. 
+And finally it is also very usefull to modify the commit message.
+
+<h2>Adding changes to the last commit</h2>
+All you have to do is a "git add" so to "stage" the additional changes, be it new files or simple modifications.
+<shell>
+git add your_modified_files
+</shell>
+
+Then you simply commit with the "--amend" argument. 
+
+<shell>
+git commit --amend
+</shell>
+
+And that's it ! It couldn't have been more simple !
+If you don't specify any commit message with the "-m" option, the commit will keep the original message.
+
+<h2>Modifying the last commit's message</h2>
+If you have no modifications to add, and just want to change the commit message, then you don't need the <code>git add</code> part.
+Just commit again with the "-m" option and the corrected message : 
+<shell>
+git commit --amend -m "Mon message de commit est corrigé"
+</shell>
+
+When you finish, check it up with the <code>git log --stat</code> command to see how your commit was updated with the additional modifications. 
+For more information on the "amend" argument, have a look to <link>Git's documentation</link>.
+
+Note that this manipulation must only be done if you did <b>not</b> push the last commit to a public repository.
+If the last commit has already been pushed, then it is better to do a complete revert and to commit back the corrections like detailed <link>here</link>.
+</tuto>
