@@ -1,5 +1,5 @@
 <tuto>
-<h1>Git : modifier votre dernier commit</h1>
+<h1>Git : modifier votre dernier commit avec l'option "amend"</h1>
 
 Git permet de modifier facilement le commit précédent. 
 Cela peut s'avérer très utile, par exemple si jamais vous avez oublié d'inclure quelque chose dans le dernier commit.
@@ -11,7 +11,7 @@ Cela est aussi très utile pour modifier un message de commit inadéquat.
 Tout ce que vous avez à faire est un "git add" afin de "stager" les changements supplémentaires.
 
 <shell>
-git add .
+git add mes_fichiers_modifies
 </shell>
 
 Ensuite il suffit de commiter avec l'argument "--amend". 
@@ -30,7 +30,7 @@ git commit --amend -m "Mon message de commit est corrigé"
 </shell>
 
 Lorsque vous avez terminé, vous pouvez vérifier avec la commande <code>git log --stat</code> pour voir votre commit mis à jour avec les modifications supplémentaires. 
-Pour plus d'informations, consultez <link>la documentation de Git</link>.
+Pour plus d'informations sur l'option "amend", consultez <link>la documentation de Git</link>.
 
 Notez bien que cette manipulation est à réserver au cas où vous n'avez pas pushé les modifications sur un repository public.
 Si le commit a déjà été pushé alors il est plus propre de faire un revert complet et de refaire un commit corrigé comme expliqué <link>ici</link>.
