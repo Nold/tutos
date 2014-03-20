@@ -1,0 +1,64 @@
+<tuto>
+<h1>How to use Git's commands to verify a release content ?</h1>
+
+A release is always a delicate time in the project life cycle.
+It gets especially true if the release tasks to perform depend on the type of modifications you are releasing.
+In this tutorial we'll stick to the simple case of a basic version number increase.
+We'll be moving from version 1.0.1 to version 1.0.2 and before doing that we want to know what are precisely the differences between the two versions.
+For this we will use Git's commands in order to get the list of the commits included in the new release.
+
+<h2>How to list a release commits ?</h2>
+The new release will have the version number 1.0.2. 
+Normally it means that your Git repository already has a tag for the previous version : "tag_1.0.1". 
+This point is vital for this tutorial purposes, if you don't have such tags we recommand you to use them as soon as possible.
+Maven, for example, natively supports the tags creation on a release : no work on your part here.
+
+To get the list of commits since the last tag the command is the following :
+<shell>
+git log 'git describe --abbrev=0 --tags'..master
+</shell>
+
+If you don't deliver from the master but from a patching branch for example, then you only need to give your branch name :
+<shell>
+git log 'git describe --abbrev=0 --tags'..patching_branch
+</shell>
+
+How does this command work ? Here are some explanations : 
+
+<h2><code>git log</code></h2>
+This command displays the list of commits present on the HEAD branch.
+Here we use it with the option "since..until" that restrains the list to the commits found between the two named commits "since" and "until". 
+Git's documentation has complete explanations on the "since..until" option <link>here</link>.
+In our example, "since" is the previous release tag and "until" is the required branch.
+
+<h2><code>git describe</code></h2>
+Since we don't want to actually search what is the last release tag, the "git describe" command will do the search for us.
+It will simply display the most recent tag.
+The "--abbrev=0" option is used to avoid the long format and to only show the most recent tag.
+The "--tags" option is necessary to display all tags and not just annotated ones.
+
+<h2>Displaying modifications of a commit</h2>
+Now that you have identified the precise list of commits in your release, you will probably need to study their content.
+So you simply display the commit's modifications with :
+<shell>
+git diff commit_id
+</shell>
+Git displays the commit's modifications, file after file.
+
+<h2>How to display the modifications of a given file ?</h2>
+It is quite probable that your release has a lot of modified files, and you might want to narrow your study to some specific ones.
+This is a usual task anyway and not limited to release time in any case.
+Let's just check it one of our files, let's say "pom.xml" has been modified.
+Pom files are essential to the correct process of the release anyway, better check them up before performing the release.
+
+We use the following command : 
+<shell>
+git diff 'git describe --abbrev=0 --tags' --name-only -- path | grep -v "pom.xml"
+</shell>
+The "git describe" part is the same as discussed above : it returns the tag of the last release.
+The "--name-only" option commands "git diff" to only return the names of the modified files.
+The "-- path" part limits the search to the "path" folder.
+And finally the "grep -v" part is the search part : it searches "pom.xml" files within the list of modified files.
+If you are working with Windows or another OS without grep, then you'll need to install it or to use an equivalent such as "findstr".
+
+</tuto>
