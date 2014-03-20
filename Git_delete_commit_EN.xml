@@ -1,0 +1,64 @@
+<tuto>
+<h1>How to delete a local commit with Git ?</h1>
+
+You have commited once too much ? 
+Don't panic, this tutorial will show how to remove your commit with Git.
+However if you already pushed that commit, don't try to remove it, it's way better to <link src="">revert it</link>.
+
+<h2>First check up the logs !</h2>
+Deleting a commit is not without consequences, before doing anything serious, we'd better check up the repository's state.
+To check up the commits log on the entire project the Git command is : 
+<shell>
+git log
+</shell>
+
+It displays the project's last commits starting by the most recent ones : 
+<shell>
+commit 117653fr243118495e4114218e0d4182rrf3176e
+Author: Developper Alpha <dev.alpha@tutotechno.com>
+Date:   Thu Jun 5 04:05:06 2014 +0100
+
+    Commit message number 3
+
+commit 227653fr243118495e4114218e0d4182rrf3176e
+Author: Developper Alpha <dev.alpha@tutotechno.com>
+Date:   Thu Jun 5 03:05:06 2014 +0100
+
+    Commit message number 2
+
+commit 337653fr243118495e4114218e0d4182rrf3176e
+Author: Developper Alpha <dev.alpha@tutotechno.com>
+Date:   Thu Jun 5 02:05:06 2014 +0100
+
+    Commit message number 1
+</shell>
+Git displays each commit with its unique id, for example : "337653fr243118495e4114218e0d4182rrf3176e".
+To move through the results of the "git log", you simply use the commands of the program <link href="">less</link>.
+
+<h2>Go back to a given commit without loosing modifications</h2>
+Going back to a previous commit is the point of the "git reset" command.
+While going back to a previous commit with "git reset", the following commits are cancelled, but files modifications are kept.
+To indicate which commit you want to go back to, you have several syntaxes :
+    git reset HEAD^ : goes back to the commit immediately before the last one : cancels the last commit
+    git reset HEAD^^ : goes back to two commits before the last one : cancels the last two commits
+    git reset HEAD~3 : goes back 3 commits : cancels the last three commits 
+    git reset d6d98923868578a7f38dea79833b56d0326fcba1 : goes back to the commit with the given id
+
+<h2>Go back to a given commit loosing all modifications (git reset --hard)</h2>
+If you really need to cancel a commit and loose all file changes, then you use :
+<shell>
+git reset --hard
+</shell>
+That's the point where you check your actions : files modifications will be lost !
+
+Syntaxes are similar to a normal reset : 
+    git reset --hard HEAD^ : goes back to the commit immediately before the last one : cancels the last commit and removes all changes
+    git reset --hard HEAD^^ : goes back to two commits before the last one : cancels the last two commits and removes all changes
+    git reset --hard HEAD~3 : goes back 3 commits : cancels the last three commits and removes all changes
+    git reset --hard d6d98923868578a7f38dea79833b56d0326fcba1 : goes back to the commit with the given id and removes all changes
+
+On go back on the modifications of a unique file follow <link>that tutorial</link>.
+	
+</tuto>
+
+
