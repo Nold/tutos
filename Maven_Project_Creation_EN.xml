@@ -1,0 +1,61 @@
+<tuto>
+<h1>How to create a Maven project with "archetype" plugin ?</h1>
+
+Maven allows for easy project creation with the "archetype" plugin. 
+You can create a simple Maven project with a single command line :
+
+<code type="shell">
+mvn archetype:create -DgroupId=com.tutotechno -DartifactId=myProject
+</code>
+
+<h2>A first Maven project structure</h2>
+This command will create a Maven project named "myProject" within the "com.tutotechno" group. 
+The group specifies the project place in the repository and allows the gathering of related projects in a single group.
+When the command has finished you can see a new folder "myProject" : the "archetype" goal was successfull.
+Within that new project you will find a "src" folder destined to hold your sources and the mandatory "pom.xml" file.
+If you are new to Maven know that the POM file (standing for Project Object Model) is a project descriptor with xml format.
+This file has all the vital information Maven needs to correctly compile, package and release your project.
+Particularly it holds the list of your project jar dependencies.
+
+Within the "src/main/java" project folder you will fine the structure for the package "com.tutotechno". 
+Also your first test file "AppTest.java" was created in "src/test/java/com/tutotechno", altough it's only a JUnit example class.
+This is to remind you that Maven natively support the execution of JUnit tests in the application's life cycle. 
+Maven will run your tests by default (unless you instruct him not to do so) when you perform a "mvn clean install" : the classic building command.
+
+<h2>Introduction to the pom file</h2>
+The pom file Maven has provided your project is central to Maven's processes.
+It holds your project metadata such as the project name, the group name, the project version, the list of dependencies and potentially much more.
+The generated pom file is simple however :
+<code type="xml">
+	<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	  <modelVersion>4.0.0</modelVersion>
+	  <groupId>com.tutotechno</groupId>
+	  <artifactId>myProject</artifactId>
+	  <packaging>jar</packaging>
+	  <version>1.0.0-SNAPSHOT</version>
+	  <name>My Project</name>
+	  <url>http://maven.apache.org</url>
+	  <dependencies>
+		<dependency>
+		  <groupId>junit</groupId>
+		  <artifactId>junit</artifactId>
+		  <version>3.8.1</version>
+		  <scope>test</scope>
+		</dependency>
+	  </dependencies>
+	</project>
+</code>
+
+The "modelVersion" element is the version of the pom's xml format, this value is usually not modified. 
+The "groupId" element is the initial command's groupId value. 
+The "artifactId" element also keeps the initial artefactId value, this will be used to name the final artefact file.
+The "packaging" element is the type of package you want to release, usually the values are : jar , war or ear.
+The "version" element is the version number of your project, this will also be used to name the final artefact file like, for example "junit-1.2.3.jar".
+The "name" element is the project's display name. 
+The "url" element is used to configure the project's "site", usefull for documentation.
+
+Also we see that the JUnit dependency was included in the pom.xml file.
+The "AppTest" class being a JUnit test, the JUnit dependency is necessary.
+
+</tuto>
