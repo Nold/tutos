@@ -1,0 +1,9 @@
+<tuto>
+	<h1>How to block/unblock a package update</h1>
+
+1) To block
+   <shell>echo "package_name hold"|dpkg --set-selections</shell> 
+
+2) To unblock
+   <shell>echo "package_name install"|dpkg --set-selections</shell>
+</tuto>
