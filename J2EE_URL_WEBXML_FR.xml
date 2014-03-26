@@ -27,10 +27,17 @@ Exemple de définition dans le fichier web.xml :
 	</web-app>
 </code>
 
-<h2>Ajouter la définition d'URL dans Websphere</h2>
+<h2>Création de la définition d'URL dans Websphere</h2>
 Il faut définir le nom JNDI dans l'arbre JNDI de WebSphere.
 Le nom JNDI est une valeur à votre discrétion, la convention est d'utiliser un préfixe correspondant à la nature de la ressource.
 Comme notre ressource est un fichier properties on utilisera donc "properties/exempleConf".
+Pour la création on peut procéder manuellement à travers la console de Websphere : suivez Resources->URL->URLs : puis cliquez "New".
+Ou si vous appréciez l'automatisation, vous pouvez utiliser un script à l'exemple de ce script python :
+<code type="python">
+print "Creation de la ressource URL",
+if not(ressourceExist('URL','exempleConf')):
+	createURL('exempleConf', 'properties/exempleConf', 'file:/main/application/tutotechnoWebApp/external/conf/exemple.properties')
+</code>
 
 <h2>Définition du nom de Binding</h2>
 Le nom de binding est le nom JNDI par lequel l'URL est connue de WebSphere. 
