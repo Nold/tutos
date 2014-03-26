@@ -1,0 +1,101 @@
+<tuto>
+<h1>How to use @PostConstruct and @PreDestroy annotations with Spring</h1>
+
+The two annotations @PostConstruct and @PreDestroy define callback methods destined to respectively initialize and destroy Spring beans.
+Those annotations are specified in JSR-250 and are provided by common-annotations.jar library.
+Spring supports these annotations, so let's see how to use them with Spring.
+
+<h2>Example of a bean @PostConstruct and @PreDestroy annotations</h2>
+Let's take the exemple of a simple bean representing an invoice : 
+<code type="java">
+package com.tutotechno.beans;
+ 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+ 
+public class Invoice
+{
+	String customerId;
+ 
+	public String getCustomerId() {
+	  return customerId;
+	}
+ 
+	public void setCustomerId(String customerId) {
+	  this.customerId = customerId;
+	}
+ 
+	@PostConstruct
+	public void initialize() throws Exception {
+	  System.out.println("Initialization after fillout of properties : " + customerId);
+	}
+ 
+	@PreDestroy
+	public void finalize() throws Exception {
+	  System.out.println("Last cleanup before destroying the Invoice bean");
+	}
+}
+</code>
+
+The annotation @PostConstruct instructs Spring that the "initialize()" method must be executed after injecting the bean.
+The annotation @PreDestroy instructs Spring that the "finalize()" method must be executed before Spring destroys the bean.
+The developer is responsible for implementating this methods : he has to ensure that the initialization and finalization tasks are correctly done.
+
+<h2>Configuring Spring to use @PostConstruct and @PreDestroy annotations</h2>
+Spring does not handle @PostConstruct and @PreDestroy annotations by default.
+You can activate those annotations in Spring context file by either : 
+	- registering the "CommonAnnotationBeanPostProcessor" 
+	- specifying the <code type="xml"><context:annotation-config /></code> element.
+See those two configurations below :
+
+<h3>1. CommonAnnotationBeanPostProcessor</h3>
+<code type="xml">
+<![CDATA[
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+ 
+	<bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor" />
+ 
+	<bean id="invoice" class="com.tutotechno.beans.Invoice">
+		<property name="customerId" value="client's id" />
+	</bean>
+</beans>]]>
+ </code>
+
+<h3>2. &lt;context:annotation-config /&gt;</h3>
+<code type="xml">
+<![CDATA[
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+ 
+	<context:annotation-config />
+ 
+	<bean id="invoice" class="com.tutotechno.beans.Invoice">
+		<property name="customerId" value="client's id" />
+	</bean>
+</beans>]]>
+ </code>
+
+<h2>Code execution</h2>
+
+Executing the code returns the following : 
+<shell>
+Initialization after fillout of properties : client's id
+com.tutotechno.beans.Invoice@32316f
+...
+INFO: Destroying singletons in org.springframework.beans.factory.
+support.DefaultListableBeanFactory@98766a: 
+defining beans [invoice]; root of factory hierarchy
+Last cleanup before destroying the Invoice bean
+</shell>
+
+Here we see that "initialize()" method (@PostConstruct) is executed after that the "customerId" property has been injected.
+And the "finalize()" (@PreDestroy) method is called after Spring's "context.close();" method.
+</tuto>
