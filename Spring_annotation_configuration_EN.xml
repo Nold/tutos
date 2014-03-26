@@ -1,0 +1,37 @@
+<tuto>
+<h1>How to use configuration by annotations with Spring ?</h1>
+Since Spring 2.5, we can use annotations to configure the dependency injection in Java.
+Instead of using cumbersome XML files to map Spring beans to Java classes, we can put this configuration directly in the Java class using annotations.
+Spring still supports XML configuration however, and since annotations are processed before XML configuration, if both are used note that the last overrides the first : XML wins !
+
+Spring's annotations based configuration is not activated by default by the container, it must be declared in Spring context file like this : 
+<code type="xml">
+	<![CDATA[
+	<beans xmlns="http://www.springframework.org/schema/beans"
+	    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	    xmlns:contexte="http://www.springframework.org/schema/context"
+	    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	   <context:annotation-config/>
+	      ...   
+	</beans>]]>
+</code>
+
+Once the element <code type="xml"><![CDATA[<context:annotation-config/>]]></code> is declared, Spring will use Java code annotations to inject the beans.
+Here is the list of the main annotations usable with Spring :
+<li>@Autowired : Spring annotation "@Autowired" specifies an instance variable provided by Spring</li>
+<li>@Required : Spring annotation "@Required" certifies that a variable is correctly provided</li>
+<li>@Qualifier : Spring annotation "@Qualifier", used with "@Autowired", it allows to precise the exact bean to inject</li>
+<li>@Resource : JSR-250 annotation : similar to "@Autowired" : a standard annotation from the package javax.annotation</li>
+<li>@PostConstruct : JSR-250 annotation : allows the definition of a bean's initialization callback method</li>
+<li>@PreDestroy : JSR-250 annotation : allows the definition of a bean's destruction callback method</li>
+
+The three last annotations are not provided by Spring but by the J2EE library common-annotations.jar, but they are still supported by Spring.
+
+TODO : java example : 
+<code type="java">
+	TODO
+</code>
+
+</tuto>
