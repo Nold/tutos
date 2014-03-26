@@ -5,7 +5,7 @@ Ainsi, au lieu d'utiliser XML pour mapper les beans Springs aux classes Java, vo
 Attention : spring procède à l'injection par annotations avant l'injection par configuration XML, si les deux sont utilisées conjointement, la dernière surcharge donc la première.
 
 La configuration par annotations n'est pas activée par défaut par le conteneur Spring, il faut la déclarer dans le fichier contexte Spring de la façon suivante : 
-<code type="xml>
+<code type="xml">
 	<![CDATA[
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -18,7 +18,7 @@ La configuration par annotations n'est pas activée par défaut par le conteneur S
 </beans>]]>
 </code>
 
-Une fois la balise <code type="xml><![CDATA[<context:annotation-config/>]]></code> déclarée, Spring va utiliser les annotations du code pour injecter les beans.
+Une fois la balise <code type="xml"><![CDATA[<context:annotation-config/>]]></code> déclarée, Spring va utiliser les annotations du code pour injecter les beans.
 Voici la liste des principales annotations utilisables avec Spring :
 <li>@Autowired : L'annotation Spring "@Autowired" permet de spécifier une variable d'instance à renseigner par Spring</li>
 <li>@Required : L' annotation Spring "@Required" s'utilise sur une propriété pour certifier qu'elle est correctement renseignée</li>
