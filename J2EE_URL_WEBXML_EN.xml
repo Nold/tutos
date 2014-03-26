@@ -1,42 +1,93 @@
 <tuto>
 
-<h1>How to define a resource url into web.xml for Websphere ?</h1>
-For your code to perform a JNDI lookup on some JNDI name (for example : java:comp/env/exampleUrl), you must properly define the URL resource. 
-The web.xml is the standard JavaEE file where you must declare the URLs needed for your local JNDI namespace (java:comp/env).
-The web.xml file is to be located inside the WEB-INF folder of your WAR project. 
-If you use Servlet specification 2.5 or more, then deployment descriptors are optional meaning that the web.xml file is not mandatory any more.
+<h1>How to define and use an URL resources such as a properties file in Websphere ?</h1>
 
-The file ibm-web-bnd.xml is specific to WebSphere and must be located in the same directory as web.xml. 
-It holds the binding of URLs definitions (and other declared artifacts). 
-You can find IBM's documentation about this file <link src="">here</link>.
-Inside the ibm-web-bnd.xml file, the references "id" attribute must match the "id" attribute of the "resource-ref" element of the web.xml file.
-That's the way WebSphere links ibm-web-bnd.xml definitions to web.xml ones. 
+It's quite common for a web application to need external configuration provided by properties files.
+The point of that is to enable configuration changes with a simple application stop and start and without needing a new release and deploy.
+For the application to access this configuration in java, the most flexible solution are Websphere's URL resources.
+This way integration and production teams can modify the configuration files location without impact on the application.
 
-To summary : 
+<h2>Defining the JNDI local name</h2>
+Here we are going to use the example of a standard configuration file : example.properties.
+The URL resource is used to provided the full access path of the configuration file : /main/application/tutotechnoWebApp/external/conf/example.properties.
+This URL is in no way present in the application classpath, and because IO accesses are discouraged in J2EE, the application will use JNDI to retrieve the file.
+For the JNDI lookup to correctly look a JNDI name (for example : java:comp/env/exampleConf), we must define the URL resource in the web.xml file.
+The web.xml file is placed in the "WEB-INF" folder of the project WAR and describe the resources for the JNDI local namespace (java:comp/env).
 
-1) Defining the local JNDI name
-In web.xml, you define the local JNDI name. 
-That would be the name by which your Java code is referring to the URL. 
-For example, exampleUrl. 
-
-We must add the following to web.xml :
+We add our resource definition in the web.xml file :
 <code type="xml">
-    <resource-env-ref>
-        <resource-env-ref-name>exampleUrl</resource-env-ref-name>
-        <resource-env-ref-type>java.net.URL</resource-env-ref-type>
-    </resource-env-ref>	
+	<web-app>
+		...
+		<resource-ref id="ResourceEnvRef_1">
+			<res-ref-name>properties/exampleConf</res-ref-name>
+			<res-type>java.net.URL</res-type>
+			<res-auth>Container</res-auth>
+			<res-sharing-scope>Unshareable</res-sharing-scope>
+		</resource-ref>
+	</web-app>
 </code>
 
-2) Adding a URL definition in Websphere
+<h2>Creation of the URL definition in Websphere</h2>
 We must define the JNDI name in WebSphere's JNDI tree.
-Any value can be used here, convention being that you use the prefix "url/". For example: url/exampleUrl.
-
-3) Binding name
-We must bind the URL looked-up by your application (here : exampleUrl) to the binding name (here : url/exampleUrl).
-The binding name is the JNDI name by which the URL is known by WebSphere. 
-This is done in the file ibm-web-bnd.xml like this :
-<code type="xml">
-    <resource-env-ref name="exampleUrl" binding-name="url/exampleUrl"/>
+The JNDI name can be anything, however the convention is to use a prefix depending on the resource type.
+In our example, the resource is a properties file, we'll then use the "properties/" prefix : "properties/exampleConf".
+To create the URL definition in Websphere we can manually use the console : see Resources->URL->URLs, then select "New".
+But if you prefer automated solutions you'd better use a script like the following python script :
+<code type="python">
+print "Creating the URL resource",
+if not(resourceExist('URL','exampleConf')):
+	createURL('exampleConf', 'properties/exampleConf', 'file:/main/application/tutotechnoWebApp/external/conf/example.properties')
 </code>
+
+<h2>Defining the binding name</h2>
+The binding name is the JNDI name by which WebSphere knows the URL resource. 
+This binding is declared in the "ibm-web-bnd.xml" file.
+This WebSphere specific file is to be located in the web.xml file folder. 
+In the "ibm-web-bnd.xml" file, the "href" attributes must map to the "resource-ref" attributes "id" of the "web.xml" file : that is "ResourceEnvRef_1" in our example.
+
+The link between Websphere's URL definition and the web.xml file is declared like this : 
+<code type="xml">  
+	<webappbnd:WebAppBinding>
+		...
+		<resRefBindings xmi:id="ResourceRefBinding_1" jndiName="properties/exampleConf">
+			<bindingResourceRef href="WEB-INF/web.xml#ResourceEnvRef_1"/>
+		</resRefBindings>
+	</webappbnd:WebAppBinding>
+</code>
+Note that ids must be unique in the entire file.
+For more documentation on the ibm-web-bnd.xml file, check <link src="">this</link>.
+
+<h2>Using the resource in Java</h2>
+
+Once the resource has correctly been configured in the JNDI context, usage in Java is straightforward :
+<code type="java">
+private Properties retrieveConfigurationProperties() {
+	final Properties configurationProperties = new Properties();
+	final String confJndiName = "java:comp/env/properties/exampleConf";
+
+	try{		
+		// Retrieving example.properties file's URL from JNDI context
+		final InitialContext context = new InitialContext();
+		final URL urlFile = (URL) context.lookup(confJndiName);
+		if (urlFile != null) {
+			// Loading the properties file
+			configurationProperties.load(urlFile.openStream());
+		}
+	} catch (NamingException ex) {
+		ex.printStackTrace();
+	} catch (IOException ex) {
+		ex.printStackTrace();
+	}
+
+	return configurationProperties;
+}
+</code>
+
+And to retrieve a specific property in your properties file, say you want the property "is.security.down", just do : 
+<code type="java">
+final Properties configurationProperties = retrieveConfigurationProperties();
+configurationProperties.getProperty("is.security.down", "false");
+</code>
+
 
 <tuto>
