@@ -1,0 +1,30 @@
+<tuto>
+<h1>How to load a resource bundle from a properties file in Java ?</h1>
+
+There are two ways of loading the resource bundle depending if the properties file is located in the classpath or not.
+
+<h2>Location in classpath</h2>
+Put your properties file into a jar and add it to your classpath.
+Check that your file has the correct "properties" extension : "myBundle.properties" for example.
+You then load the bundle and get the property using this code :
+
+<code type="java">
+	final ResourceBundle resourceBundle = ResourceBundle.getBundle("myBundle");
+	final String myProperty = resourceBundle.getString("property_key");
+</code>
+	
+<h2>Location outside of classpath</h2>
+In this case your file will be placed in an external folder, for example "C:\\temp", so it won't be placed in the classpath.
+You may still check that it has the correct "properties" extension.
+You load the bundle and get the property using this code :
+
+<code type="java">
+	final File file = new File("C:\\temp");
+	final URL[] urls = {file.toURI().toURL()};
+	final ClassLoader classLoader = new URLClassLoader(urls);
+	final ResourceBundle resourceBundle = ResourceBundle.getBundle("myBundle", Locale.getDefault(), loader);
+	final String myProperty = resourceBundle.getString("property_key");
+</code>
+
+Note that "myBundle" relates to myBundle.properties, myBundle_en_US.properties, etc.
+</tuto>
