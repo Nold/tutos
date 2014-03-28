@@ -8,9 +8,9 @@ Ce tutoriel va vous montrer comment ajouter un nouvel élement dans un document 
 
 <code type="xml">
 <?xml version="1.0" encoding="UTF-8"?>
-<products>
-    <product id="P01" price="12" />
-</products>
+<produits>
+    <produit id="P01" prix="12" />
+</produits>
 </code>
 
 <h2>Exemple de code Java pour ajouter un noeud XML</h2>
@@ -49,26 +49,26 @@ public class AddElementDocumentBuilderTest {
 					"&lt;products&gt;&lt;product id=\"P01\" price=\"12\" /&gt;&lt;/products&gt;"));
 			final Document document = builder.parse(inputSource);
 
-			// <products> element
+			// La racine correspond à l'élément <produits>
 			final Element productList = (Element) document.getFirstChild();
 
-			// Create the new product element
-			final Element newProductElement = document.createElement("product");
+			// Création du nouvel élément produit
+			final Element newProductElement = document.createElement("produit");
 
-			// Adding ID attribute to the new element
+			// Ajout de l'attribut ID au nouvel élément
 			final Attr idAttribute = document.createAttribute("id");
 			idAttribute.setValue("P02");
 			newProductElement.setAttributeNode(idAttribute);
 
-			// Adding price attribute to the new element
-			final Attr priceAttribute = document.createAttribute("price");
+			// Ajout de l'attribut prix au nouvel élément
+			final Attr priceAttribute = document.createAttribute("prix");
 			priceAttribute.setValue("24");
 			newProductElement.setAttributeNode(priceAttribute);
 
-			// Append the new product element to the list
+			// Ajout du nouveau produit à la liste
 			productList.appendChild(newProductElement);
 
-			// write the content into xml file
+			// Ecriture du document dans un objet String
 			final TransformerFactory transformerFactory = TransformerFactory
 					.newInstance();
 			final Transformer transformer = transformerFactory.newTransformer();
@@ -97,10 +97,10 @@ public class AddElementDocumentBuilderTest {
 
 <code type="xml">
 <?xml version="1.0" encoding="UTF-8"?>
-<products>
-    <product id="P01" price="12" />
-    <product id="P02" price="24" />
-</products>
+<produits>
+    <produit id="P01" prix="12" />
+    <produit id="P02" prix="24" />
+</produits>
 </code>
 
 </tuto>
