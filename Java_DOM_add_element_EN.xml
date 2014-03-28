@@ -3,7 +3,6 @@
 
 This tutorial will show you how to add a new element into an XML document with the Java object <code type="java">javax.xml.parsers.DocumentBuilder</code>.
 
-
 <h2>Input XML</h2> 
 
 <code type="xml">
@@ -68,7 +67,7 @@ public class AddElementDocumentBuilderTest {
 			// Append the new product element to the list
 			productList.appendChild(newProductElement);
 
-			// write the content into xml file
+			// Output the document as a String
 			final TransformerFactory transformerFactory = TransformerFactory
 					.newInstance();
 			final Transformer transformer = transformerFactory.newTransformer();
