@@ -1,0 +1,106 @@
+<tuto>
+<h1>Comment créer un nouvel élement XML avec un parser DOM en Java ?</h1>
+
+Ce tutoriel va vous montrer comment ajouter un nouvel élement dans un document XML avec l'objet <code type="java">javax.xml.parsers.DocumentBuilder</code>.
+
+
+<h2>Le XML en entrée</h2> 
+
+<code type="xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+    <product id="P01" price="12" />
+</products>
+</code>
+
+<h2>Exemple de code Java pour ajouter un noeud XML</h2>
+
+<code type="java">
+package com.tutotechno.util.parsers;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+public class AddElementDocumentBuilderTest {
+
+	public static void main(String argv[]) {
+
+		try {
+			final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
+					.newInstance();
+			final DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
+			final InputSource inputSource = new InputSource(new StringReader(
+					"&lt;products&gt;&lt;product id=\"P01\" price=\"12\" /&gt;&lt;/products&gt;"));
+			final Document document = builder.parse(inputSource);
+
+			// <products> element
+			final Element productList = (Element) document.getFirstChild();
+
+			// Create the new product element
+			final Element newProductElement = document.createElement("product");
+
+			// Adding ID attribute to the new element
+			final Attr idAttribute = document.createAttribute("id");
+			idAttribute.setValue("P02");
+			newProductElement.setAttributeNode(idAttribute);
+
+			// Adding price attribute to the new element
+			final Attr priceAttribute = document.createAttribute("price");
+			priceAttribute.setValue("24");
+			newProductElement.setAttributeNode(priceAttribute);
+
+			// Append the new product element to the list
+			productList.appendChild(newProductElement);
+
+			// write the content into xml file
+			final TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
+			final Transformer transformer = transformerFactory.newTransformer();
+			final DOMSource domSource = new DOMSource(document);
+			final StringWriter stringWriter = new StringWriter();
+			final StreamResult streamResult = new StreamResult(stringWriter);
+			transformer.transform(domSource, streamResult);
+
+			System.out.println(stringWriter.toString());
+
+		} catch (ParserConfigurationException ex) {
+			ex.printStackTrace();
+		} catch (TransformerException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} catch (SAXException ex) {
+			ex.printStackTrace();
+		}
+	}
+}
+</code>
+
+
+<h2>Le XML modifié en sortie</h2> 
+
+<code type="xml">
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+    <product id="P01" price="12" />
+    <product id="P02" price="24" />
+</products>
+</code>
+
+</tuto>
