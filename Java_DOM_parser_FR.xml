@@ -2,15 +2,15 @@
 <h1>Comment modifier un fichier XML avec un parser DOM en Java ?</h1>
 
 Voici comment modifier un fichier XML avec l'API javax.xml.parsers.DocumentBuilder.
-Mettons que nous avons un fichier XHTML où nous souhaitons manipuler le contenu des balises "form".
+Ici nous allons modifier du XHTML où nous souhaitons manipuler le contenu des balises "form".
 
-Avec <code type="java">DocumentBuilder</code> nous avons accès à tous types de modifications du XML : 
+Avec l'objet Java <code type="java">DocumentBuilder</code> nous avons accès à tous types de modifications du XML : 
 1) Modification du contenu des balises
 2) Modification de la valeur des attributs
 3) Creation de balises ou d'attributs
 4) Suppression de balises ou d'attributs
 
-<h2>Implementation du parser</h2>
+<h2>Implémentation du parser</h2>
 
 <code type="java">
 package com.tutotechno.util.parsers;
@@ -161,10 +161,10 @@ On peut donc constater les différences :
 
 <h2>Problèmes de validation </h2> 
 Le parser java DOM a la capacité de valider le document XML avec son DTD ou XmlSchema.
-C'est une bonne pratique mais cela peut causer des problèmes.
-On peut voir le parsing se ralentir considérablement, en fonction de la complexité de la validation.
+C'est une bonne pratique en général, mais cela peut vite causer des problèmes.
+Typiquement cela peut considérablement ralentir le parsing, en fonction de la complexité de la validation.
 On peut aussi avoir des tentatives de connexion à des ressources externes (des URLs) ce qui n'est pas forcément voulu.
-Enfin, s'il n'y a pas de connection disponisble le parser peut se mettre à attendre le timeout de connextion et donc rester bloqué plusieurs minutes !
+Enfin, s'il n'y a pas de connexion disponible le parser peut attendre le timeout de connexion et donc rester bloqué plusieurs minutes !
 
 La solution pour cela est de configurer le <code type="java">DocumentBuilderFactory</code> de la façon suivante :
 <code type="java">
