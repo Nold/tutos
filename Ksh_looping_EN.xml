@@ -1,0 +1,130 @@
+<tuto>
+<h1>Ksh Tutorial : loops and conditionnal instructions</h1>
+This tutorial presents the commands allowing to control the program flow.
+Conditionnal instructions give a way to execute a command only if some conditions are fullfilled.
+Similarly, loops allow to repeat command a certain number of time, ususally untill some condition is fullfilled.
+
+<h2>Conditionnal instructions : <code>if</code> and <code>case</code></h2>
+
+<h3>The instruction <code>if</code></h3>
+That's the base instruction to test conditions.
+The syntax is illustrated here :
+<shell type="ksh">
+    if [$? - eq 0] ; then
+		print everything is ok
+    else
+		print something failed
+    fi
+</shell>
+The "$?" variable verifies the output of the last executed command : usually 0 for a success and 1 for a faillure.
+In the above code, if "$?" is equal to 0, then the program displays a success message.
+Else, a failure message is printed. 
+Note that the final «fi» is mandatory : it allows to use several lines in the same clause.
+We can put several lines between "if" and "else", or between "else" and "fi", or both.
+Also note that the "else" is optional, you can leave it if you don't need it.
+Example :
+<shell type="ksh">
+    if [$? - eq 0] ; then
+		print everything is ok
+		print you can add lines
+		print as much lines as you want !
+    fi
+</shell>
+
+<h3>The instruction <code>case</code></h3>
+The "case" instruction works like the "switch" instruction of some other languages.
+Depending on a variable value, the "case" instruction can execute some commands, depending on the variable specific value.
+
+<shell type="ksh">
+echo entrer yes or no
+read response
+case $response in
+	yes|Yes|y)
+		echo positive response
+		# les ';;' suivants sont obligatoires pour clore l'ensemble de commandes
+		;;
+	no)
+		echo negative response
+		;;
+	q*|Q*)
+		# user wants to quit
+		exit
+		;;
+	*)
+		echo default case if the value didn't match anything
+		;;
+esac
+</shell>
+
+Notes :
+- The "case" variable can be a string or an integer.
+- You can use generic characters like "*" with a string variable.
+- The "case" instruction only executes one case group. However you get a "fallback" type mode by using ";&" instead of ";;".
+		
+<h2>Loop instructions : <code>while</code>, <code>for</code> and <code>until</code></h2>
+
+<h3>The instruction <code>while</code></h3>
+The basic loop is given by the "while" instruction that will loop while some condition is true.
+The "while condition" is an instruction evaluated at each loop to check if condition became false, meaning the loop must stop.
+The other way to stop the loop is to use a <code>break</code> instruction that immediately exits the loop.
+
+<shell type="ksh">
+        weshouldloop=1;
+	while [[ $weshouldloop -eq 1 ]] ; do
+		read user_entry
+		if [[ "$user_entry" = "execute_stop" ]] ; then
+			execute_final_process
+			weshouldloop=0
+		fi
+		if [[ "$user_entry" = "immediate_stop" ]] ; then
+			break;
+		fi
+	done
+</shell>
+
+<h3>The instruction <code>until</code></h3>
+The second type of loop in ksh, is the <code>until</code> loop. 
+Contrary to <code>while</code>, the <code>until</code> instruction loops until a false condition becomes true.
+
+<shell type="ksh">
+    until [[ $stopcondition -eq 1 ]] ; do
+		echo execute this once
+		stopcondition=1;
+		echo this won't be printed twice
+    done
+</shell>
+
+<h3>The instruction <code>for</code></h3>
+A <code>for</code> loop, is a "restrained" instruction that will only loop a given number of times.
+The number of loops depends on the loop parameter
+Once the loop is started, the parameters are set an can not be changed.
+The syntax is illustrated here :
+<shell type="ksh">
+	for numbers in one two three ; do
+		echo $numbers
+	done
+</shell>
+
+The "numbers" variable will be updated by each value of the instruction <code>in</code>.
+The loop will therefore print the following text : 
+<shell>
+    one
+    two
+    three
+</shell>
+
+You can also use a variable to define the "for" instruction's list.
+It will only be read once, when the loop starts.
+Any latter modification will have no effect on the loop behaviour.
+<shell type="ksh">
+    	numbers="one two three"
+	for number in $numbers ; do
+		echo $number
+		# Note: Change the "numbers" variable won't change the loop !
+		liste="nothing"
+	done
+</shell>
+
+The program will still be printing "one", "two", "three" on three lines.
+
+</tuto>
