@@ -103,6 +103,6 @@ In the above example, we create a "ForwardForm" bean which extends the "org.apac
 
 13) The required display component, here : "/login.jsp", is then called and its return is sent back to the navigator.
 
-This seems complex enough, however knowing what your application can still need to take <link href="">Struts tiles</link> into account !
+And that is only the simple case where you don't use <link href="">Struts tiles</link> !
 
 </tuto>
