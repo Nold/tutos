@@ -12,7 +12,7 @@ Considérez le code suivant :
 <code style="html">
 <html>
 <body>
-<p>Paragraphe un</ p >
+<p>Paragraphe un</p>
 <script type='text/javascript'>
     alert ("Arrête analyse !");
 </script>
@@ -29,7 +29,7 @@ Le code ci-dessous démontre comment réaliser un simple accès aux éléments précéd
 <code style="html">
 <html>
 <body>
-<p id='p1'>Paragraphe un</ p >
+<p id='p1'>Paragraphe un</p>
 <script type='text/javascript'>
     document.write("<p>p1 est null ? " + (document.getElementById('p1') == null " oui " : "non") + "</p>");
     document.write("<p>p2 est null ? " + (document.getElementById('p2') == null " oui " : "non") + "</p>");
@@ -59,14 +59,6 @@ L'intérêt de cet attribut réside dans le fait que la durée d'exécution du script
 - Si aucun des deux attribut n'est présent, alors le script est récupéré et exécuté immédiatement, comme expliqué précédemment.
 
 <h2>Exécuter un script juste après le chargement de la page avec l'évenement "load"</h2>
-En javascript rien de plus simple que de déclencher l'exécution d'un script une fois que la page est complètement chargée :
-<code style="html">
-<script type='text/javascript'>
-	addEvent(window,'load', function() {
-		alert("Le chargement de la page est terminé");
-		// Ici on peut faire le vrai travail
-	});
-</script>
-</code>
+Un autre moyen de déclencher l'exécution d'un script une fois que la page est complètement chargée est d'utiliser l'évènement "load", tel que décrit<link>ici</link>.
 
 </tuto>
