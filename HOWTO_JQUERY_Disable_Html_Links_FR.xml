@@ -37,7 +37,7 @@ Insérez le script suivant dans votre page html :
 
 Vous avez noté que deux types de liens ont été désactivés : les liens simples : "a" et les liens de type "input".
 Tant que la page n'est pas encore chargé, la fonction associée à ces éléments renvoie la valeur "false", ce qui signifie que les clics seront ignorés.
-Ensuite, un événement est enregistré pour réactiver les liens lorsque la page est complètement chargée.
+Ensuite, un <link src="JavaScript_Load_Event">listener de l'événement "load"</link> est déclaré pour réactiver les liens lorsque la page est complètement chargée.
 Simple, non ?
 
 Il y a toutefois un inconvénient à cette méthode : si le chargement de la page se bloque, suite à un problème serveur par exemple, vos liens ne seront jamais activés...
