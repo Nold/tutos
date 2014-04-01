@@ -1,0 +1,71 @@
+<tuto>
+
+<h1>How to execute JavaScript before an HTML page loads ?<h1>
+
+Well, not only is this easy, but it's in fact the default behaviour !
+When the browser analyses HTML code and it encounters a "script" tag, it will stop to process the HTML page and it will trigger the JavaScript interpreter, which will then execute the script.
+When the script has finished executing, only then will the page processing continue.
+What it means is that by default JavaScript is executed during page load and therefore, before it is fully loaded !
+A script can even use : <code style="javascript">document.write</code> to create tags that the interpreter will process later.
+If in your case this default behaviour is a problem, then you should consider to use the attributes "defer" and "async" of the <code style="html">script</code> tag.
+Those will allow you to avoid immediate execution of the script.
+
+
+<h2>Example of JavaScript execution before page load</h2>
+Consider the following code :
+<code style="html">
+<html>
+<body>
+<p>First paragraph</p>
+<script type='text/javascript'>
+    alert ("Stopping HTML interpretation");
+</script>
+<p>Second paragraph</p>
+</body>
+</html>
+</code>
+
+If you open that HTML page, will see the "First paragraph" printed, and then the alert.
+The second paragraph only appears once the alerte is closed.
+
+<h2>Example of JavaScript interaction with the DOM during page load</h2>
+It is possible to interact with the DOM during page load !
+A script can easly manipulate what has already been built by the interpreter.
+Of course you can't manipulate what has not already been built.
+The following code shows how to access to the HTLM tags preceding the script :
+<code style="html">
+<html>
+<body>
+<p>First paragraph</p>
+<script type='text/javascript'>
+    document.write("<p>p1 exists ? " + (document.getElementById('p1') == null " yes " : "no") + "</p>");
+    document.write("<p>p2 exists ? " + (document.getElementById('p2') == null " yes " : "no") + "</p>");
+</script>
+<p>Second paragraph</p>
+</body>
+</html>
+</code>
+The output is :
+First paragraph
+p1 exists ? yes
+p2 exists ? no
+Second paragraph
+
+Here we can see that the first paragraph already exists before the script executes, but not the second one.
+To avoid most problems, it can be a best practice to wait for the complete loading of the page before doing any DOM manipulation though.
+
+<h2>How to avoid immediate script execution with "defer" or "async" attributes</h2>
+The attributes "defer" and "async" boolean attributes of the <code style="html">script</code> tag, telling how the script must be executed. 
+Thoses attributes should not be specified if the "src" attribute is absent.
+
+A <code style="html">script</code> tag execution can have three modes depending on the "defer" and "async" attributes :
+- If "async" attribute is used, then the script will be asynchronously executed, as soon as it is available (it may take some download time). 
+The main advantage of the "async" attribute is that the page can still load and be displayed while the script runs.
+- If "async" attribute is not used mais the "defer" attribute is, then the script is executed after the page is fully loaded. 
+- If none of those attributes is used then the script is executed immediately like described previously.
+Note that the support of these attributes may vary depending on the browsers used.
+
+<h2>Execute a script after full page load with the "load" event</h2>
+Another way of executing a script once the page is fully loaded is explained in <link>this tutorial</link>
+
+</tuto>
