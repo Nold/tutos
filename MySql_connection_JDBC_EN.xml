@@ -1,0 +1,93 @@
+<tuto>
+
+<h1>How to connect to MySQL with a JDBC driver in Java ?</h1>
+
+This Java tutorial will show you how to connect to MySQL with a JDBC driver. 
+You will need a MySQL JDBC driver, you can download it <link src="">here<link>.
+You will also need to add the following two jars in your classpath.
+- mysql-connector-java-5.1.30-bin.jar 
+- commons-dbutils-1.2.jar
+If you are using Maven, the dependencies are given below.
+
+<h2>Code the Java class</h2>
+
+The Java code to get a JDBC driver to connect to your MySQL database is pretty simple :
+<code type="java">
+Class.forName("com.mysql.jdbc.Driver");
+Connection connection = DriverManager.getConnection("jdbc:mysql://hostname:port/dbname","username", "password");
+</code>
+
+An example of a simple MySql connection class :
+
+<code type="java">
+package com.tutotechno.mysql;
+ 
+import java.sql.DriverManager;
+import org.apache.commons.dbutils.DbUtils;
+import java.sql.Connection;
+import java.sql.SQLException;
+ 
+public class SimpleMySqlConnection {
+ 
+  public static void main(String[] args) {
+	Connection connection = null;
+ 
+	try {
+		// First step : registering the MySql JDBC driver
+		Class.forName("com.mysql.jdbc.Driver");
+		System.out.println("Registered JDBC Driver successfully !");
+
+		// Second step : establishing the connection
+		connection = DriverManager.getConnection("jdbc:mysql://hostname:port/dbname","username", "password");
+		if (null == connection) {
+			System.out.println("Connection failed ! Is your database running ?");
+		} else {
+			System.out.println("Connection successfull");
+		}
+
+ 	} catch (ClassNotFoundException e) {
+		System.out.println("The JDBC driver for MySQL was not found !");
+		e.printStackTrace();
+		return;
+
+	} catch (SQLException e) {
+		System.out.println("Connection failed ! Is your database running ?");
+		e.printStackTrace();
+		return;
+	} finally {
+		// Don't forget to close the connection
+		DbUtils.closeQuietly(connection);
+	}
+   }
+}
+</code>
+ 
+<h2>Test the JDBC connection</h2>
+
+You can easily test your connection with the following Java code :
+
+<code type="java">
+	connection.setAutoCommit(false);
+	Statement statement = connection.createStatement();
+	ResultSet resultSet = statement.executeQuery("select 1 from dual");
+	while (resultSet.next()) {
+		System.out.println (resultSet.getString(1));
+	}
+	DbUtils.closeQuietly(statement);
+</code>
+
+<h2>Maven dependencies to add</h2>
+<code type="xml">
+	<dependency>
+		<groupId>commons-dbutils</groupId>
+		<artifactId>commons-dbutils</artifactId>
+		<version>1.2</version>
+	</dependency>
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>5.1.30</version>
+	</dependency>
+</code>
+
+</tuto>
