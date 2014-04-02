@@ -1,0 +1,100 @@
+<tuto>
+
+<h1>Comment se connecter à MySQL avec un driver JDBC en Java ?</h1>
+
+Ce tutoriel Java va vous montrer comment se connecter à MySQL avec un driver JDBC en Java.
+Vous aurez besoin du driver JDBC MySQL que vous pouvez télécharger <link src="">ici<link>.
+Vous aurez aussi besoin d'ajouter les jars suivants à votre classpath :
+- mysql-connector-java-5.1.30-bin.jar 
+- commons-dbutils-1.2.jar
+Si vous utilisez Maven, vous pouvez utiliser les dépendances fournies à la fin de ce tutoriel.
+
+<h2>Coder la connexion JDBC en Java</h2>
+
+Le code Java permettant la connexion à une base MySql à l'aide du driver JDBC est presque trivial :
+<code type="java">
+// Instanciation du driver
+Class.forName("com.mysql.jdbc.Driver");
+// Etablissement de la connexion
+Connection connection = DriverManager.getConnection("jdbc:mysql://hostname:port/dbname","username", "password");
+</code>
+
+Voici un exemple de classe Java réalisant une connexion MySql :
+
+<code type="java">
+package com.tutotechno.mysql;
+ 
+import java.sql.DriverManager;
+import org.apache.commons.dbutils.DbUtils;
+import java.sql.Connection;
+import java.sql.SQLException;
+ 
+public class SimpleMySqlConnection {
+ 
+  public static void main(String[] args) {
+	Connection connection = null;
+ 
+	try {
+		// Premiere etape : instanciation du driver
+		Class.forName("com.mysql.jdbc.Driver");
+		System.out.println("Instanciation du driver réussie !");
+
+		// Deuxieme etape : etablissement de la connexion
+		connection = DriverManager.getConnection("jdbc:mysql://hostname:port/dbname","username", "password");
+		if (null == connection) {
+			System.out.println("Connexion échouée ! Vérifiez que la base est démarrée.");
+		} else {
+			System.out.println("Connexion réussie");
+		}
+
+ 	} catch (ClassNotFoundException e) {
+		System.out.println("Le driver JDBC pour MySQL est inconnu !");
+		e.printStackTrace();
+		return;
+
+	} catch (SQLException e) {
+		System.out.println("Connexion échouée ! Vérifiez que la base est démarrée.");
+		e.printStackTrace();
+		return;
+	} finally {
+		// N'oubliez pas de fermer la connexion
+		DbUtils.closeQuietly(connection);
+	}
+   }
+}
+</code>
+
+La méthode <code type="java">DbUtils.closeQuietly</code> est pratique pour fermer une connexion élégamment, sans avoir besoin de nouvelles déclarations "try catch". 
+Elle fonctionne aussi avec la classe "Statement" comme illustré ci-dessous.
+Notez que le seul code dépendant de MySql est l'instanciation du driver. 
+En effet le principe derrière JDBC est d'avoir du code portable, indépendamment de la base de donnée.
+ 
+<h2>Test de la connexion JDBC</h2>
+
+Vous pouvez facilement tester que la connexion permet l'accès à la base avec le code Java suivant :
+
+<code type="java">
+	connection.setAutoCommit(false);
+	Statement statement = connection.createStatement();
+	ResultSet resultSet = statement.executeQuery("select 1 from dual");
+	while (resultSet.next()) {
+		System.out.println (resultSet.getString(1));
+	}
+	DbUtils.closeQuietly(statement);
+</code>
+
+<h2>Les dépendances Maven à ajouter</h2>
+<code type="xml">
+	<dependency>
+		<groupId>commons-dbutils</groupId>
+		<artifactId>commons-dbutils</artifactId>
+		<version>1.2</version>
+	</dependency>
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>5.1.30</version>
+	</dependency>
+</code>
+
+</tuto>
