@@ -66,7 +66,7 @@ To build a single classifier between the two at build time, the classical way is
 	</project>
 <code>
 
-To producing your jar with the required classifier you use the "-P" option to indicate the profile used :
+To produce your jar with the required classifier you use the "-P" option to indicate the profile used :
 <shell>
 	mvn install -Pjdk15
 	mvn install -Pjdk16
