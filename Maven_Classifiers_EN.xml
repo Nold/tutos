@@ -1,0 +1,158 @@
+<tuto>
+<h1>How use Maven classifiers to build the same project for different JDK ?<h1>
+
+If you have a scenario where your project needs to be compiled with different JDKs and therefore needs to produce different artifact, Maven has a solution for you : classifiers !
+Say you want "mvn install" to compile your project in JDK 1.5 as well as JDK 1.6, and finally produce two different jars myProject-1.0.0-jdk15.jar and myProject-1.0.0-jdk16.jar. 
+The last part of your artifacts names are "-jdk15" and "-jdk16" : those are the classifiers.
+
+<h2>Classifiers usage in pom file</h2>
+
+The Maven way to use a single classifier is shown in the following pom example:
+
+<code type="xml">
+	<project>
+	  ...
+	  <groupId>com.tutotechno</groupId>
+	  <artifactId>myProject</artifactId>
+	  <version>1.0.0</version>
+	  ...
+	  <build>
+	    <plugins>
+	      <plugin>
+		<artifactId>maven-jar-plugin</artifactId>
+		<configuration>
+		  <classifier>jdk15</classifier>
+		</configuration>
+	      </plugin>
+	    </plugins>
+	  </build>
+	  ...
+<code>
+Maven will then build the "myProject-1.0.0-jdk15.jar" artifact.
+However this pom configuration is rarely used because it does not allow you to build the jdk16 artifact without altering the pom.
+
+<h2>Choosing a classifier at build time with Maven profiles</h2>
+
+To build a single classifier between the two at build time, the classical way is to use profiles :
+
+<code type="xml">
+	<project>
+	  ...
+	  <build>
+	    <plugins>
+	      <plugin>
+		<artifactId>maven-jar-plugin</artifactId>
+		<configuration>
+		  <classifier>${jdkClassifier}</classifier>
+		</configuration>
+	      </plugin>
+	    </plugins>
+	  </build>
+	  ...
+	  <profiles>
+	    <profile>
+	      <id>jdk15</id>
+	      <properties>
+		<jdkClassifier>jdk15</jdkClassifier>
+	      </properties>
+	    </profile>
+	    <profile>
+	      <id>jdk16</id>
+	      <properties>
+		<jdkClassifier>jdk16</jdkClassifier>
+	      </properties>
+	    </profile>
+	  </profiles>
+	</project>
+<code>
+
+To producing your jar with the required classifier you use the "-P" option to indicate the profile used :
+<shell>
+	mvn install -Pjdk15
+	mvn install -Pjdk16
+</shell>
+As you see, you will have to call the Maven build twice to produce both jars.
+If you forget to use the "-P" option, Maven will build the normal jar with no classifier : myProject-1.0.0.jar.
+
+<h2>Activating a classifier by default<h2>
+
+If most of the time you want to build only one of the two artifacts, you can spare yourself the "-P" argument by activating one the classifiers by default.
+All you have to do is to declare the activation of the wanted profile.
+For example, if you want "jdk16" classifier to be build by default, you change your "jdk16" profile to the following :
+<code type="xml">
+ 	...
+	    <profile>
+	      <id>jdk16</id>
+	      <activation>
+		<jdk>1.6</jdk>
+	      </activation>
+	      <properties>
+		<jdkClassifier>jdk16</jdkClassifier>
+	      </properties>
+	    </profile>
+	...
+<code>
+That way your "jdk16" profile will be activated every time Maven detects your jdk 1.6 environment.
+And so, a simple "mvn install" without the "-P" option will build your artifact with the "jdk16" classifier : myProject-1.0.0-jdk16.jar.
+
+<h2>Building several classifiers at once</h2>
+Maven can build several artifacts with different classifiers, you don't even need profiles for this !
+You must change your "maven-jar-plugin" declaration and use several "executions" like this :
+
+<code type="xml">
+	      <plugin>
+		<artifactId>maven-jar-plugin</artifactId>
+		<executions>
+		    <execution>
+		      <id>jdk15</id>
+		      <phase>package</phase>
+		      <goals>
+			<goal>jar</goal>
+		      </goals>
+		      <configuration>
+			<classifier>jdk15</classifier>
+		      </configuration>
+		    </execution>
+		    <execution>
+		      <id>jdk16</id>
+		      <phase>package</phase>
+		      <goals>
+			<goal>jar</goal>
+		      </goals>
+		      <configuration>
+			<classifier>jdk16</classifier>
+		      </configuration>
+		    </execution>
+		  </executions>		
+	      </plugin>
+<code>
+
+Maven will then produce the two attached artifacts "myProject-1.0.0-jdk15.jar" and "myProject-1.0.0-jdk16.jar", as well as the main artifact "myProject-1.0.0.jar".
+
+<h2>Using dependencies with classifiers</h2>
+
+And finally, to include a specific classifier artifact as a dependency you should use the following syntax:
+
+<code type="xml">
+	<dependency>
+	  <groupId>com.tutotechno</groupId>
+	  <artifactId>myProject</artifactId>
+	  <version>1.0.0</version>
+	  <classifier>jdk15</classifier>
+	</dependency>
+<code>
+
+or :
+
+<code type="xml">
+	<dependency>
+	  <groupId>com.tutotechno</groupId>
+	  <artifactId>myProject</artifactId>
+	  <version>1.0.0</version>
+	  <classifier>jdk16</classifier>
+	</dependency>
+<code>
+
+You can see that the only difference is the classifier used.
+
+</tuto>
