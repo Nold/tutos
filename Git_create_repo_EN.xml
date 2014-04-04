@@ -1,0 +1,61 @@
+<tuto>
+<h1>How to create a new repository with Git ?<h1>
+
+This tutorial will show you how to create a Git repository from a project folder.
+
+<h2>Initializing a Git repository from an existing folder</h2>
+
+When you have an existing project folder, then creating a new repository with Git is pretty straightforward : 
+
+<shell>
+cd project_folder
+git init
+git add .
+git commit -m "My project initial commit"
+</shell> 
+
+If want to build your project immediately, you will find quickly yourself with folders and files you don't want to commit.
+That's why you might as well add the ".gitignore" file the soonest possible.
+The ".gitignore" file is a simple text file containing the list of files and folders you want Git to ignore.
+
+My typical initial ".gitignore" file looks like this :
+<code type="text">
+.classpath
+.externalToolBuilders
+.project
+.settings
+target
+</code>
+
+<h2>Pushing a new repository for the first time</h2>
+Once created your new Git repository is strictly local. 
+However great your project is, for others to acknowledge your talent, you will need to share it.
+Be aware that you can not push an empty repository, you must have added and commited a minimal file to it (a README file is a good start).
+
+First you will need a remote repository to push to. 
+Creating a new remote repository is described in <link>this tutorial</link>.
+Here we are going to take the example of an existing remote repository, hosted on GitHub to be specific.
+You need to have the remote repository URL to use it.
+In our case it's : https://github.com/username/MyProject.git.
+The administrator of the Git server should also provide you with the required access rights...
+
+You can check if your local repository knows any remotes with the command :
+<shell>
+git remote
+</shell> 
+
+And it you don't have the one you are looking for, then you can add it with :
+<shell>
+# Add a remote named "origin" pointing at the GitHub project repository
+git remote add origin https://github.com/username/MyProject.git
+</shell>
+
+Once your local repository knows the remote one you can push normally :
+<shell>
+# Push your commits in the "master" branch of the remote
+git push origin master
+</shell> 
+
+That's it ! You made it !
+
+</tuto>
