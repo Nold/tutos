@@ -33,7 +33,7 @@ However this pom configuration is rarely used because it does not allow you to b
 
 <h2>Choosing a classifier at build time with Maven profiles</h2>
 
-To build a single classifier between the two at build time, the classical way is to use profiles :
+To choose a single classifier between the two at build time, the classical way is to use profiles :
 
 <code type="xml">
 	<project>
