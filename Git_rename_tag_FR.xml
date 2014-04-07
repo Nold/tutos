@@ -1,0 +1,47 @@
+<tuto>
+<h1>Comment renommer un tag Git ?<h1>
+
+Ce tutoriel va vous montrer comment renommer simplement un tag Git dans le repository distribué.
+
+<h2>Créer un alias de tag</h2>
+
+Tout d'abord on crée un alias au tag que l'on souhaite renommer en donnant à l'alias le nom final :
+<shell>
+git tag tag_monAncienNomDeTag-1.0.1 tag_monNouveauNomDeTag-1.0.1
+</shell> 
+
+<h2>Suppression locale de l'ancien tag</h2>
+
+On supprime l'ancien tag avec la commande suivante :
+<shell>
+git tag -d tag_monAncienNomDeTag-1.0.1
+</shell> 
+
+<h2>Push de la suppression de l'ancien tag</h2>
+
+Par défault, Git ne pushe pas les tags sur les serveurs en remote.
+Pour pusher des modifications de tags vers le repo distribué, il faut lancer : "git push origin [tagname]" :
+<shell>
+git push origin :refs/tags/tag_monAncienNomDeTag-1.0.1
+</shell> 
+
+<h2>Push de la création du nouveau tag</h2>
+
+Pour accélérer la gestion des tags, la commande <shell>git push</shell> possède une option "--tags" qui permet de pusher plusieurs tags d'un coup. 
+Avec cette commande, tous les tags locaux non pushés sont transférés au serveur distant.
+<shell>
+git push --tags
+</shell> 
+
+<h2>En résumé : l'ensemble des commandes regroupées</h2>
+
+<shell>
+git tag tag_monAncienNomDeTag-1.0.1 tag_monNouveauNomDeTag-1.0.1
+git tag -d tag_monAncienNomDeTag-1.0.1
+git push origin :refs/tags/tag_monAncienNomDeTag-1.0.1
+git push --tags
+</shell> 
+
+Et voilà !
+
+</tuto>
