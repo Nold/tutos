@@ -1,0 +1,45 @@
+<tuto>
+<h1>How to rename a Git tag ?<h1>
+
+This tutorial will show you how to simply rename a Git tag in a remote repository.
+
+<h2>Create a tag alias </h2>
+
+First you create an alias with the new name you want to give to the tag :
+<shell>
+git tag tag_myOldTagName-1.0.1 tag_myNewTagName-1.0.1
+</shell> 
+
+<h2>Delete the old Git tag locally</h2>
+
+Then you delete locally the tag with the wrong name :
+<shell>
+git tag -d tag_myOldTagName-1.0.1
+</shell> 
+
+<h2>Push the tag deletion to the remote repository</h2>
+
+When pushing, Git does not transfer tags to remote servers by default.
+To push tags modifications to a shared server you must run : "git push origin [tagname]" :
+<shell>
+git push origin :refs/tags/tag_myOldTagName-1.0.1
+</shell> 
+
+<h2>Push the new tag alias to the remote repository</h2>
+
+<shell>
+git push --tags
+</shell> 
+The "--tags" option of the <shell>git push</shell> command allows you to push several tags at once. 
+In fact, all your tags that are not already pushed will be transfered to the remote server.
+
+<h2>All together</h2>
+
+<shell>
+git tag tag_myOldTagName-1.0.1 tag_myNewTagName-1.0.1
+git tag -d tag_myOldTagName-1.0.1
+git push origin :refs/tags/tag_myOldTagName-1.0.1
+git push --tags
+</shell> 
+
+</tuto>
