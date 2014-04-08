@@ -74,12 +74,16 @@ En effet le principe derrière JDBC est d'avoir du code portable, indépendammen
 Vous pouvez facilement tester que la connexion permet l'accès à la base avec le code Java suivant :
 
 <code type="java">
+	// Préparation de la connexion et du statement
 	connection.setAutoCommit(false);
 	Statement statement = connection.createStatement();
+	// Exécution de la requète SQL de test
 	ResultSet resultSet = statement.executeQuery("select 1 from dual");
+	// Vérification du résultat de la requète
 	while (resultSet.next()) {
 		System.out.println (resultSet.getString(1));
 	}
+	// Fermeture du statement indispensable pour relacher la ressource
 	DbUtils.closeQuietly(statement);
 </code>
 

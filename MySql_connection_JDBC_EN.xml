@@ -61,18 +61,26 @@ public class SimpleMySqlConnection {
    }
 }
 </code>
+
+The <code type="java">DbUtils.closeQuietly()</code> is an utility method really usefull to close connections and statements without multiplying the "catch" clauses.
+Note that the only MySql-dependent code is the driver instanciation. 
+Indeed, JDBC philosophy is to allow for portable code, independent from any database vendor.
  
 <h2>Test the JDBC connection</h2>
 
 You can easily test your connection with the following Java code :
 
 <code type="java">
+	// Prepare connection and statement
 	connection.setAutoCommit(false);
 	Statement statement = connection.createStatement();
+	// Execute a test SQL query
 	ResultSet resultSet = statement.executeQuery("select 1 from dual");
+	// Checking if the query returned a result
 	while (resultSet.next()) {
-		System.out.println (resultSet.getString(1));
+		System.out.println(resultSet.getString(1));
 	}
+	// Closing statements is vital to avoid holding resources
 	DbUtils.closeQuietly(statement);
 </code>
 
