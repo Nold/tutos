@@ -5,6 +5,7 @@ This tutorial will show you how to add a new element into an XML document with t
 
 <h2>Input XML</h2> 
 
+In this exemple, a very simple XML will suffice :
 <code type="xml">
 <?xml version="1.0" encoding="UTF-8"?>
 <products>
@@ -51,7 +52,7 @@ public class AddElementDocumentBuilderTest {
 			// <products> element
 			final Element productList = (Element) document.getFirstChild();
 
-			// Create the new product element
+			// Create the new <products> element
 			final Element newProductElement = document.createElement("product");
 
 			// Adding ID attribute to the new element

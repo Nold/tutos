@@ -1,11 +1,11 @@
 <tuto>
 <h1>Comment créer un nouvel élement XML avec un parser DOM en Java ?</h1>
 
-Ce tutoriel va vous montrer comment ajouter un nouvel élement dans un document XML avec l'objet <code type="java">javax.xml.parsers.DocumentBuilder</code>.
-
+Ce tutoriel va vous montrer comment ajouter un nouvel élément dans un document XML avec l'objet <code type="java">javax.xml.parsers.DocumentBuilder</code>.
 
 <h2>Le XML en entrée</h2> 
 
+Dans cet exemple, un XML simpliste nous suffira :
 <code type="xml">
 <?xml version="1.0" encoding="UTF-8"?>
 <produits>
@@ -52,7 +52,7 @@ public class AddElementDocumentBuilderTest {
 			// La racine correspond à l'élément <produits>
 			final Element productList = (Element) document.getFirstChild();
 
-			// Création du nouvel élément produit
+			// Création du nouvel élément <produit>
 			final Element newProductElement = document.createElement("produit");
 
 			// Ajout de l'attribut ID au nouvel élément
@@ -65,7 +65,7 @@ public class AddElementDocumentBuilderTest {
 			priceAttribute.setValue("24");
 			newProductElement.setAttributeNode(priceAttribute);
 
-			// Ajout du nouveau produit à la liste
+			// Ajout du nouveau <produit> à la liste
 			productList.appendChild(newProductElement);
 
 			// Ecriture du document dans un objet String
