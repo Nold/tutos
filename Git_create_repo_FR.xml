@@ -1,0 +1,64 @@
+<tuto>
+<h1>Comment créer un nouveau repository avec Git ?<h1>
+
+Ce tutorial va vous montrer comment créer un repository Git à partir du répertoire d'un projet.
+
+<h2>Initialisation d'un repository Git depuis un répertoire existant</h2>
+
+Il est assez simple de créer un nouveau repository Git à partir d'un répertoire projet existant : 
+
+<shell>
+cd repertoire_projet
+git init
+git add .
+git commit -m "Commit initial de mon projet"
+</shell> 
+
+Si vous buildez immédiatement le projet, vous allez créer un répertoire "target" et potentiellement divers fichiers que vous ne souhaitez pas commiter.
+C'est pourquoi il est conseillé d'ajouter le fichier ".gitignore" à votre repository local le plus tôt possible.
+Le fichier ".gitignore" est un simple fichier texte qui contient la liste des répertoires et fichiers devant être ignorés par Git.
+
+Personnellement, mon fichier ".gitignore" classique à l'initialisation d'un projet ressemble à ceci :
+<code type="text">
+.classpath
+.externalToolBuilders
+.project
+.settings
+target
+</code>
+
+<h2>Pusher un nouveau repository pour la première fois</h2>
+Une fois créé, votre nouveau repository Git reste entièrement local. 
+Il faut donc le pusher sur un repo distant pour le partager.
+Notez que Git ne permet pas de push un repository vide, vous devez avoir au minimum un fichier pour pouvoir pusher (un fichier README serait un bon début...).
+
+<h3>Récupérer l'URL du repository distant</h3>
+Pour pusher il vous faut donc un repository remote. 
+La création d'un repository remote est décrite dans <link>ce tutoriel</link>.
+Ici nous allons prendre l'exemple d'un repository remote préexistant, hébergé sur GitHub plus précisément.
+Notre URL de repository remote est fournie par GitHub : https://github.com/username/MonProjet.git.
+Evidemment l'administrateur du repository distant doit préalablement vous fournir les droits d'accès adéquats...
+
+<h3>Déclarer le repository distant auprès du repository local</h3>
+
+Pour afficher la liste des repository remote déclarés auprès de votre repository local, il faut simplement faire :
+<shell>
+git remote
+</shell> 
+
+Si le repository distant n'est pas présent dans la liste (ce qui sera automatiquement le cas si vous venez de créér le repository remote avec la méthode ci-dessus),
+alors il vous faut le déclarer à l'aide de l'URL récupérée.
+<shell>
+# Ajout d'un remote nommé "origin" qui pointe sur le repository de projet GitHub
+git remote add origin https://github.com/username/MonProjet.git
+</shell>
+
+Une fois que le repo local connait le repo distant, vous pouvez pusher normalement :
+<shell>
+# Pushez vos commits sur la branche "master" du repository remote "origin"
+git push origin master
+</shell> 
+
+Et voilà, un nouveau projet distribué est né !
+
+</tuto>
