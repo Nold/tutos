@@ -60,17 +60,17 @@ La fonction addEvent de dustindiaz.com est la suivante :
 
 Et notre utilisation est simplissime : 
 <code style="javascript">
-		
-	/** Vider le cache des évènements **/
-	addEvent(window,'unload',EventCache.flush);
 
 	/** Ajouter notre évènement **/
 	addEvent(window,'load', function() {
 		alert("A présent nous pouvons manipuler le DOM!");
 		// TODO ajoutez les modifications de DOM ici !		
 	});
+		
+	/** Pour récupérer la mémoire n'oubliez pas de vider le cache des évènements **/
+	addEvent(window,'unload',EventCache.flush);
 </code>
 
-Où que vous déclariez ce code dans la page, l'alerte ne sera lancée qu'à la fin du chargement de la page.
+Où que le code soit déclaré dans la page, l'alerte ne sera lancée qu'une fois la page entièrement chargée.
 
 </tuto>

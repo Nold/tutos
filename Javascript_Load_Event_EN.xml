@@ -60,15 +60,15 @@ The "addEvent" function from dustindiaz.com is the following :
 
 And the usage is quite simple : 
 <code style="javascript">
-		
-	/** Flushing the event cache **/
-	addEvent(window,'unload',EventCache.flush);
 
 	/** Adding our event **/
 	addEvent(window,'load', function() {
 		alert("Now we can manipulate DOM!");
 		// TODO insert DOM manipulation code here !		
 	});
+
+	/** For a cleaner behavior : flushing the event cache on unload **/
+	addEvent(window,'unload',EventCache.flush);
 </code>
 
 You can place this code anywhere in the page, the alert will be displayed after page load only.
