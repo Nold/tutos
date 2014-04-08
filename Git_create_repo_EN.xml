@@ -52,10 +52,10 @@ git remote add origin https://github.com/username/MyProject.git
 
 Once your local repository knows the remote one you can push normally :
 <shell>
-# Push your commits in the "master" branch of the remote
+# Push your commits to the "master" branch of the "origin" remote 
 git push origin master
 </shell> 
 
-That's it ! You made it !
+That's it, a new distributed project is born !
 
 </tuto>
