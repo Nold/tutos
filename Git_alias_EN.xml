@@ -1,0 +1,110 @@
+<tuto lang="EN">
+<h1>Git config : mastering aliases</h1>
+
+Git config aliases are powerfull tools you can't avoid ! 
+Aliases are commands shortcuts that give Git gurus a strong productivity rise.
+They allow you to avoid repetitive typing and lenghthy commands. 
+Too add or create new aliases, you just need to create or modify the "alias" section of your ".gitconfig" or ".git/config" files.
+For more information about those files, check the <link>Git installation</link> tutorial.
+And as a remainder : 
+    <li>.gitconfig : placed in the "home" folder, used for global configuration<li>
+    <li>.git/config : placed in every project, used for repository specific configuration<li>
+
+<h2>Classical Git aliases</h2>
+Git gurus use most of those aliases extensively :
+<code type="text">
+[alias]
+    st = status
+    df = diff
+    co = checkout
+    ci = commit -m
+    br = branch
+    mt = mergetool
+</code>
+
+<h2>Aliasing aliases and external commands</h2>
+The sliases syntax allows to use other aliases and even commands from programs external to Git.
+To do so, however, Git demands you to prefix your alias declaration by an exclamation mark : "!".
+To demonstrate there is some exemple of (almost useless) chained and external aliases :
+<code type="text">
+[alias]
+    a = add 		#Normal alias : no "!"
+    addall = !git a .	#Chained alias : uses the first alias
+    k = !gitk		#External alias : uses a command external to Git
+</code>
+
+Testing a chained alias :
+<shell>
+	git addall	#Adds all modified files to the index
+</shell>
+
+<h2>Log aliases : checking the commits history</h2>
+<code type="text">
+[alias]
+    last = log -1 HEAD							#Displays the last commit log
+    logl = log --pretty=oneline --abbrev-commit --graph --decorate	#Displays a concise log of all commits
+    logc = !git logl ORIG_HEAD.. --stat --no-merges			#Displays changes since the last pull
+    logs = shortlog -sne						#Displays commits stats
+</code>
+
+<h2>Diff aliases</h2>
+<code type="text">
+[alias]
+    dna = diff --name-status
+    dca = diff --cached
+    dst = diff --stat
+</code>
+
+<h2>Last commit modification or reset aliases</h2>
+<code type="text">
+[alias]
+    amend = commit --amend						#Modification of the last commit
+    undo = reset --soft HEAD^						#Cancelation of the last commit
+    unst = reset HEAD --						#Unstaging files from index
+</code>
+
+The "--soft" option keeps local modifications in the workspace.
+For more information about canceling a commit, follow <link>this tutorial</link>.
+
+<h2>Add and rm aliases</h2>
+Those aliases list some types of files and add them to the index.
+<code type="text">
+[alias]
+    addm = !git ls-files -m -z | xargs -0 git-add                  	#Adding all modified files to the index
+    addi = !git ls-files -o --exclude-standard -z | xargs -0 git-add	#Adding all unknown files to the index
+    rmm  = !git ls-files -d -z | xargs -0 git-rm			#Removing files marked as deleted
+</code>
+If you don't trust your commands, you can add " &amp;&amp; git status" to the end.
+That way you can check your repository state at the same time.
+
+<h2>The complete list</h2>
+You take the whole lot ? Wise decision ! Feel free to copy as much as needed !
+<code type="text">
+[alias]
+    st = status
+    df = diff
+    co = checkout
+    ci = commit -m
+    br = branch
+    mt = mergetool
+    last = log -1 HEAD							#Displays the last commit log
+    logl = log --pretty=oneline --abbrev-commit --graph --decorate	#Displays a concise log of all commits
+    logc = !git logl ORIG_HEAD.. --stat --no-merges			#Displays changes since the last pull
+    logs = shortlog -sne						#Displays commits stats
+    dna = diff --name-status
+    dca = diff --cached
+    dst = diff --stat
+    amend = commit --amend						#Modification of the last commit
+    undo = reset --soft HEAD^						#Cancelation of the last commit
+    unst = reset HEAD --						#Unstaging files from index
+    addm = !git ls-files -m -z | xargs -0 git-add                  	#Adding all modified files to the index
+    addi = !git ls-files -o --exclude-standard -z | xargs -0 git-add	#Adding all unknown files to the index
+    rmm  = !git ls-files -d -z | xargs -0 git-rm			#Removing files marked as deleted			
+</code>
+
+Note that it is also possible to configure Git aliases with the command line :
+<shell>
+git config --global alias.br branch
+<shell>
+</tuto>
+
