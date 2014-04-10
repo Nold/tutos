@@ -74,6 +74,7 @@ Ces alias permettent de lister certains types de fichiers et de les ajouter à l'
     addm = !git ls-files -m -z | xargs -0 git-add                  	#Ajouter les fichiers modifiés
     addi = !git ls-files -o --exclude-standard -z | xargs -0 git-add	#Ajouter les fichiers inconnus
     rmm  = !git ls-files -d -z | xargs -0 git-rm			#Supprimer les fichiers marqués comme effacés
+    cl = clean -f -X							#Supprimer tous les fichiers ignorés
 </code>
 
 <h2>La liste complète</h2>

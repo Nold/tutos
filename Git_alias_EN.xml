@@ -73,6 +73,7 @@ Those aliases list some types of files and add them to the index.
     addm = !git ls-files -m -z | xargs -0 git-add                  	#Adding all modified files to the index
     addi = !git ls-files -o --exclude-standard -z | xargs -0 git-add	#Adding all unknown files to the index
     rmm  = !git ls-files -d -z | xargs -0 git-rm			#Removing files marked as deleted
+    cl = clean -f -X							#Removing all ignored files
 </code>
 If you don't trust your commands, you can add " &amp;&amp; git status" to the end.
 That way you can check your repository state at the same time.
