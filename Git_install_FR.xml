@@ -39,10 +39,11 @@ git config --global color.diff auto
 git config --global color.branch auto
 </shell>
 
+L'option "--global" est nécessaire afin que cette configuration touche tous les repository Git.
+
 <h2>Configuration de Git par le fichier .gitconfig</h2>
 La meilleure façon de reproduire une configuration de Git fonctionnelle est d'utiliser un fichier ".gitconfig".
 Ce fichier doit être situé dans votre répertoire personnel (home).
-Le grand intérêt de ce fichier est d'y configuer la section des alias de façon à raccourcir les commandes Git.
 
 <code type="text">
 [user]
@@ -61,9 +62,40 @@ Le grand intérêt de ce fichier est d'y configuer la section des alias de façon à
 	rebase = true
 </code>
 
-Ces alias vous permettent d'exécuter "git st" au lieu de "git status" par exemple.
+Un des intérêts majeurs de ce fichier est la section des alias qui permet de configurer des raccourcis de commandes.
+Par exemple, ici on pourra exécuter "git st" au lieu de "git status".
 Cela reste un gain de simplicité appréciable pour ceux qui font une utilisation extensive de Git.
+
 Le paramètre "rebase" de la section "pull", une fois mis à "true", va automatiquement exécuter les commandes "git pull" avec l'option "--rebase".
 Cette option, qui n'est pas indispensable, est toutefois assez utile pour obtenir un historique de repository plus concis, plus propre.
+
+<h2>Configuration spécifique à un projet avec le fichier .git/config</h2>
+
+Dans chaque projet, le fichier "config" du répertoire ".git" permet de réaliser la configuration spécifique d'un repository Git.
+Ce fichier contient la même syntaxe de configuration que le fichier de configuration globale ".gitconfig" :
+<code type="text">
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = ssh://123.123.123.123:1234/main/git/repos/monProjet.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+[color]
+        diff = auto
+	status = auto
+        branch = auto
+[color.diff]
+        meta="red black bold"
+</code>
+
+Ici on a ajouté un paramètre "meta" à la section "color.diff", ce qui permet de configurer le rendu de la commande "diff" pour ce projet uniquement.
+Notez qu'en plus des couleurs, le paramètre "meta" peut aussi contenir du formatage tel que l'attribut "bold".
+En terme de couleurs, Git permet d'utiliser les valeurs suivantes : black, red, green, yellow, blue, magenta, cyan, white. 
+En terme de formatage, vous pouvez utiliser les attributs : bold, dim, ul, blink, et reverse.
 
 </tuto>
