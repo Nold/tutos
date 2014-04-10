@@ -1,4 +1,4 @@
-<tuto>
+<tuto lang="EN">
 <h1>How to modify your last commit with Git "amend" ?</h1>
 
 Git allows for easy modifying of the last commit. 
@@ -25,7 +25,7 @@ If you don't specify any commit message with the "-m" option, the commit will ke
 If you have no modifications to add, and just want to change the commit message, then you don't need the <code>git add</code> part.
 Just commit again with the "-m" option and the corrected message : 
 <shell>
-git commit --amend -m "Mon message de commit est corrigé"
+git commit --amend -m "My commit message is corrected"
 </shell>
 
 When you finish, check it up with the <code>git log --stat</code> command to see how your commit was updated with the additional modifications. 
