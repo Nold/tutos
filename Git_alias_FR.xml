@@ -1,4 +1,4 @@
-<tuto>
+<tuto lang="FR">
 <h1>Git : maîtriser les alias</h1>
 
 Les alias Git sont des outils indispensables pour qui veut augmenter sa productivité.
@@ -101,6 +101,9 @@ Vous prenez tout le lot ? Vous n'avez qu'à recopier l'ensemble !
     rmm  = !git ls-files -d -z | xargs -0 git-rm			#Supprimer les fichiers marqués comme effacés			
 </code>
 
-Notez qu'il est aussi possible de configurer Git à l'aide de la commande "git config".
+Notez qu'il est aussi possible de configurer Git en ligne de commande : 
+<shell>
+git config --global alias.br branch
+<shell>
 </tuto>
 
