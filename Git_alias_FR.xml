@@ -25,6 +25,7 @@ La plupart des alias suivants sont quotidiennement utilisés par les gourous de G
 <h2>Alias d'alias ou de commandes externes</h2>
 La syntaxe des alias permet d'utiliser des alias voire même des commandes de programmes externes à Git.
 Pour ce faire, il est nécessaire de commencer la déclaration par un point d'exclamation "!".
+A titre de démonstration (ne mettez pas ceci dans votre fichier !) : 
 <code type="text">
 [alias]
     a = add 		#Alias normal : pas de "!"
