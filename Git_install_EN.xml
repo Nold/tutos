@@ -41,7 +41,7 @@ git config --global color.diff auto
 git config --global color.branch auto
 </shell>
 
-<h2>Configuring Git with .gitconfig file</h2>
+<h2>Global Git configuration with .gitconfig file</h2>
 
 The best way to reproduce a functionnal Git configuration is to use the ".gitconfig" file.
 This file must be placed in your personnal folder (home) :
@@ -68,5 +68,34 @@ Those aliases allow you to execute "git st" instead of "git status".
 Developpers having an intensive use of Git do find these cheats handy.
 The "rebase" parameter of the "pull" section, once set to "true", will automatically add the "--rebase" option to the "git pull" command.
 This remains quite usefull to provide a cleaner and more concise repository history.
+
+<h2>Project specific configuration with .git/config file</h2>
+
+Every Git project has a "config" file placed in the ".git" project. 
+This file uses the same syntax as the global configuration ".gitconfig" file :
+<code type="text">
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = ssh://123.123.123.123:1234/main/git/repos/myProject.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+[color]
+        diff = auto
+	status = auto
+        branch = auto
+[color.diff]
+        meta="red black bold"
+</code>
+
+Here we added a "meta" parameter to the "color.diff" section, which allows to modify the display of the "diff" command, for this project only.
+As well as colors, the "meta" parameter can also contain formating attributes such as "bold".
+Git supports the following colors : normal, black, blue, cyan, green, magenta, red, yellow, white.
+For the formating, you can use the following attributes : bold, blink, dim, ul and reverse.
 
 </tuto>

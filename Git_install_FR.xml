@@ -95,7 +95,7 @@ Ce fichier contient la même syntaxe de configuration que le fichier de configura
 
 Ici on a ajouté un paramètre "meta" à la section "color.diff", ce qui permet de configurer le rendu de la commande "diff" pour ce projet uniquement.
 Notez qu'en plus des couleurs, le paramètre "meta" peut aussi contenir du formatage tel que l'attribut "bold".
-En terme de couleurs, Git permet d'utiliser les valeurs suivantes : black, red, green, yellow, blue, magenta, cyan, white. 
+En terme de couleurs, Git permet d'utiliser les valeurs suivantes : normal, black, red, green, yellow, blue, magenta, cyan, white. 
 En terme de formatage, vous pouvez utiliser les attributs : bold, dim, ul, blink, et reverse.
 
 </tuto>
