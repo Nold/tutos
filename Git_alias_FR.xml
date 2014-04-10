@@ -1,0 +1,105 @@
+<tuto>
+<h1>Git : maîtriser les alias</h1>
+
+Les alias Git sont des outils indispensables pour qui veut augmenter sa productivité.
+Ces raccourcis de commandes Git vont vous permettre d'éviter les répétitions et autres saisies de commandes à rallonge ! 
+L'ajout de nouveaux alias est enfantine ! 
+Il vous suffit de créer ou de modifier la section [alias] de votre fichier ".gitconfig" ou ".git/config".
+Voyez le tutoriel <link>installation de Git</link> pour quelques précisions.
+Pour rappel : 
+    <li>.gitconfig pour une configuration globale<li>
+    <li>.git/config dans un projet pour une configuration spécifique à un repository<li>
+
+<h2>Les alias Git classiques</h2>
+La plupart des alias suivants sont quotidiennement utilisés par les gourous de Git :
+<code type="text">
+[alias]
+    st = status
+    df = diff
+    co = checkout
+    ci = commit
+    br = branch
+    mt = mergetool
+</code>
+
+<h2>Alias d'alias ou de commandes externes</h2>
+La syntaxe des alias permet d'utiliser des alias voire même des commandes de programmes externes à Git.
+Pour ce faire, il est nécessaire de commencer la déclaration par un point d'exclamation "!".
+<code type="text">
+[alias]
+    a = add 		#Alias normal : pas de "!"
+    addall = !git a .	#Alias chaîné : utilise le premier alias
+    k = !gitk		#Alias externe : utilise une commande externe à Git
+</code>
+
+En utilisation :
+<shell>
+	git addall	#Ajoute tous les fichiers modifiés à l'index
+</shell>
+
+
+<h2>Alias de log : historique des commits</h2>
+<code type="text">
+[alias]
+    last = log -1 HEAD							#Affiche le log du dernier commits
+    logl = log --pretty=oneline --abbrev-commit --graph --decorate	#Affiche un log concis de tous les commits
+    logc = !git logl ORIG_HEAD.. --stat --no-merges			#Affiche les changements depuis le dernier pull
+    logs = shortlog -sne						#Affiche les statistiques de commits
+</code>
+
+<h2>Alias de diff</h2>
+<code type="text">
+[alias]
+    dna = diff --name-status
+    dca = diff --cached
+    dst = diff --stat
+</code>
+
+<h2>Alias de modification ou d'annulation du dernier commit</h2>
+<code type="text">
+[alias]
+    amend = commit --amend						#Modification du dernier commit
+    undo = reset --soft HEAD^						#Annulation du dernier commit
+    unst = reset HEAD --						#Annulation des ajouts à l'index
+</code>
+
+L'option "--soft" permet de conserver les modifications dans le répertoire de travail.
+Notez que ces commandes ne modifient que le repository local, pour plus de détails sur l'annulation d'un commit voyez le tutoriel <link>suivant</link>.
+
+<h2>Alias de add et de rm</h2>
+Ces alias permettent de lister certains types de fichiers et de les ajouter à l'index.
+<code type="text">
+[alias]
+    addm = !git ls-files -m -z | xargs -0 git-add                  	#Ajouter les fichiers modifiés
+    addi = !git ls-files -o --exclude-standard -z | xargs -0 git-add	#Ajouter les fichiers inconnus
+    rmm  = !git ls-files -d -z | xargs -0 git-rm			#Supprimer les fichiers marqués comme effacés
+</code>
+
+<h2>La liste complète</h2>
+Vous prenez tout le lot ? Vous n'avez qu'à recopier l'ensemble !
+<code type="text">
+[alias]
+    st = status
+    df = diff
+    co = checkout
+    ci = commit
+    br = branch
+    mt = mergetool
+    last = log -1 HEAD							#Affiche le log du dernier commits
+    logl = log --pretty=oneline --abbrev-commit --graph --decorate	#Affiche un log concis de tous les commits
+    logc = !git logl ORIG_HEAD.. --stat --no-merges			#Affiche les changements depuis le dernier pull
+    logs = shortlog -sne						#Affiche les statistiques de commits	
+    dna = diff --name-status
+    dca = diff --cached
+    dst = diff --stat
+    amend = commit --amend						#Modification du dernier commit
+    undo = reset --soft HEAD^						#Annulation du dernier commit
+    unst = reset HEAD --						#Annulation des ajouts à l'index
+    addm = !git ls-files -m -z | xargs -0 git-add                  	#Ajouter les fichiers modifiés
+    addi = !git ls-files -o --exclude-standard -z | xargs -0 git-add	#Ajouter les fichiers inconnus
+    rmm  = !git ls-files -d -z | xargs -0 git-rm			#Supprimer les fichiers marqués comme effacés			
+</code>
+
+Notez qu'il est aussi possible de configurer Git à l'aide de la commande "git config".
+</tuto>
+
