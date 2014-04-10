@@ -1,0 +1,69 @@
+<tuto>
+<h1>Comment installer Git ?<h1>
+
+Ce tutoriel va vous montrer comment procéder à l'installation et à la configuration de Git sous Linux et sous Windows.
+
+<h2>Comment installer Git sous Linux ?</h2>
+L'installation se fait avec un gestionnaire de paquets standard :
+<shell>
+sudo apt-get install git-core gitk
+</shell>
+
+Deux paquets sont intallés :
+	- git-core : "le" Git
+	- gitk : une interface graphique qui permet de visualiser les logs.
+
+<h2>Comment installer Git sous Windows ?</h2>
+
+Pour utiliser Git sous Windows, vous pouvez installer <link src="http://code.google.com/p/msysgit">Msysgit</link>.
+Msys est un système d'émulation des commandes Unix sous Windows, Msysgit y intègre l'installation simultanée de Git.
+
+Lors de l'installation, il est recommandé de laisser toutes les options par défaut.
+L'installation terminée, en lançant le programme Git Bash on obtient une console qui permet d'exécuter les commandes de Git. 
+L'intérêt de Git Bash, c'est que les commandes classiques de Linux (cd, ls, mkdir...) y sont aussi utilisables.
+
+<h2>Configuration de Git par la console</h2>
+
+Git se configure très bien directement par la console.
+En premier lieu, il est indispensable de renseigner vos nom d'utilisateur et email :
+<shell>
+git config --global user.name "nom_utilisateur"
+git config --global user.email developerAlpha@tutotechno.com
+</shell>
+
+Si les couleurs ne sont pas activées, les messages de Git sont moins lisibles.
+La configuration vous permet facilement d'activer les couleurs :
+<shell>
+git config --global color.status auto
+git config --global color.diff auto
+git config --global color.branch auto
+</shell>
+
+<h2>Configuration de Git par le fichier .gitconfig</h2>
+La meilleure façon de reproduire une configuration de Git fonctionnelle est d'utiliser un fichier ".gitconfig".
+Ce fichier doit être situé dans votre répertoire personnel (home).
+Le grand intérêt de ce fichier est d'y configuer la section des alias de façon à raccourcir les commandes Git.
+
+<code type="text">
+[user]
+        name = developerAlpha
+        email = developerAlpha@tutotechno.com
+[color]
+        diff = auto
+        status = auto
+        branch = auto
+[alias]
+        br = branch
+        ci = commit
+        co = checkout
+        st = status
+[pull]
+	rebase = true
+</code>
+
+Ces alias vous permettent d'exécuter "git st" au lieu de "git status" par exemple.
+Cela reste un gain de simplicité appréciable pour ceux qui font une utilisation extensive de Git.
+Le paramètre "rebase" de la section "pull", une fois mis à "true", va automatiquement exécuter les commandes "git pull" avec l'option "--rebase".
+Cette option, qui n'est pas indispensable, est toutefois assez utile pour obtenir un historique de repository plus concis, plus propre.
+
+</tuto>
