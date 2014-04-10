@@ -1,4 +1,4 @@
-<tuto>
+<tuto lang="EN">
 <h1>How to install Git ?<h1>
 
 This tutorial will show you how to proceed Git's installation and configuration for Linux and Windows.
@@ -65,7 +65,8 @@ This file must be placed in your personnal folder (home) :
 One of the main interest of the ".gitconfig" file is the "alias" section.
 Aliases are usefull for shortening Git's commands : 
 Those aliases allow you to execute "git st" instead of "git status".
-Developpers having an intensive use of Git do find these cheats handy.
+Git gurus use aliases liberally, if you too want to become an alias guru, <link tuto="Git_alias">this tutorial</link> is the right start.
+
 The "rebase" parameter of the "pull" section, once set to "true", will automatically add the "--rebase" option to the "git pull" command.
 This remains quite usefull to provide a cleaner and more concise repository history.
 

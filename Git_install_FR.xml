@@ -1,4 +1,4 @@
-<tuto>
+<tuto lang="FR">
 <h1>Comment installer Git ?<h1>
 
 Ce tutoriel va vous montrer comment procéder à l'installation et à la configuration de Git sous Linux et sous Windows.
@@ -65,6 +65,7 @@ Ce fichier doit être situé dans votre répertoire personnel (home).
 Un des intérêts majeurs de ce fichier est la section des alias qui permet de configurer des raccourcis de commandes.
 Par exemple, ici on pourra exécuter "git st" au lieu de "git status".
 Cela reste un gain de simplicité appréciable pour ceux qui font une utilisation extensive de Git.
+Pour devenir un "gourou des alias", suivez <link tuto="Git_alias">ce tutoriel</link>.
 
 Le paramètre "rebase" de la section "pull", une fois mis à "true", va automatiquement exécuter les commandes "git pull" avec l'option "--rebase".
 Cette option, qui n'est pas indispensable, est toutefois assez utile pour obtenir un historique de repository plus concis, plus propre.
