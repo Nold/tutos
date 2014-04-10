@@ -1,0 +1,72 @@
+<tuto>
+<h1>How to install Git ?<h1>
+
+This tutorial will show you how to proceed Git's installation and configuration for Linux and Windows.
+
+<h2>how to install Git for Linux ?</h2>
+TODO : link to download
+Installation is done with a standard package manager :
+<shell>
+sudo apt-get install git-core gitk
+</shell>
+
+Two packages are intalled : 
+	- git-core : "the" Git
+	- gitk : a graphical interface allowing to visualize logs.
+
+<h2>How to install Git for Windows ?</h2>
+
+To use Git with Windows, you will have to install a specific software.
+Here we have chosen to use <link src="http://code.google.com/p/msysgit">Msysgit</link>.
+Msys is a Unix emulation system for Windows, Msysgit adds the simultaneous installation of Git.
+
+During the install, you can leave all settings to the default.
+Once the install is complete, by launching Git Bash you obtain a console in which you can execute Git's commands. 
+The point of Git Bash is that the standard Linux commands (cd, ls, mkdir...) are also available.
+
+<h2>Configuring Git with the console</h2>
+
+You can easily configure Git directly with the console.
+The first step would be to provide your name and email :
+<shell>
+git config --global user.name "you_user_name"
+git config --global user.email your_email@tutotechno.com
+</shell>
+
+If the colors are not activated, Git's messages are less readable.
+You can easily activate colors by those configuration command lines :
+<shell>
+git config --global color.status auto
+git config --global color.diff auto
+git config --global color.branch auto
+</shell>
+
+<h2>Configuring Git with .gitconfig file</h2>
+
+The best way to reproduce a functionnal Git configuration is to use the ".gitconfig" file.
+This file must be placed in your personnal folder (home) :
+<code type="text">
+[user]
+        name = developerAlpha
+        email = developerAlpha@tutotechno.com
+[color]
+        diff = auto
+        status = auto
+        branch = auto
+[alias]
+        br = branch
+        ci = commit
+        co = checkout
+        st = status
+[pull]
+	rebase = true
+</code>
+
+One of the main interest of the ".gitconfig" file is the "alias" section.
+Aliases are usefull for shortening Git's commands : 
+Those aliases allow you to execute "git st" instead of "git status".
+Developpers having an intensive use of Git do find these cheats handy.
+The "rebase" parameter of the "pull" section, once set to "true", will automatically add the "--rebase" option to the "git pull" command.
+This remains quite usefull to provide a cleaner and more concise repository history.
+
+</tuto>
