@@ -55,12 +55,13 @@ Testing a chained alias :
     dst = diff --stat
 </code>
 
-<h2>Last commit modification or reset aliases</h2>
+<h2>Last commit modification and other cancelations</h2>
 <code type="text">
 [alias]
     amend = commit --amend						#Modification of the last commit
-    undo = reset --soft HEAD^						#Cancelation of the last commit
+    unci = reset --soft HEAD^						#Cancelation of the last commit
     unst = reset HEAD --						#Unstaging files from index
+    undo = checkout -- 							#Cancelation of a file modification
 </code>
 
 The "--soft" option keeps local modifications in the workspace.
@@ -96,8 +97,9 @@ You take the whole lot ? Wise decision ! Feel free to copy as much as needed !
     dca = diff --cached
     dst = diff --stat
     amend = commit --amend						#Modification of the last commit
-    undo = reset --soft HEAD^						#Cancelation of the last commit
+    unci = reset --soft HEAD^						#Cancelation of the last commit
     unst = reset HEAD --						#Unstaging files from index
+    undo = checkout -- 							#Cancelation of a file modification
     addm = !git ls-files -m -z | xargs -0 git-add                  	#Adding all modified files to the index
     addi = !git ls-files -o --exclude-standard -z | xargs -0 git-add	#Adding all unknown files to the index
     rmm  = !git ls-files -d -z | xargs -0 git-rm			#Removing files marked as deleted			

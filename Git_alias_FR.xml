@@ -56,12 +56,13 @@ En utilisation :
     dst = diff --stat
 </code>
 
-<h2>Alias de modification ou d'annulation du dernier commit</h2>
+<h2>Modification du dernier commit et autres annulations</h2>
 <code type="text">
 [alias]
     amend = commit --amend						#Modification du dernier commit
-    undo = reset --soft HEAD^						#Annulation du dernier commit
+    unci = reset --soft HEAD^						#Annulation du dernier commit
     unst = reset HEAD --						#Annulation des ajouts à l'index
+    undo = checkout -- 							#Annulation de la modification d'un fichier
 </code>
 
 L'option "--soft" permet de conserver les modifications dans le répertoire de travail.
@@ -95,8 +96,9 @@ Vous prenez tout le lot ? Vous n'avez qu'à recopier l'ensemble !
     dca = diff --cached
     dst = diff --stat
     amend = commit --amend						#Modification du dernier commit
-    undo = reset --soft HEAD^						#Annulation du dernier commit
+    unci = reset --soft HEAD^						#Annulation du dernier commit
     unst = reset HEAD --						#Annulation des ajouts à l'index
+    undo = checkout -- 							#Annulation de la modification d'un fichier
     addm = !git ls-files -m -z | xargs -0 git-add                  	#Ajouter les fichiers modifiés
     addi = !git ls-files -o --exclude-standard -z | xargs -0 git-add	#Ajouter les fichiers inconnus
     rmm  = !git ls-files -d -z | xargs -0 git-rm			#Supprimer les fichiers marqués comme effacés			
