@@ -1,0 +1,24 @@
+<tuto>
+
+<h1>Comment déterminer la version de Internet Explorer avec JavaScript</h2>
+
+La façon la plus simple reste d'utiliser le champ "userAgent" de l'objet "navigator".
+Une expression régulière adaptée nous permet de récupérer la version de IE dans une variable :
+
+<code style="javascript">
+	function isInternetExplorer8OrLess(){
+	  if (navigator.appName == 'Microsoft Internet Explorer') {
+		var userAgent = navigator.userAgent;
+		var regexp = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+		if (regexp.exec(userAgent) != null) {
+		  var versionIE = RegExp.$1;	
+		  return versionIE &lt;= 8;
+		}
+	  }
+	  return false;
+	}
+</code>
+
+Cet exemple nous permet de récupérer la version de IE comme un entier et donc de tester si elle est égale ou inférieure à une valeur souhaitée, ici on a arbitrairement pris 8.
+
+</tuto>
