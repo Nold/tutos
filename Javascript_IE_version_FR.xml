@@ -1,6 +1,6 @@
 <tuto>
 
-<h1>Comment déterminer la version de Internet Explorer avec JavaScript</h2>
+<h1>Comment déterminer la version de Internet Explorer avec JavaScript ?</h2>
 
 La façon la plus simple reste d'utiliser le champ "userAgent" de l'objet "navigator".
 Une expression régulière adaptée nous permet de récupérer la version de IE dans une variable :
