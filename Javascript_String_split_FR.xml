@@ -1,0 +1,15 @@
+<tuto>
+
+<h1>Comment découper une chaîne avec un séparateur avec JavaScript ?</h2>
+
+Il suffit d'utiliser la méthode "split" de l'objet <code type="javascript">String</code>.
+Cette méthode renvoie un tableau de chaînes qu'on peut itérer simplement :
+<code style="javascript">
+	var chainedetokens = "cheval,oie,poisson,araignée";
+	var tokens = chainedetokens.split(",");
+	for(var i=0; i&lt;tokens.length; i++){
+		alert("J'ai trouvé mon animal de companie : " + tokens[i]);
+	}
+</code>
+
+</tuto>

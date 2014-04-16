@@ -1,0 +1,15 @@
+<tuto>
+
+<h1>How to split a string using a separator in JavaScript ?</h2>
+
+you simply use the "split" function of the <code type="javascript">String</code> object.
+This function returns an array of String that you can iterate normally :
+<code style="javascript">
+	var singleStringWithTokens = "horse,donkey,fish,cat,spider";
+	var tokens = singleStringWithTokens.split(",");
+	for(var i=0; i&lt;tokens.length; i++){
+		alert("I found a pet for the day ! : " + tokens[i]);
+	}
+</code>
+
+</tuto>
