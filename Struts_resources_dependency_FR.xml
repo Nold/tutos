@@ -1,0 +1,126 @@
+<tuto>
+
+<h1>Comment utiliser des ressources depuis une dépendance avec Struts ?</h1>
+
+Comment faire en sorte que notre application web Struts utilise un ressource bundle situé dans une librairie externe ?
+Dans le cadre de mes nombreux projets web, j'ai mis en place une librairie qui fourni des classes utilitaires ainsi que des ressources communes.
+Cette librairie est une ressource externe à tous mes projets web, comment utiliser ses ressources bundles avec Struts ?
+
+<h2>Création d'un module web</h2>
+Ma librairie commune doit contenir un module web qui sera déclaré comme dépendance par mes projets web.
+Ci-dessous le pom de mon projet web commun :
+<code type="xml">
+	<?xml version="1.0"?>
+	<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+		<parent>
+			<artifactId>common-web-utils</artifactId>
+			<groupId>com.tutotechno</groupId>
+			<version>1.0.0</version>
+			<relativePath>../pom.xml</relativePath>
+		</parent>
+		<modelVersion>4.0.0</modelVersion>
+		<groupId>com.tutotechno</groupId>
+		<artifactId>webapp-common-web-utils</artifactId>
+		<name>WEBAPP-COMMON-WEB-UTILS</name>
+		<description>Librairie webapp utilitaire pour les applications web</description>
+		<url>http://localhost/webapp-common-web-utils/</url>
+		<packaging>war</packaging>
+	</project>
+</code>
+
+Le point important ici est de noter que le packaging est de type "war" ce qui est la déclaration d'une application web.
+C'est essentiel pour que les ressources de la librairies se retrouvent bien dans le dossier "webcontent" de l'application web finale au moment du build.
+
+<h2>Création des ressources bundle</h2>
+Les fichiers de ressource sont de simples fichiers de properties dont le nommage doivent toutefois respecter la spécification <link></link>.
+Pour l'exemple on créera deux fichiers : un en français et un en anglais.
+ CommonResources_fr.properties : 
+<code type="properties">
+error.login=Votre mot de passe n'a pas été validé, merci de vous authentifier.
+error.no.session=Votre session a expiré, merci de vous reconnecter.
+error.security=Un problème de sécurité est apparu.
+</code>
+
+CommonResources_en.properties :
+<code type="properties">
+error.login=Your password was not validated, please authentify yourself.
+error.no.session=Your session has expired, please reconnect yourself.
+error.security=A security problem happened.
+</code>
+
+N'oubliez pas que ces fichiers doivent être présents dans le package déclaré dans le fichier de configuration Struts.
+
+<h2>Déclaration de la dépendance dans le projet web</h2>
+Notre module commun doit être buildé correctement puis déclaré comme dépendance dans le pom de notre projet web final :
+<code type="xml">
+	<dependencies>
+		<dependency>
+			<groupId>com.tutotechno</groupId>
+			<artifactId>webapp-common-web-utils</artifactId>
+			<version>1.0.0</version>
+			<type>war</type>
+		</dependency>
+	</dependencies>
+</code>
+
+<h2>Utilisation du resource bundle dans la jsp</h2>
+Il ne reste plus qu'à utiliser notre ressource bundle dans notre jsp pour obtenir des messages dépendants de la locale :
+<code type="jsp">
+	<%@ taglib uri="/common/WEB-INF/tld/fmt.tld" prefix="fmt"%>
+	<div class="error_messages">
+		<h2>
+			<b>
+				<fmt:setBundle basename="com.tutotechno.common.utils.webapp.CommonResources" />
+				<fmt:message key="error.login"/>
+			</b>
+		</h2>
+	</div>
+</code>
+
+
+<h2>Utilisation du ressource bundle dans les tiles Struts</h2>
+Il est possible d'utiliser un ressource bundle directement dans les tiles Struts.
+Toutefois le ressource bundle doit être déclaré dans le fichier de configuration Struts pour cela.
+Exemple de fichier struts-config-common-webapp.xml :
+<code type="xml">
+	<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE struts-config PUBLIC
+		"-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+	    "./struts-config_1_2.dtd">
+	<struts-config>
+		<message-resources parameter="com.tutotechno.common.utils.webapp.CommonResources" key="commonResources"/> 
+	</struts-config>
+</code>
+
+Dans l'attribut "parameter" on voit que Struts s'attend à trouver les fichiers de ressource bundle "CommonResources" dans le package "com.tutotechno.common.utils.webapp" du build final.
+Notez que ce package n'a pas besoin d'être accessible au moment de la compilation mais uniquement au run-time.
+On peut donc le placer dans une autre librairie, par mesure de simplicité nous allons toutefois le conserver dans le module "webapp-common-web-utils".
+Selon la norme de nommage des fichiers de ressources bundle, on pourra avoir divers fichiers : CommonResources.properties, CommonResources_fr.properties, CommonResources_en.properties, CommonResources_en_US.properties ...
+
+S'il n'y a qu'un seul resource bundle, alors Struts considera ce bundle comme étant le resource bundle par défaut.
+Toutefois si ce n'est pas le cas, alors il sera nécessaire de préciser le bundle au moment de son utilisation.
+L'attribut "key" est important à ce niveau car il définit la clé qui permettra de référencer notre ressource bundle spécifique dans les jsp.
+Dans notre déclaration de tiles, nous devons donc utiliser deux attributs : un pour le message et un pour préciser le bundle.
+Et pour référencer correctement le resource bundle nous utilisons l'attribut "key", que nous avons défini plus haut dans le fichier de config Struts.
+<code type="xml">
+	<definition name="error.security.def">
+		<put name="title_message" value="error.security" />
+		<put name="title_bundle" value="commonResources" />
+		<put name="content" value="/common/jsp/errorSecurity.jsp" />
+	</definition>
+</code>
+
+Dans la jsp "errorSecurity.jsp" il faut alors déclarer l'utilisation des attributs :
+<code type="jsp">
+	<%@ taglib uri="/commun/WEB-INF/tld/struts-bean.tld" prefix="bean" %>
+	<%@ taglib uri="/commun/WEB-INF/tld/struts-tiles.tld" prefix="tiles" %>
+	<tiles:useAttribute name="title_message" classname="java.lang.String" />
+	<tiles:useAttribute name="title_bundle" scope="request" classname="java.lang.String" ignore="true"/>
+</code>
+
+On n'a plus qu'à placer notre message localisé avec une simple balise "bean:message" :
+<code type="jsp">
+	<bean:message key="&lt;%=title_message%&gt;"  bundle="&lt;%=title_bundle%&gt;" />
+</code>
+
+</tuto>
