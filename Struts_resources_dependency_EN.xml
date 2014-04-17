@@ -1,0 +1,125 @@
+<tuto>
+
+<h1>How to use resource bundles from a dependency with Struts ?</h1>
+
+How to make a Struts web application use resource bundles located into an external library ?
+While working on numerous web projects, it becomes usefull to develop an external library, common to all web projects, that provides utility classes and common resources.
+This library being external to all my web projects, how to use its resources bundle with Struts ?
+
+<h2>Creating a web module in the library</h2>
+The common library must have a web module which will be declared as a dependency by the web projects.
+Beneath here the pom of the common web module :
+<code type="xml">
+	<?xml version="1.0"?>
+	<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+		<parent>
+			<artifactId>common-web-utils</artifactId>
+			<groupId>com.tutotechno</groupId>
+			<version>1.0.0</version>
+			<relativePath>../pom.xml</relativePath>
+		</parent>
+		<modelVersion>4.0.0</modelVersion>
+		<groupId>com.tutotechno</groupId>
+		<artifactId>webapp-common-web-utils</artifactId>
+		<name>WEBAPP-COMMON-WEB-UTILS</name>
+		<description>Webapp common utility library for web applications</description>
+		<url>http://localhost/webapp-common-web-utils/</url>
+		<packaging>war</packaging>
+	</project>
+</code>
+
+The important point here is the type "war" packaging which makes this module a web application.
+This is essential for the library's resources to be correctly placed into the "webcontent" folder of the final web application during the build.
+
+<h2>Creating the resources bundles</h2>
+Resource bundle files are simple properties files whose naming must follow <link>this specification</link>.
+For the example we'll create two files : one in english and one in... an honnest kind of english...
+CommonResources_en.properties : 
+<code type="properties">
+error.login=Your password was not validated, please authentify yourself.
+error.no.session=Your session has expired, please reconnect yourself.
+error.security=A security problem happened.
+</code>
+
+CommonResources_en_US.properties :
+<code type="properties">
+error.login=Lost your password eh ? Don't panic, you'll find it leaked NSA files !
+error.no.session=Your session has expired, why were you clicking away anyway ?
+error.security=No security problem really happened. It's really OK... trust me on this !
+</code>
+
+<h2>Declaration of the dependency in the web project</h2>
+The common module must be correctly built and then declared as an external dependency int the final web project pom :
+<code type="xml">
+	<dependencies>
+		<dependency>
+			<groupId>com.tutotechno</groupId>
+			<artifactId>webapp-common-web-utils</artifactId>
+			<version>1.0.0</version>
+			<type>war</type>
+		</dependency>
+	</dependencies>
+</code>
+
+<h2>Using the resource bundle in the jsp</h2>
+We only have to use our resource bundle in our jsp to obtain locale-dependent messages :
+<code type="jsp">
+	<%@ taglib uri="/common/WEB-INF/tld/fmt.tld" prefix="fmt"%>
+	<div class="error_messages">
+		<h2>
+			<b>
+				<fmt:setBundle basename="com.tutotechno.common.utils.webapp.CommonResources" />
+				<fmt:message key="error.login"/>
+			</b>
+		</h2>
+	</div>
+</code>
+
+
+<h2>Using the resource bundle in Struts tiles</h2>
+It is possible to directly use a resource bundle in Struts tiles.
+However, the resource bundle must be declared in Struts configuration file for this.
+Example of Struts configuration file struts-config-common-webapp.xml :
+<code type="xml">
+	<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE struts-config PUBLIC
+		"-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+	    "./struts-config_1_2.dtd">
+	<struts-config>
+		<message-resources parameter="com.tutotechno.common.utils.webapp.CommonResources" key="commonResources"/> 
+	</struts-config>
+</code>
+
+In the "parameter" attribute we have the package "com.tutotechno.common.utils.webapp" of the final build where Struts will look for "CommonResources" resource bundle files.
+Note that this package does not need to be present at compile time, it is only needed at run time.
+You can therefore place it in another library, but for simplicity we will keep it in our "webapp-common-web-utils" module.
+Following resource bundle naming convention, we can have several bundles files inside the package : CommonResources.properties, CommonResources_en.properties, CommonResources_en_US.properties ...
+
+If there is only one resource bundle known to Struts, then this bundle will be considered the default one.
+If that's not the case, then we must precise the needed bundle when we use it.
+That why the "key" attribute is important : it defines the key used to reference the needed resources bundle from Struts tags in JSP files.
+In our tiles declaration, we must use two attributes : one for the message and one for to precise the bundle.
+And to correctly reference the resource bundle we use the "key" attribute that we just defined in Struts configuration file.
+<code type="xml">
+	<definition name="error.security.def">
+		<put name="title_message" value="error.security" />
+		<put name="title_bundle" value="commonResources" />
+		<put name="content" value="/common/jsp/errorSecurity.jsp" />
+	</definition>
+</code>
+
+In the JSP file "errorSecurity.jsp" we must declare the use of the two attributes : 
+<code type="jsp">
+	<%@ taglib uri="/commun/WEB-INF/tld/struts-bean.tld" prefix="bean" %>
+	<%@ taglib uri="/commun/WEB-INF/tld/struts-tiles.tld" prefix="tiles" %>
+	<tiles:useAttribute name="title_message" classname="java.lang.String" />
+	<tiles:useAttribute name="title_bundle" scope="request" classname="java.lang.String" ignore="true"/>
+</code>
+
+Then we just have to place our locale-dependent message with a simple "bean:message" tag :
+<code type="jsp">
+	<bean:message key="&lt;%=title_message%&gt;"  bundle="&lt;%=title_bundle%&gt;" />
+</code>
+
+
+</tuto>
